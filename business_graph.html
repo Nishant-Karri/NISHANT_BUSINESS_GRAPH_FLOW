@@ -78,6 +78,19 @@ body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFo
 .pulse{animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 canvas{display:block}
+
+/* ── Bottom connection bar ── */
+#conn-bar{position:fixed;bottom:20px;left:260px;right:320px;z-index:10;
+  display:none;background:rgba(8,10,22,0.92);border:1px solid #1a1f3a;
+  border-radius:12px;padding:10px 18px;backdrop-filter:blur(12px);
+  display:none;align-items:center;gap:12px;flex-wrap:wrap}
+#conn-bar .cb-node{font-size:12px;font-weight:700}
+#conn-bar .cb-sep{color:#333;font-size:10px}
+#conn-bar .cb-desc{font-size:10px;color:#888;flex:1;line-height:1.4}
+#conn-bar .cb-tags{display:flex;gap:6px;flex-wrap:wrap}
+#conn-bar .cb-tag{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;border:1px solid;opacity:.85}
+#conn-bar .cb-close{color:#444;cursor:pointer;font-size:14px;margin-left:auto;flex-shrink:0}
+#conn-bar .cb-close:hover{color:#fff}
 </style>
 </head>
 <body>
@@ -323,7 +336,7 @@ const mouse=new THREE.Vector2();
 let meshMap={},lineObjects=[],hiddenTiers=new Set(),hiddenEdgeTypes=new Set();
 
 function raycast(e){
-  mouse.x=(e.clientX/W())*2-1;mouse.y=-(e.clientY/H())*2+1;
+  const cw=CW();mouse.x=((e.clientX-LW)/cw)*2-1;mouse.y=-(e.clientY/H())*2+1;
   raycaster.setFromCamera(mouse,camera);
   const hits=raycaster.intersectObjects(Object.values(meshMap),false);
   return hits.length?hits[0]:null;
@@ -415,11 +428,23 @@ function selectNode(nid){
   document.getElementById("node-detail").style.display="block";
   document.getElementById("back-btn").style.display="block";
   document.getElementById("ctx-sub").textContent=n.id+" — "+n.tier;
+  // Bottom bar
+  const bar=document.getElementById("conn-bar");
+  document.getElementById("cb-name").innerHTML=`<span style="color:${n.color}">${n.id}</span>`;
+  document.getElementById("cb-desc").textContent=n.desc;
+  const tags=rels.slice(0,6).map(e=>{
+    const isOut=e.source===nid,other=isOut?e.target:e.source;
+    const on=SCHEMA_NODES.find(x=>x.id===other);
+    return `<span class="cb-tag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#333'}">${isOut?"→":"←"} ${e.rel} ${other}</span>`;
+  }).join("");
+  document.getElementById("cb-tags").innerHTML=tags+(rels.length>6?`<span style="font-size:9px;color:#555">+${rels.length-6} more</span>`:"");
+  bar.style.display="flex";
 }
 
 function clearSelect(){
   Object.values(meshMap).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
   lineObjects.forEach(l=>{l.material.opacity=hiddenEdgeTypes.has(l.userData.type)?0:0.8});
+  document.getElementById("conn-bar").style.display="none";
   showOverview();
 }
 function showOverview(){
@@ -467,5 +492,13 @@ document.getElementById("loading").style.display="none";
 // ── Animate ────────────────────────────────────────────────────────────────
 (function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
 </script>
+
+<div id="conn-bar">
+  <div class="cb-node" id="cb-name"></div>
+  <div class="cb-sep">|</div>
+  <div class="cb-desc" id="cb-desc"></div>
+  <div class="cb-tags" id="cb-tags"></div>
+  <span class="cb-close" onclick="clearSelect()">✕</span>
+</div>
 </body>
 </html>
