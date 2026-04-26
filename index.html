@@ -287,7 +287,8 @@ function buildLegend(){
 }
 
 build();buildLegend();
-(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
+(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();}
+requestAnimationFrame(init);
 </script>
 
 <div id="conn-bar">
@@ -465,7 +466,8 @@ function buildLegend(){
 }
 
 build();buildLegend();
-(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
+(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();}
+requestAnimationFrame(init);
 </script>
 
 <div id="conn-bar">
@@ -479,7 +481,8 @@ build();buildLegend();
 </html;
 
 const wrap=document.getElementById("globe-wrap");
-const W=()=>wrap.clientWidth||600, H=()=>wrap.clientHeight||window.innerHeight;
+const W=()=>wrap.getBoundingClientRect().width||wrap.clientWidth||600;
+const H=()=>wrap.getBoundingClientRect().height||wrap.clientHeight||window.innerHeight;
 
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x050810);
@@ -604,7 +607,7 @@ function buildLeg(){
   });
 }
 
-build();buildLeg();
-(function anim(){requestAnimationFrame(anim);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
+function init(){build();buildLeg();(function anim(){requestAnimationFrame(anim);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();}
+requestAnimationFrame(init);
 </script>
 </body></html>
