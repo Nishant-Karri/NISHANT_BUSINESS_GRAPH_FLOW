@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Metric Drift Monitor</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
@@ -343,6 +344,13 @@ async function triggerRun() {
 
 async function loadDashboard() {
   const d = await fetch(API + '/api/data', {mode:'cors'}).then(r=>r.json());
+  const metMap = Object.fromEntries(d.metrics.map(m=>[m.store_id, m]));
+  d.alerts.forEach(a => {
+    const m = metMap[a.store_id] || {};
+    a.address  = m.address  || '';
+    a.zip_code = m.zip_code || '';
+    a.net_sales = m.net_sales || 500;
+  });
   renderSummary(d.alerts, d.metrics);
   renderMetrics(d.metrics);
   renderAlerts(d.alerts);
@@ -403,10 +411,15 @@ function renderAlerts(alerts) {
       <div class="ctx-grp"><div class="ctx-lbl">${k.replace(/_/g," ")}</div>
       <div class="ctx-tags">${(Array.isArray(v)?v:[v]).slice(0,3).map(t=>`<span class="ctx-tag">${t}</span>`).join("")}</div></div>`).join("");
     const rec = (a.recommendation||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const chartId = `chart-${a.store_id}-${a.metric}`;
+    const addr = a.address ? `${a.address}, ZIP ${a.zip_code}` : '';
     return `<div class="alert-card">
       <div class="card-hdr">
         <span class="sev sev-${a.severity}">${a.severity}</span>
-        <span class="atitle">${a.store_name} — ${ML[a.metric]||a.metric}</span>
+        <div style="flex:1">
+          <div class="atitle">${a.store_name} — ${ML[a.metric]||a.metric}</div>
+          <div style="font-size:9px;color:#6b7280;margin-top:2px">${a.store_id} · ${addr}</div>
+        </div>
         <span class="dpill ${dp}">${sign}${a.drift_pct}%</span>
       </div>
       <div class="card-body">
@@ -416,12 +429,13 @@ function renderAlerts(alerts) {
             <div class="mbox"><div class="mk">Actual</div><div class="mv2" style="color:#dc2626">${u}${a.actual.toFixed(1)}${suf}</div></div>
             <div class="mbox"><div class="mk">Baseline</div><div class="mv2" style="color:#16a34a">${u}${a.baseline.toFixed(1)}${suf}</div></div>
           </div>
-          <div class="ah4">Projected Loss</div>
-          <table class="loss-t">
-            <tr><td>30 days</td><td>$${(a.loss_30d||0).toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>
-            <tr><td>60 days</td><td>$${(a.loss_60d||0).toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>
-            <tr><td>90 days</td><td>$${(a.loss_90d||0).toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>
-          </table>
+          <div class="ah4">Projected Loss
+            <input type="range" min="7" max="180" value="90"
+              style="width:70px;margin-left:6px;vertical-align:middle;accent-color:#dc2626"
+              oninput="updProj('${chartId}',${JSON.stringify(a)},+this.value,this.nextElementSibling)"
+            /><span style="font-size:9px;color:#6b7280">90d</span>
+          </div>
+          <canvas id="${chartId}" height="100"></canvas>
         </div>
         <div>
           <div class="ah4">Graph Context</div>
@@ -432,6 +446,9 @@ function renderAlerts(alerts) {
     </div>`;
   }).join("");
   document.getElementById("alerts-grid").innerHTML = cards;
+  setTimeout(() => alerts.forEach(a => {
+    drawProj(`chart-${a.store_id}-${a.metric}`, a, 90);
+  }), 50);
 }
 
 // ── Mobile ────────────────────────────────────────────────────────────────
@@ -440,6 +457,25 @@ function toggleCTX(){document.getElementById("CTX").classList.toggle("open");doc
 function closePanels(){document.getElementById("SB").classList.remove("open");document.getElementById("CTX").classList.remove("open");document.getElementById("overlay").classList.remove("show")}
 function handleResize(){const m=window.innerWidth<=900;document.getElementById("btn-sb").style.display=m?"block":"none";document.getElementById("btn-ctx").style.display=m?"block":"none"}
 window.addEventListener("resize",handleResize);handleResize();
+
+
+const _ch = {};
+const _M = {gross_margin:.8,return_rate:1.2,aov:.6,discount_rate:.9,net_sales:1.0};
+function calcL(a,days){return (a.net_sales||500)/30*Math.abs(a.drift_pct)/100*(_M[a.metric]||1)*days;}
+function drawProj(id,a,days){
+  const cv=document.getElementById(id);if(!cv)return;
+  if(_ch[id]){_ch[id].destroy();delete _ch[id];}
+  const pts=Math.min(days,30),step=days/pts;
+  const labels=Array.from({length:pts+1},(_,i)=>Math.round(i*step)+'d');
+  const data=Array.from({length:pts+1},(_,i)=>+calcL(a,i*step).toFixed(2));
+  const bad=(a.metric==="return_rate"||a.metric==="discount_rate")?a.drift_pct>0:a.drift_pct<0;
+  const color=bad?'#dc2626':'#16a34a';
+  _ch[id]=new Chart(cv,{type:'line',data:{labels,datasets:[{label:'Loss ($)',data,borderColor:color,backgroundColor:color+'18',borderWidth:2,pointRadius:0,fill:true,tension:.4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.parsed.y.toLocaleString('en-US',{maximumFractionDigits:0})}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:8},color:'#9ca3af',maxTicksLimit:6}},
+    y:{grid:{color:'#f3f4f6'},ticks:{font:{size:8},color:'#9ca3af',callback:v=>'$'+v.toLocaleString('en-US',{notation:'compact',maximumFractionDigits:0})}}}}});
+}
+function updProj(id,a,days,el){el.textContent=days+'d';drawProj(id,a,days);}
 
 // ── Init ──────────────────────────────────────────────────────────────────
 checkServer();
