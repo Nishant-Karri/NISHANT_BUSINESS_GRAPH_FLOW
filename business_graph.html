@@ -206,10 +206,38 @@ window.addEventListener("resize",updateCam);
 scene.add(new THREE.AmbientLight(0xffffff,0.9));
 const dl=new THREE.DirectionalLight(0xffffff,0.6);dl.position.set(1,1,2);scene.add(dl);
 const R=290;
-scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,40,40),
-  new THREE.MeshBasicMaterial({color:0xdddddd,wireframe:true,opacity:0.25,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1.5,8,100),
-  new THREE.MeshBasicMaterial({color:0xcccccc,transparent:true,opacity:0.5})));
+// ── Brain-shaped geometry ─────────────────────────────────────────────
+function makeBrainGeo(R, seg) {
+  const geo = new THREE.SphereGeometry(R, seg, seg);
+  const pos = geo.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    const len = Math.sqrt(x*x+y*y+z*z)||1;
+    const nx=x/len, ny=y/len, nz=z/len;
+    const theta = Math.atan2(nz, nx);
+    const phi   = Math.acos(Math.max(-1,Math.min(1,ny)));
+    // Surface folds (gyri/sulci)
+    const folds = 1
+      + 0.07 * Math.sin(6*theta)   * Math.sin(3*phi)
+      + 0.05 * Math.sin(9*theta+1) * Math.sin(5*phi)
+      + 0.03 * Math.sin(4*theta-2) * Math.sin(7*phi);
+    // Midline groove between hemispheres
+    const groove = 1 - 0.14 * Math.exp(-nx*nx / 0.04);
+    // Flatten top/bottom (brain is wider than tall)
+    const flatY = 0.82;
+    const r2 = R * folds * groove;
+    pos.setXYZ(i, nx*r2, ny*r2*flatY, nz*r2);
+  }
+  pos.needsUpdate = true; geo.computeVertexNormals();
+  return geo;
+}
+const brainGeo = makeBrainGeo(R, 72);
+scene.add(new THREE.Mesh(brainGeo,
+  new THREE.MeshBasicMaterial({color:0xdddddd,wireframe:true,opacity:0.3,transparent:true})));
+// Faint solid brain for depth
+const brainSolid = new THREE.Mesh(makeBrainGeo(R*0.98, 48),
+  new THREE.MeshPhongMaterial({color:0xf0f4ff,transparent:true,opacity:0.08,side:THREE.BackSide}));
+scene.add(brainSolid);
 
 let spin=true,drag=false,ox=0,oy=0,rx=0,ry=0;
 const piv=new THREE.Group();scene.add(piv);
@@ -261,8 +289,17 @@ function doHover(e){
 function fib(n,R){
   const pts=[],phi=Math.PI*(3-Math.sqrt(5));
   for(let i=0;i<n;i++){
-    const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;
-    pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R));
+    const y0=1-(i/(n-1))*2,r0=Math.sqrt(1-y0*y0),t=phi*i;
+    const nx=Math.cos(t)*r0, ny=y0, nz=Math.sin(t)*r0;
+    const theta=Math.atan2(nz,nx), phiA=Math.acos(Math.max(-1,Math.min(1,ny)));
+    // Apply same brain distortion as wireframe
+    const folds=1
+      +0.07*Math.sin(6*theta)*Math.sin(3*phiA)
+      +0.05*Math.sin(9*theta+1)*Math.sin(5*phiA)
+      +0.03*Math.sin(4*theta-2)*Math.sin(7*phiA);
+    const groove=1-0.14*Math.exp(-nx*nx/0.04);
+    const r2=R*folds*groove;
+    pts.push(new THREE.Vector3(nx*r2, ny*r2*0.82, nz*r2));
   }
   return pts;
 }
