@@ -294,12 +294,20 @@ scene.background=new THREE.Color(0x050810);
 const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
 camera.position.set(0,0,1400);
 const renderer=new THREE.WebGLRenderer({antialias:true});
+const LW=240,RW=300;
+const CW=()=>Math.max(200,window.innerWidth-LW-RW);
+function updateCamera(){
+  const w=window.innerWidth,h=H(),cw=CW();
+  renderer.setSize(w,h);
+  camera.aspect=cw/h;
+  camera.setViewOffset(w,h,LW,0,cw,h);
+  camera.updateProjectionMatrix();
+}
 renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(W(),H());
 renderer.domElement.style.cssText="position:fixed;left:0;top:0;z-index:1";
 document.body.appendChild(renderer.domElement);
-
-window.addEventListener("resize",()=>{camera.aspect=W()/H();camera.updateProjectionMatrix();renderer.setSize(W(),H())});
+updateCamera();
+window.addEventListener("resize",updateCamera);
 scene.add(new THREE.AmbientLight(0xffffff,0.5));
 const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
 
