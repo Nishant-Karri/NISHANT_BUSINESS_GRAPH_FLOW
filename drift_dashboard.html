@@ -381,7 +381,7 @@ function mc(val, metric) {
 function renderMetrics(metrics) {
   const rows = metrics.sort((a,b)=>b.net_sales-a.net_sales).map(m=>`
     <tr>
-      <td><div class="sn">${m.store_name}</div><div class="st">${m.store_type}</div></td>
+      <td><div class="sn">${m.store_name}</div><div class="st">${m.store_id} · ${m.address||"—"}, ${m.zip_code||""}</div></td>
       <td><span class="mv ${mc(m.gross_margin,'gross_margin')}">${m.gross_margin.toFixed(1)}%</span></td>
       <td><span class="mv ${mc(m.return_rate,'return_rate')}">${m.return_rate.toFixed(1)}%</span></td>
       <td><span class="mv ${mc(m.aov,'aov')}">$${m.aov.toFixed(0)}</span></td>
