@@ -1,177 +1,163 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Nishant_Star_Model_Business_Globe</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;width:100vw;height:100vh}
-
-/* ── Left sidebar ── */
-#sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:rgba(8,10,22,0.93);border-right:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px)}
-#logo{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
-#logo h1{font-size:11px;font-weight:700;letter-spacing:.5px;color:#fff;line-height:1.5}
-#logo h1 em{color:#59A14F;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
-#stats-box{padding:10px 14px;border-bottom:1px solid #1a1f3a}
+html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e0;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+/* Canvas sits behind everything */
+#cv{position:fixed;left:0;top:0;width:100%;height:100%;z-index:1}
+/* Sidebars sit on top */
+#SB{position:fixed;left:0;top:0;bottom:0;width:240px;
+  background:rgba(6,8,20,0.96);border-right:1px solid #1a1f3a;
+  z-index:10;display:flex;flex-direction:column}
+#CTX{position:fixed;right:0;top:0;bottom:0;width:300px;
+  background:rgba(6,8,20,0.96);border-left:1px solid #1a1f3a;
+  z-index:10;display:flex;flex-direction:column}
+/* Sidebar internals */
+.logo{padding:14px 14px 10px;border-bottom:1px solid #1a1f3a;font-size:11px;font-weight:700;color:#fff;line-height:1.5}
+.logo em{color:#59A14F;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+.sbox{padding:9px 14px;border-bottom:1px solid #1a1f3a}
 .stat{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
-.stat .v{font-weight:700;color:#59A14F}
-#legend{flex:1;overflow-y:auto;padding:10px 14px}
-#legend h3{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:#444;margin-bottom:7px;margin-top:10px}
-#legend h3:first-child{margin-top:0}
-.li{display:flex;align-items:center;gap:6px;padding:3px 5px;font-size:10px;cursor:pointer;border-radius:4px;transition:background .15s}
-.li:hover{background:#151830}
+.stat b{color:#59A14F}
+.leg{flex:1;overflow-y:auto;padding:10px 14px}
+.leg h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#444;margin:10px 0 6px}
+.leg h4:first-child{margin-top:0}
+.li{display:flex;align-items:center;gap:6px;padding:3px 5px;font-size:10px;cursor:pointer;border-radius:4px}
+.li:hover{background:#111830}
 .li.off{opacity:.2}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.li-label{flex:1}
-.li-type{font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.5px}
-#ctrl{padding:10px 14px;border-top:1px solid #1a1f3a;display:flex;gap:6px;flex-wrap:wrap}
-.btn{padding:5px 10px;background:#0e1025;border:1px solid #252a48;border-radius:5px;color:#bbb;font-size:10px;cursor:pointer;transition:border-color .2s,color .2s}
-.btn:hover{border-color:#59A14F;color:#fff}
-.btn.on{border-color:#59A14F;color:#59A14F}
-#back-to-skills{padding:8px 14px;border-top:1px solid #1a1f3a;font-size:10px}
-#back-to-skills a{color:#4E79A7;text-decoration:none}
-#back-to-skills a:hover{color:#fff}
-
-/* ── Right panel ── */
-#context{position:fixed;right:0;top:0;bottom:0;width:300px;background:rgba(8,10,22,0.93);border-left:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px);overflow:hidden}
-#ctx-header{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
-#ctx-header h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff}
-#ctx-header p{font-size:9px;color:#555;margin-top:3px}
-#ctx-body{flex:1;overflow-y:auto;padding:12px 14px}
-.ctx-section{margin-bottom:18px}
-.ctx-section h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#59A14F;margin-bottom:8px;border-bottom:1px solid #1a1f3a;padding-bottom:4px}
-.ctx-row{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid #0e1025;font-size:10px}
-.ctx-row:last-child{border:none}
-.ctx-key{color:#888;flex-shrink:0;width:45%}
-.ctx-val{color:#e0e0e0;text-align:right;width:53%;font-size:9.5px;line-height:1.4}
-.ctx-formula{background:#0d1025;border:1px solid #1a1f3a;border-radius:5px;padding:6px 8px;font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;margin:3px 0;line-height:1.5}
-#node-detail{display:none}
-#node-detail .nd-label{font-size:13px;font-weight:700;margin-bottom:3px}
-#node-detail .nd-tier{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:10px}
-#node-detail .nd-desc{font-size:10px;color:#aaa;line-height:1.5;margin-bottom:12px;padding:8px;background:#0d1025;border-radius:6px;border-left:3px solid}
-#node-detail .nd-metrics h4{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#59A14F;margin-bottom:6px}
-#node-detail .nd-metric{font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;background:#0d1025;padding:4px 8px;border-radius:4px;margin:2px 0;border:1px solid #1a1f3a}
-#node-detail .nd-rels h4{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#76B7B2;margin:12px 0 6px}
-#node-detail .nd-rel{display:flex;align-items:center;gap:6px;font-size:9px;padding:3px 0;border-bottom:1px solid #0e1025}
-#node-detail .nd-rel:last-child{border:none}
-.rel-arrow{color:#555;font-size:8px}
-.rel-name{color:#F1CE63;font-family:Menlo,monospace;font-size:8px}
-.rel-target{color:#aaa}
-#back-btn{font-size:10px;color:#76B7B2;cursor:pointer;padding:6px 0;display:none;margin-bottom:8px}
-#back-btn:hover{color:#fff}
-
-/* ── Top title ── */
-#top-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:10}
-.title-badge{background:rgba(8,10,22,.88);border:1px solid #252a48;border-radius:20px;padding:6px 20px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;backdrop-filter:blur(8px);white-space:nowrap}
-.title-badge em{color:#59A14F;font-style:normal}
-
-/* ── Tooltip ── */
-#tip{position:fixed;background:rgba(8,10,22,.97);border:1px solid #2a2f50;border-radius:8px;padding:8px 12px;font-size:10px;pointer-events:none;display:none;z-index:20;max-width:200px;box-shadow:0 4px 24px rgba(0,0,0,.7)}
-#tip .tl{font-weight:700;font-size:11px;margin-bottom:2px}
-#tip .td{font-size:9px;color:#888;line-height:1.4}
-
-/* ── Loading ── */
-#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.96);z-index:50;flex-direction:column;gap:12px}
-#loading p{font-size:14px;color:#59A14F;letter-spacing:1px}
-#loading small{font-size:10px;color:#444}
-.pulse{animation:pulse 1.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
-canvas{display:block}
+.lbl{flex:1;line-height:1.3}
+.cnt{font-size:9px;color:#555}
+.ctrl{padding:10px 14px;border-top:1px solid #1a1f3a;display:flex;gap:6px}
+.btn{padding:5px 12px;background:#0a0e22;border:1px solid #252a48;border-radius:5px;
+  color:#bbb;font-size:10px;cursor:pointer;transition:.2s}
+.btn:hover,.btn.on{border-color:#59A14F;color:#59A14F}
+.navl{padding:8px 14px;border-top:1px solid #1a1f3a;font-size:10px}
+.navl a{color:#4E79A7;text-decoration:none}
+.navl a:hover{color:#fff}
+/* Right panel */
+.ch{padding:14px 14px 10px;border-bottom:1px solid #1a1f3a}
+.ch h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff}
+.ch p{font-size:9px;color:#555;margin-top:2px}
+.cb{flex:1;overflow-y:auto;padding:12px 14px}
+.cs{margin-bottom:15px}
+.cs h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:#59A14F;margin-bottom:7px;border-bottom:1px solid #1a1f3a;padding-bottom:3px}
+.cr{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #0d1020;font-size:10px}
+.cr:last-child{border:none}
+.ck{color:#888;width:44%}
+.cv2{color:#ddd;text-align:right;width:54%;font-size:9.5px;line-height:1.4}
+.cf{background:#0d1025;border:1px solid #1a1f3a;border-radius:5px;padding:5px 8px;
+  font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;margin:2px 0;line-height:1.5}
+#ND{display:none}
+#ND .nl{font-size:13px;font-weight:700;margin-bottom:2px}
+#ND .nt{font-size:9px;text-transform:uppercase;color:#888;margin-bottom:8px;letter-spacing:1px}
+#ND .nd2{font-size:10px;color:#aaa;line-height:1.5;padding:7px;background:#0d1025;
+  border-radius:6px;border-left:3px solid;margin-bottom:8px}
+#ND .nmh{font-size:9px;text-transform:uppercase;color:#59A14F;margin-bottom:5px;letter-spacing:.8px}
+#ND .nm{font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;background:#0d1025;
+  padding:3px 8px;border-radius:4px;margin:2px 0;border:1px solid #1a1f3a}
+#ND .nrh{font-size:9px;text-transform:uppercase;color:#76B7B2;margin:10px 0 4px;letter-spacing:.8px}
+#ND .nr{display:flex;align-items:center;gap:5px;font-size:9px;padding:2px 0;border-bottom:1px solid #0d1020}
+#ND .nr:last-child{border:none}
+.ra{color:#555;font-size:8px}
+.rn{color:#F1CE63;font-family:Menlo,monospace;font-size:8px}
+#BK{font-size:10px;color:#76B7B2;cursor:pointer;padding:5px 0;display:none;margin-bottom:8px}
+#BK:hover{color:#fff}
+/* Top badge */
+#TOP{position:fixed;top:14px;left:240px;right:300px;
+  z-index:20;display:flex;justify-content:center;pointer-events:none}
+.badge{background:rgba(6,8,20,.92);border:1px solid #252a48;border-radius:20px;
+  padding:6px 20px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;
+  pointer-events:auto;white-space:nowrap}
+.badge em{color:#59A14F;font-style:normal}
+/* Tooltip */
+#TIP{position:fixed;background:rgba(6,8,20,.97);border:1px solid #2a2f50;
+  border-radius:8px;padding:8px 12px;font-size:10px;pointer-events:none;
+  display:none;z-index:30;max-width:210px;box-shadow:0 4px 20px rgba(0,0,0,.7)}
+.tl{font-weight:700;font-size:11px;margin-bottom:2px}
+.td2{font-size:9px;color:#888;line-height:1.4}
+/* Bottom connection bar */
+#BAR{position:fixed;bottom:18px;left:256px;right:316px;
+  z-index:20;display:none;background:rgba(6,8,20,.96);border:1px solid #1a1f3a;
+  border-radius:12px;padding:10px 16px;gap:10px;flex-wrap:wrap;align-items:flex-start}
+#BAR .bn{font-size:12px;font-weight:700;flex-shrink:0}
+#BAR .bd{font-size:10px;color:#888;flex:1;line-height:1.4;min-width:160px}
+#BAR .bt{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
+.btag{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:600;border:1px solid;opacity:.9}
+#BAR .bx{color:#444;cursor:pointer;font-size:14px;flex-shrink:0;line-height:1}
+#BAR .bx:hover{color:#fff}
 </style>
-</head>
-<body>
+</head><body>
 
-<div id="sidebar">
-  <div id="logo">
-    <h1>Nishant_Star_Model_Business_Globe<em>Business Logic — Schema View</em></h1>
+<canvas id="cv"></canvas>
+
+<div id="SB">
+  <div class="logo">Nishant_Star_Model_<em>Business_Globe</em><em>Interactive Knowledge Globe</em></div>
+  
+  <div class="sbox">
+    <div class="stat"><span>Schema Nodes</span><b>22</b></div>
+    <div class="stat"><span>Relationships</span><b>28</b></div>
+    <div class="stat"><span>Tiers</span><b>6</b></div>
   </div>
-  <div id="stats-box">
-    <div class="stat"><span>Schema Nodes</span><span class="v" id="sn">22</span></div>
-    <div class="stat"><span>Relationships</span><span class="v" id="se">28</span></div>
-    <div class="stat"><span>Schema Tiers</span><span class="v" id="st">6</span></div>
+  <div class="leg">
+    <h4>Node Tiers</h4><div id="TIER-LEG"></div>
+    <h4>Edge Types</h4><div id="EDGE-LEG"></div>
   </div>
-  <div id="legend">
-    <h3>Node Tiers</h3>
-    <div id="tier-legend"></div>
-    <h3>Edge Types</h3>
-    <div id="edge-legend"></div>
+  <div class="ctrl">
+    <button class="btn on" id="SPIN" onclick="toggleSpin()">⟳ Spin</button>
+    <button class="btn" onclick="resetCam()">⌖ Reset</button>
   </div>
-  <div id="ctrl">
-    <button class="btn on" id="btn-spin" onclick="toggleSpin()">⟳ Spin</button>
-    <button class="btn" onclick="resetCamera()">⌖ Reset</button>
+  <div class="navl"><a href="index.html">← Skills Globe</a></div>
+</div>
+
+<div id="CTX">
+  <div class="ch"><h2 id="CTX-H">Context</h2><p id="CTX-S"></p></div>
+  <div class="cb">
+    <span id="BK" onclick="showOv()">← Overview</span>
+    <div id="OV">
+  <div class="cs"><h3>Model Overview</h3>
+    <div class="cr"><span class="ck">Schema</span><span class="cv2">Star Schema → Property Graph</span></div>
+    <div class="cr"><span class="ck">Domain</span><span class="cv2">Retail Sales (B2C + B2B)</span></div>
+    <div class="cr"><span class="ck">Grain</span><span class="cv2">One order line item</span></div>
+    <div class="cr"><span class="ck">Graph Store</span><span class="cv2">Amazon Neptune (Gremlin)</span></div>
   </div>
-  <div id="back-to-skills">
-    <a href="index.html">← Skills Knowledge Graph</a>
+  <div class="cs"><h3>Key Metrics</h3>
+    <div class="cf">Gross Sales = Qty × Unit Price</div>
+    <div class="cf">Net Sales = Gross − Discount</div>
+    <div class="cf">COGS = Qty × Unit Cost</div>
+    <div class="cf">Gross Profit = Net Sales − COGS</div>
+    <div class="cf">Margin % = Gross Profit / Net Sales × 100</div>
+    <div class="cf">Total = Net Sales + Tax (8%)</div>
+  </div>
+  <div class="cs"><h3>Segments</h3>
+    <div class="cr"><span class="ck">Customer</span><span class="cv2">Retail B2C · Wholesale B2B</span></div>
+    <div class="cr"><span class="ck">Loyalty</span><span class="cv2">Bronze → Silver → Gold → Platinum</span></div>
+    <div class="cr"><span class="ck">Store</span><span class="cv2">Flagship · Retail · E-Commerce</span></div>
+    <div class="cr"><span class="ck">Channels</span><span class="cv2">All · In-Store · Online</span></div>
+  </div>
+  <div class="cs"><h3>Click any node</h3>
+    <div style="font-size:10px;color:#555;line-height:1.5">Select a schema node for business definition and relationships.</div>
+  </div></div>
+    <div id="ND"></div>
   </div>
 </div>
 
-<div id="top-bar">
-  <div class="title-badge">Nishant_Star_Model_<em>Business_Globe</em></div>
+<div id="TOP"><div class="badge">Nishant_Star_Model_<em>Business_Globe</em></div></div>
+<div id="TIP"><div class="tl" id="TL"></div><div class="td2" id="TD"></div></div>
+<div id="BAR">
+  <div class="bn" id="BN"></div>
+  <div class="bd" id="BD"></div>
+  <div class="bt" id="BT"></div>
+  <span class="bx" onclick="clearSel()">✕</span>
 </div>
-
-<div id="context">
-  <div id="ctx-header">
-    <h2>Business Context</h2>
-    <p id="ctx-sub">Star Schema Retail Sales Model</p>
-  </div>
-  <div id="ctx-body">
-    <span id="back-btn" onclick="showOverview()">← Overview</span>
-
-    <div id="ctx-overview">
-      <div class="ctx-section">
-        <h3>Model Overview</h3>
-        <div class="ctx-row"><span class="ctx-key">Schema Type</span><span class="ctx-val">Star Schema → Property Graph</span></div>
-        <div class="ctx-row"><span class="ctx-key">Domain</span><span class="ctx-val">Retail Sales (B2C + B2B)</span></div>
-        <div class="ctx-row"><span class="ctx-key">Grain</span><span class="ctx-val">One order line item per SalesTransaction</span></div>
-        <div class="ctx-row"><span class="ctx-key">Graph Store</span><span class="ctx-val">Amazon Neptune (Gremlin)</span></div>
-        <div class="ctx-row"><span class="ctx-key">Schema Source</span><span class="ctx-val">star_schema/data_model/erd_diagram.md</span></div>
-      </div>
-      <div class="ctx-section">
-        <h3>Key Business Metrics</h3>
-        <div class="ctx-formula">Gross Sales = Qty × Unit Price</div>
-        <div class="ctx-formula">Net Sales = Gross Sales − Discount</div>
-        <div class="ctx-formula">COGS = Qty × Unit Cost</div>
-        <div class="ctx-formula">Gross Profit = Net Sales − COGS</div>
-        <div class="ctx-formula">Margin % = Gross Profit / Net Sales × 100</div>
-        <div class="ctx-formula">Total Amount = Net Sales + Tax (8%)</div>
-        <div class="ctx-formula">AOV = SUM(Total) / COUNT(Orders)</div>
-        <div class="ctx-formula">Return Rate = Return Qty / Qty × 100</div>
-      </div>
-      <div class="ctx-section">
-        <h3>Business Segments</h3>
-        <div class="ctx-row"><span class="ctx-key">Customer</span><span class="ctx-val">Retail (B2C) · Wholesale (B2B)</span></div>
-        <div class="ctx-row"><span class="ctx-key">Loyalty</span><span class="ctx-val">Bronze → Silver → Gold → Platinum</span></div>
-        <div class="ctx-row"><span class="ctx-key">Store Types</span><span class="ctx-val">Flagship · Retail · E-Commerce</span></div>
-        <div class="ctx-row"><span class="ctx-key">Promotions</span><span class="ctx-val">Seasonal · Clearance · Loyalty · Volume · Major Sale</span></div>
-        <div class="ctx-row"><span class="ctx-key">Channels</span><span class="ctx-val">All · In-Store · Online</span></div>
-        <div class="ctx-row"><span class="ctx-key">Regions</span><span class="ctx-val">NE · West · Midwest · South · SE · National</span></div>
-      </div>
-      <div class="ctx-section">
-        <h3>Business Questions</h3>
-        <div class="ctx-formula">Who are Gold loyalty customers & their stores?</div>
-        <div class="ctx-formula">Which promotions drive the highest gross profit?</div>
-        <div class="ctx-formula">Best margin categories by region?</div>
-        <div class="ctx-formula">Return rate by store type?</div>
-        <div class="ctx-formula">Most profitable supplier relationships?</div>
-      </div>
-      <div class="ctx-section">
-        <h3>Click any node for details</h3>
-        <div class="ctx-formula">Select a schema node on the globe to see its business definition, attributes, and relationships.</div>
-      </div>
-    </div>
-
-    <div id="node-detail"></div>
-  </div>
-</div>
-
-<div id="tip"></div>
-<div id="loading"><p class="pulse">Building Business Globe…</p><small>Schema-level view · No data</small></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
-// ── Schema data (embedded — no backend needed) ────────────────────────────
-const SCHEMA_NODES = [
+const NODES=[
   {id:"SalesTransaction",color:"#59A14F",size:22,tier:"fact",
    desc:"Central fact. One row per order line item. Atomic unit of revenue.",
    metrics:["Gross Sales = Qty × Unit Price","Net Sales = Gross − Discount","COGS = Qty × Unit Cost","Gross Profit = Net Sales − COGS","Tax Amount = Net Sales × 8%","Total Amount = Net Sales + Tax","Return Flag (TRUE/FALSE)"]},
@@ -239,8 +225,7 @@ const SCHEMA_NODES = [
    desc:"Fiscal year label used for financial reporting alignment.",
    metrics:["Fiscal Year (e.g. FY2023)"]},
 ];
-
-const SCHEMA_EDGES = [
+const EDGES=[
   {source:"SalesTransaction",target:"Customer",   rel:"BY_CUSTOMER",   type:"fact"},
   {source:"SalesTransaction",target:"Product",    rel:"FOR_PRODUCT",   type:"fact"},
   {source:"SalesTransaction",target:"Store",      rel:"AT_STORE",      type:"fact"},
@@ -270,202 +255,188 @@ const SCHEMA_EDGES = [
   {source:"Month",    target:"FiscalYear",        rel:"IN_FISCAL_YEAR",type:"time"},
   {source:"Quarter",  target:"FiscalYear",        rel:"IN_FISCAL_YEAR",type:"time"},
 ];
+const NAME_KEY="id";
 
-const TIER_COLORS  = {fact:"#59A14F",dimension:"#4E79A7",hierarchy:"#B07AA1",geography:"#F1CE63",segment:"#76B7B2",time:"#FABFD2"};
-const EDGE_COLORS  = {fact:"#59A14F",business:"#4E79A7",hierarchy:"#B07AA1",geography:"#F1CE63",time:"#FABFD2"};
+const cv=document.getElementById("cv");
+cv.width=window.innerWidth; cv.height=window.innerHeight;
 
-// ── Three.js setup ─────────────────────────────────────────────────────────
-const W=()=>window.innerWidth, H=()=>window.innerHeight;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x050810);
-const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
-camera.position.set(0,0,900);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(W(),H());
-renderer.domElement.style.cssText="position:fixed;left:0;top:0;z-index:1";
-document.body.appendChild(renderer.domElement);
+const camera=new THREE.PerspectiveCamera(50,cv.width/cv.height,1,5000);
+camera.position.set(0,0,1200);
 
-window.addEventListener("resize",()=>{camera.aspect=W()/H();camera.updateProjectionMatrix();renderer.setSize(W(),H())});
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(cv.width,cv.height);
+
+window.addEventListener("resize",()=>{
+  cv.width=window.innerWidth;cv.height=window.innerHeight;
+  renderer.setSize(cv.width,cv.height);
+  camera.aspect=cv.width/cv.height;camera.updateProjectionMatrix();
+});
+
 scene.add(new THREE.AmbientLight(0xffffff,0.5));
 const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
+const R=290;
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,40,40),
+  new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.06,transparent:true})));
+scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1.2,8,100),
+  new THREE.MeshBasicMaterial({color:0x1e3050,transparent:true,opacity:0.4})));
 
-const RADIUS=300;
-scene.add(new THREE.Mesh(new THREE.SphereGeometry(RADIUS,32,32),
-  new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.05,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(RADIUS+4,1,8,80),
-  new THREE.MeshBasicMaterial({color:0x1a2a4a,transparent:true,opacity:0.35})));
+let spin=true,drag=false,ox=0,oy=0,rx=0,ry=0;
+const piv=new THREE.Group();scene.add(piv);
 
-// ── Orbit controls ─────────────────────────────────────────────────────────
-let spinning=true,drag=false,px=0,py=0,rx=0,ry=0;
-const pivot=new THREE.Group();scene.add(pivot);
-
-renderer.domElement.addEventListener("mousedown",e=>{drag=true;px=e.clientX;py=e.clientY});
-renderer.domElement.addEventListener("mousemove",e=>{
+cv.addEventListener("mousedown",e=>{drag=true;ox=e.clientX;oy=e.clientY});
+cv.addEventListener("mousemove",e=>{
   if(drag){
-    spinning=false;document.getElementById("btn-spin").classList.remove("on");
-    ry+=(e.clientX-px)*0.005;rx+=(e.clientY-py)*0.005;
-    rx=Math.max(-Math.PI/2,Math.min(Math.PI/2,rx));
-    pivot.rotation.y=ry;pivot.rotation.x=rx;px=e.clientX;py=e.clientY;
-  } else handleHover(e);
+    spin=false;document.getElementById("SPIN").classList.remove("on");
+    ry+=(e.clientX-ox)*0.004;rx+=(e.clientY-oy)*0.004;
+    rx=Math.max(-1.5,Math.min(1.5,rx));
+    piv.rotation.y=ry;piv.rotation.x=rx;ox=e.clientX;oy=e.clientY;
+  }else doHover(e);
 });
-renderer.domElement.addEventListener("mouseup",()=>drag=false);
-renderer.domElement.addEventListener("mouseleave",()=>drag=false);
-renderer.domElement.addEventListener("wheel",e=>{camera.position.z=Math.max(300,Math.min(2500,camera.position.z+e.deltaY*0.8))});
-renderer.domElement.addEventListener("click",e=>{const h=raycast(e);if(h)selectNode(h.object.userData.nid);else clearSelect()});
+cv.addEventListener("mouseup",()=>drag=false);
+cv.addEventListener("mouseleave",()=>drag=false);
+cv.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(3000,camera.position.z+e.deltaY*0.8))});
+cv.addEventListener("click",e=>{const h=cast(e);h?selNode(h.object.userData.nid):clearSel()});
 
-function resetCamera(){camera.position.set(0,0,900);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSelect()}
-function toggleSpin(){spinning=!spinning;document.getElementById("btn-spin").classList.toggle("on",spinning)}
+function resetCam(){camera.position.set(0,0,1200);rx=0;ry=0;piv.rotation.set(0,0,0);clearSel()}
+function toggleSpin(){spin=!spin;document.getElementById("SPIN").classList.toggle("on",spin)}
 
-// ── Raycasting ─────────────────────────────────────────────────────────────
-const raycaster=new THREE.Raycaster();
-const mouse=new THREE.Vector2();
-let meshMap={},lineObjects=[],hiddenTiers=new Set(),hiddenEdgeTypes=new Set();
-
-function raycast(e){
-  mouse.x=(e.clientX/W())*2-1;mouse.y=-(e.clientY/H())*2+1;
-  raycaster.setFromCamera(mouse,camera);
-  const hits=raycaster.intersectObjects(Object.values(meshMap),false);
-  return hits.length?hits[0]:null;
+const rc=new THREE.Raycaster(),mo=new THREE.Vector2();
+let meshes={},lines=[];
+function cast(e){
+  const r=cv.getBoundingClientRect();
+  mo.x=((e.clientX-r.left)/r.width)*2-1;
+  mo.y=-((e.clientY-r.top)/r.height)*2+1;
+  rc.setFromCamera(mo,camera);
+  return rc.intersectObjects(Object.values(meshes),false)[0]||null;
 }
 
-// ── Tooltip ─────────────────────────────────────────────────────────────────
-const tip=document.getElementById("tip");
-let hovered=null;
-function handleHover(e){
-  const h=raycast(e);
+const TIP=document.getElementById("TIP");
+let hov=null;
+function doHover(e){
+  const h=cast(e);
   if(h){
-    const nid=h.object.userData.nid;
-    if(nid!==hovered){hovered=nid;const n=SCHEMA_NODES.find(x=>x.id===nid);if(n){tip.innerHTML=`<div class="tl" style="color:${n.color}">${n.id}</div><div class="td">${n.desc}</div>`;tip.style.display="block";}}
-    document.body.style.cursor="pointer";
-  } else {tip.style.display="none";hovered=null;document.body.style.cursor="default"}
-  if(tip.style.display!=="none"){tip.style.left=(e.clientX+14)+"px";tip.style.top=(e.clientY-10)+"px"}
+    const nid=h.object.userData.nid,n=NODES.find(x=>x.id===nid);
+    if(nid!==hov){hov=nid;if(n){
+      document.getElementById("TL").textContent=n[NAME_KEY];
+      document.getElementById("TL").style.color=n.color;
+      document.getElementById("TD").textContent=n.desc;
+      TIP.style.display="block";
+    }}
+    cv.style.cursor="pointer";
+  }else{TIP.style.display="none";hov=null;cv.style.cursor="default"}
+  if(TIP.style.display!=="none"){TIP.style.left=(e.clientX+14)+"px";TIP.style.top=(e.clientY-10)+"px"}
 }
 
-// ── Build ──────────────────────────────────────────────────────────────────
-function fibonacci(n,R){
+function fib(n,R){
   const pts=[],phi=Math.PI*(3-Math.sqrt(5));
-  for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R))}
+  for(let i=0;i<n;i++){
+    const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;
+    pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R));
+  }
   return pts;
 }
 
 function build(){
-  const pos=fibonacci(SCHEMA_NODES.length,RADIUS);
-  const idx={};
-  SCHEMA_NODES.forEach((n,i)=>{n._pos=pos[i];idx[n.id]=i});
+  const pos=fib(NODES.length,R),idx={};
+  NODES.forEach((n,i)=>{n._p=pos[i];idx[n.id]=i});
 
-  SCHEMA_NODES.forEach((n,i)=>{
-    const geo=new THREE.SphereGeometry(n.size/2,14,14);
-    const mat=new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),emissive:new THREE.Color(n.color).multiplyScalar(0.35),transparent:true,opacity:1});
-    const mesh=new THREE.Mesh(geo,mat);
-    mesh.position.copy(pos[i]);
-    mesh.userData={nid:n.id};
-    pivot.add(mesh);
-    meshMap[n.id]=mesh;
+  NODES.forEach((n,i)=>{
+    const r=Math.max(4,Math.min(13,n.size/4.5));
+    const m=new THREE.Mesh(
+      new THREE.SphereGeometry(r,14,14),
+      new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),
+        emissive:new THREE.Color(n.color).multiplyScalar(0.35),
+        transparent:true,opacity:1})
+    );
+    m.position.copy(pos[i]);m.userData={nid:n.id};
+    piv.add(m);meshes[n.id]=m;
 
-    const canvas=document.createElement("canvas");
-    canvas.width=256;canvas.height=48;
-    const ctx=canvas.getContext("2d");
-    ctx.font="bold 18px -apple-system,sans-serif";
-    ctx.fillStyle=n.color;ctx.textAlign="center";
-    ctx.fillText(n.id,128,28);
-    const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),transparent:true,opacity:0.9}));
-    sprite.scale.set(64,13,1);
-    sprite.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),n.size/2+12);
-    pivot.add(sprite);
+    const c=document.createElement("canvas");c.width=320;c.height=56;
+    const cx=c.getContext("2d");
+    cx.font="bold 18px -apple-system,sans-serif";
+    cx.fillStyle=n.color;cx.textAlign="center";
+    cx.fillText(n[NAME_KEY].length>18?n[NAME_KEY].slice(0,17)+"…":n[NAME_KEY],160,34);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.88}));
+    sp.scale.set(70,13,1);
+    sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+12);
+    piv.add(sp);
   });
 
-  SCHEMA_EDGES.forEach(e=>{
+  EDGES.forEach(e=>{
     const si=idx[e.source],ti=idx[e.target];
     if(si===undefined||ti===undefined)return;
-    const src=SCHEMA_NODES[si]._pos,tgt=SCHEMA_NODES[ti]._pos;
-    const mid=src.clone().add(tgt).multiplyScalar(0.5);
-    mid.normalize().multiplyScalar(RADIUS*1.4);
-    const curve=new THREE.QuadraticBezierCurve3(src,mid,tgt);
-    const geo=new THREE.BufferGeometry().setFromPoints(curve.getPoints(30));
-    const mat=new THREE.LineBasicMaterial({color:new THREE.Color(EDGE_COLORS[e.type]||"#fff"),transparent:true,opacity:0.8});
-    const line=new THREE.Line(geo,mat);
-    line.userData={src:e.source,tgt:e.target,type:e.type,rel:e.rel};
-    pivot.add(line);
-    lineObjects.push(line);
+    const s=NODES[si]._p,t=NODES[ti]._p;
+    const mid=s.clone().add(t).multiplyScalar(0.5);
+    mid.normalize().multiplyScalar(R*1.42);
+    const geo=new THREE.BufferGeometry().setFromPoints(
+      new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(32));
+    const l=new THREE.Line(geo,new THREE.LineBasicMaterial({
+      color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.78}));
+    l.userData={src:e.source,tgt:e.target,rel:e.rel};
+    piv.add(l);lines.push(l);
   });
 }
 
-// ── Node select ────────────────────────────────────────────────────────────
-function selectNode(nid){
-  const n=SCHEMA_NODES.find(x=>x.id===nid);if(!n)return;
-  Object.entries(meshMap).forEach(([id,m])=>{m.material.opacity=id===nid?1:0.07;m.scale.setScalar(id===nid?1.9:1)});
-  lineObjects.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1.0:0.03});
-
-  const rels=SCHEMA_EDGES.filter(e=>e.source===nid||e.target===nid);
-  const relsHtml=rels.map(e=>{
-    const isOut=e.source===nid,other=isOut?e.target:e.source;
-    const on=SCHEMA_NODES.find(x=>x.id===other);
-    return `<div class="nd-rel"><span class="rel-arrow">${isOut?"→":"←"}</span><span class="rel-name">${e.rel}</span><span class="rel-arrow">→</span><span class="rel-target" style="color:${on?.color||'#aaa'}">${other}</span></div>`;
-  }).join("");
-
-  document.getElementById("node-detail").innerHTML=`
-    <div class="nd-label" style="color:${n.color}">${n.id}</div>
-    <div class="nd-tier">${n.tier} tier</div>
-    <div class="nd-desc" style="border-color:${n.color}">${n.desc}</div>
-    <div class="nd-metrics"><h4>Business Attributes & Metrics</h4>${n.metrics.map(m=>`<div class="nd-metric">${m}</div>`).join("")}</div>
-    <div class="nd-rels"><h4>Relationships (${rels.length})</h4>${relsHtml}</div>`;
-
-  document.getElementById("ctx-overview").style.display="none";
-  document.getElementById("node-detail").style.display="block";
-  document.getElementById("back-btn").style.display="block";
-  document.getElementById("ctx-sub").textContent=n.id+" — "+n.tier;
+function selNode(nid){
+  const n=NODES.find(x=>x.id===nid);if(!n)return;
+  const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
+  Object.entries(meshes).forEach(([id,m])=>{m.material.opacity=id===nid?1:.06;m.scale.setScalar(id===nid?2:1)});
+  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:.03});
+  
+  const rh=rels.map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="nr"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel}</span><span class="ra">→</span><span style="color:${on?.color||'#aaa'};font-size:9px">${ot}</span></div>`}).join("");
+  const metrics=(n.metrics||[]).map(m=>`<div class="nm">${m}</div>`).join("");
+  document.getElementById("ND").innerHTML=`<div class="nl" style="color:${n.color}">${n.id}</div><div class="nt">${n.tier||""} tier</div><div class="nd2" style="border-color:${n.color}">${n.desc}</div>${metrics?`<div class="nmh">Attributes & Metrics</div>${metrics}`:""}<div class="nrh">Relationships (${rels.length})</div>${rh}`;
+  document.getElementById("OV").style.display="none";
+  document.getElementById("ND").style.display="block";
+  document.getElementById("BK").style.display="block";
+  document.getElementById("CTX-S").textContent=n.id;
+  // Bottom bar
+  document.getElementById("BN").innerHTML=`<span style="color:${n.color}">${n[NAME_KEY]}</span>`;
+  document.getElementById("BD").textContent=n.desc;
+  document.getElementById("BT").innerHTML=rels.slice(0,7).map(e=>{
+    const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);
+    return`<span class="btag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#555'}">${io?"→":"←"} ${e.rel||"connects"} ${on?.[NAME_KEY]||ot}</span>`;
+  }).join("")+(rels.length>7?`<span style="font-size:9px;color:#555">+${rels.length-7} more</span>`:"");
+  document.getElementById("BAR").style.display="flex";
 }
 
-function clearSelect(){
-  Object.values(meshMap).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
-  lineObjects.forEach(l=>{l.material.opacity=hiddenEdgeTypes.has(l.userData.type)?0:0.8});
-  showOverview();
-}
-function showOverview(){
-  document.getElementById("ctx-overview").style.display="block";
-  document.getElementById("node-detail").style.display="none";
-  document.getElementById("back-btn").style.display="none";
-  document.getElementById("ctx-sub").textContent="Star Schema Retail Sales Model";
+function clearSel(){
+  Object.values(meshes).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
+  lines.forEach(l=>{l.material.opacity=0.78});
+  document.getElementById("BAR").style.display="none";
+  showOv();
 }
 
-// ── Legend ─────────────────────────────────────────────────────────────────
-function buildLegend(){
-  const tl=document.getElementById("tier-legend");
-  const tiers={};SCHEMA_NODES.forEach(n=>tiers[n.tier]=(tiers[n.tier]||0)+1);
-  tl.innerHTML="";
-  Object.entries(tiers).forEach(([tier,cnt])=>{
-    const color=TIER_COLORS[tier]||"#aaa";
-    const div=document.createElement("div");div.className="li";div.dataset.tier=tier;
-    div.innerHTML=`<div class="dot" style="background:${color}"></div><span class="li-label">${tier}</span><span class="li-type">${cnt}</span>`;
-    div.addEventListener("click",()=>{
-      if(hiddenTiers.has(tier)){hiddenTiers.delete(tier);div.classList.remove("off")}else{hiddenTiers.add(tier);div.classList.add("off")}
-      Object.entries(meshMap).forEach(([id,m])=>{const n=SCHEMA_NODES.find(x=>x.id===id);m.material.opacity=hiddenTiers.has(n?.tier)?0:1;m.scale.setScalar(hiddenTiers.has(n?.tier)?0.01:1)});
-    });
-    tl.appendChild(div);
+function showOv(){
+  document.getElementById("OV").style.display="block";
+  document.getElementById("ND").style.display="none";
+  document.getElementById("BK").style.display="none";
+}
+
+const TIER_COLORS={"fact":"#59A14F","dimension":"#4E79A7","hierarchy":"#B07AA1","geography":"#F1CE63","segment":"#76B7B2","time":"#FABFD2"};
+const EDGE_COLORS={"fact":"#59A14F","business":"#4E79A7","hierarchy":"#B07AA1","geography":"#F1CE63","time":"#FABFD2"};
+(()=>{
+  const tiers={};NODES.forEach(n=>tiers[n.tier]=(tiers[n.tier]||0)+1);
+  const tl=document.getElementById("TIER-LEG");
+  Object.entries(tiers).forEach(([t,c])=>{
+    const color=TIER_COLORS[t]||"#aaa";
+    const d=document.createElement("div");d.className="li";
+    d.innerHTML=`<div class="dot" style="background:${color}"></div><span class="lbl">${t}</span><span class="cnt">${c}</span>`;
+    tl.appendChild(d);
   });
-
-  const el=document.getElementById("edge-legend");el.innerHTML="";
-  const etypes={};SCHEMA_EDGES.forEach(e=>etypes[e.type]=(etypes[e.type]||0)+1);
-  Object.entries(etypes).forEach(([type,cnt])=>{
-    const color=EDGE_COLORS[type]||"#aaa";
-    const div=document.createElement("div");div.className="li";
-    div.innerHTML=`<div class="dot" style="background:${color};border-radius:2px"></div><span class="li-label">${type}</span><span class="li-type">${cnt}</span>`;
-    div.addEventListener("click",()=>{
-      if(hiddenEdgeTypes.has(type)){hiddenEdgeTypes.delete(type);div.classList.remove("off")}else{hiddenEdgeTypes.add(type);div.classList.add("off")}
-      lineObjects.forEach(l=>{l.material.opacity=hiddenEdgeTypes.has(l.userData.type)?0:0.8});
-    });
-    el.appendChild(div);
+  const et={};EDGES.forEach(e=>et[e.type]=(et[e.type]||0)+1);
+  const el=document.getElementById("EDGE-LEG");
+  Object.entries(et).forEach(([t,c])=>{
+    const color=EDGE_COLORS[t]||"#aaa";
+    const d=document.createElement("div");d.className="li";
+    d.innerHTML=`<div class="dot" style="background:${color};border-radius:2px"></div><span class="lbl">${t}</span><span class="cnt">${c}</span>`;
+    el.appendChild(d);
   });
-}
-
-// ── Init ───────────────────────────────────────────────────────────────────
+})();
 build();
-buildLegend();
-document.getElementById("loading").style.display="none";
-
-// ── Animate ────────────────────────────────────────────────────────────────
-(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
+(function anim(){requestAnimationFrame(anim);if(spin)piv.rotation.y+=0.0012;renderer.render(scene,camera)})();
 </script>
-</body>
-</html>
+</body></html>
