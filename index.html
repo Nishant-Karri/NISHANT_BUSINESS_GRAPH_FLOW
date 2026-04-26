@@ -1,613 +1,421 @@
-<!DOCTYPE html>
-<html><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Neptune Skills Knowledge Globe</title>
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 100vh;
+                 background-color: #000000;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-#sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:rgba(8,10,22,0.95);border-right:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column}
-#context{position:fixed;right:0;top:0;bottom:0;width:280px;background:rgba(8,10,22,0.95);border-left:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column}
-#globe-wrap{position:fixed;left:240px;right:280px;top:0;bottom:0;z-index:1;background:#050810}
-#logo{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
-#logo h1{font-size:11px;font-weight:700;color:#fff;line-height:1.5}
-#logo h1 em{color:#FF9900;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
-.stats-box{padding:10px 14px;border-bottom:1px solid #1a1f3a}
-.stat{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
-.stat .v{font-weight:700;color:#FF9900}
-#legend{flex:1;overflow-y:auto;padding:10px 14px}
-#legend h3{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:#444;margin-bottom:7px}
-.li{display:flex;align-items:center;gap:6px;padding:3px 5px;font-size:10px;cursor:pointer;border-radius:4px}
-.li:hover{background:#151830}
-.li.off{opacity:.2}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.li-label{flex:1;line-height:1.3}
-#ctrl{padding:10px 14px;border-top:1px solid #1a1f3a;display:flex;gap:6px;flex-wrap:wrap}
-.btn{padding:5px 10px;background:#0e1025;border:1px solid #252a48;border-radius:5px;color:#bbb;font-size:10px;cursor:pointer}
-.btn:hover,.btn.on{border-color:#FF9900;color:#FF9900}
-#nav-link{padding:8px 14px;border-top:1px solid #1a1f3a;font-size:10px}
-#nav-link a{color:#59A14F;text-decoration:none}
-#nav-link a:hover{color:#fff}
-#ctx-header{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
-#ctx-header h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff}
-#ctx-header p{font-size:9px;color:#555;margin-top:3px}
-#ctx-body{flex:1;overflow-y:auto;padding:12px 14px}
-.ctx-sec{margin-bottom:16px}
-.ctx-sec h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#FF9900;margin-bottom:7px;border-bottom:1px solid #1a1f3a;padding-bottom:3px}
-.ctx-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #0e1025;font-size:10px}
-.ctx-row:last-child{border:none}
-.ctx-k{color:#888;width:44%}
-.ctx-v{color:#e0e0e0;text-align:right;width:54%;font-size:9.5px;line-height:1.4}
-.ctx-desc{font-size:10px;color:#aaa;line-height:1.5;padding:7px;background:#0d1025;border-radius:6px;border-left:3px solid #FF9900;margin-bottom:10px}
-.ctx-rh{font-size:9px;text-transform:uppercase;color:#76B7B2;margin:10px 0 5px;letter-spacing:.8px}
-.ctx-r{display:flex;align-items:center;gap:5px;font-size:9px;padding:2px 0;border-bottom:1px solid #0e1025}
-.ctx-r:last-child{border:none}
-.ra{color:#555;font-size:8px}
-.rn{color:#F1CE63;font-family:Menlo,monospace;font-size:8px}
-#back{font-size:10px;color:#76B7B2;cursor:pointer;padding:5px 0;display:none;margin-bottom:8px}
-#back:hover{color:#fff}
-#top{position:fixed;top:14px;left:240px;right:280px;z-index:20;display:flex;justify-content:center;pointer-events:none}
-.badge{background:rgba(8,10,22,.9);border:1px solid #252a48;border-radius:20px;padding:6px 20px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;pointer-events:auto}
-.badge em{color:#FF9900;font-style:normal}
-#tip{position:fixed;background:rgba(8,10,22,.97);border:1px solid #2a2f50;border-radius:8px;padding:8px 12px;font-size:10px;pointer-events:none;display:none;z-index:30;max-width:200px}
-#tip .tl{font-weight:700;font-size:11px;margin-bottom:2px}
-#tip .td{font-size:9px;color:#888;line-height:1.4}
-#cbar{position:fixed;bottom:20px;left:260px;right:300px;z-index:20;display:none;background:rgba(8,10,22,0.95);border:1px solid #1a1f3a;border-radius:12px;padding:10px 16px;align-items:flex-start;gap:10px;flex-wrap:wrap}
-#cbar .cb-name{font-size:12px;font-weight:700;flex-shrink:0}
-#cbar .cb-desc{font-size:10px;color:#888;flex:1;line-height:1.4;min-width:180px}
-#cbar .cb-tags{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
-#cbar .cb-tag{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:600;border:1px solid;opacity:.85}
-#cbar .cb-x{color:#444;cursor:pointer;font-size:14px;flex-shrink:0}
-#cbar .cb-x:hover{color:#fff}
-50%{opacity:1}}
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+  #nav-bar{position:fixed;top:14px;right:16px;z-index:999}
+  #nav-bar a{display:inline-block;padding:7px 16px;background:rgba(8,10,22,.88);border:1px solid #252a48;border-radius:20px;font-size:11px;font-weight:600;color:#59A14F;text-decoration:none;backdrop-filter:blur(8px);letter-spacing:.4px;transition:border-color .2s,color .2s}
+  #nav-bar a:hover{border-color:#59A14F;color:#fff}
+
+  * { box-sizing: border-box; }
+  body { margin:0; overflow:hidden; background:#000000; }
+  #graph-container, #mynetwork { background:#000000 !important; }
+
+  .vis-network canvas {
+    animation: fadeIn 1.2s ease-in;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  #title {
+    position: fixed;
+    top: 16px; left: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #ffffff;
+    opacity: 0.75;
+    z-index: 9999;
+    pointer-events: none;
+  }
+  #info-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 13px 28px;
+    background: rgba(0,0,0,0.92);
+    border-top: 1px solid #ffffff22;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #cccccc;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 48px;
+    backdrop-filter: blur(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease, border-top-color 0.3s ease;
+    z-index: 9999;
+    transform: translateY(0);
+  }
+  #info-bar .node-name {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px currentColor;
+  }
+  #info-bar .divider { color: #333; font-size: 18px; }
+  #info-bar .desc { color: #999; font-weight: 300; }
+  #info-bar .conn {
+    margin-left: auto; white-space: nowrap; font-size: 11px;
+    color: #555; letter-spacing: 1px; text-transform: uppercase;
+  }
+  #info-bar.hidden { opacity: 0; transform: translateY(10px); pointer-events: none; }
 </style>
-</head>
-<body>
-
-<div id="sidebar">
-  <div id="logo"><h1>Neptune Skills Knowledge Globe<em>AWS &amp; Data Engineering</em></h1></div>
-  <div class="stats-box">
-    <div class="stat"><span>Skill Nodes</span><span class="v">64</span></div>
-    <div class="stat"><span>Connections</span><span class="v">117</span></div>
-    <div class="stat"><span>Categories</span><span class="v">12</span></div>
-  </div>
-  <div id="legend"><h3>Skill Categories</h3><div id="cat-leg"></div></div>
-  <div id="ctrl">
-    <button class="btn on" id="btn-spin" onclick="toggleSpin()">⟳ Spin</button>
-    <button class="btn" onclick="resetCam()">⌖ Reset</button>
-  </div>
-  <div id="nav-link"><a href="business_graph.html">⬡ Business Globe →</a></div>
+<div id="title">Nishant_Neptune_Knowledge_Skill_Graph</div>
+<div id="info-bar" class="hidden">
+  <span class="node-name" id="info-name"></span>
+  <span class="divider">|</span>
+  <span class="desc" id="info-desc"></span>
+  <span class="conn" id="info-conn"></span>
 </div>
-
-<div id="globe-wrap"></div>
-
-<div id="context">
-  <div id="ctx-header"><h2>Skill Context</h2><p id="ctx-sub">AWS &amp; Data Engineering Stack</p></div>
-  <div id="ctx-body">
-    <span id="back" onclick="showOv()">← Overview</span>
-    <div id="ctx-ov">
-      <div class="ctx-sec"><h3>Stack Overview</h3>
-        <div class="ctx-row"><span class="ctx-k">Graph Store</span><span class="ctx-v">Amazon Neptune</span></div>
-        <div class="ctx-row"><span class="ctx-k">Query Language</span><span class="ctx-v">Gremlin + SPARQL</span></div>
-        <div class="ctx-row"><span class="ctx-k">Cloud</span><span class="ctx-v">AWS (us-east-1)</span></div>
-        <div class="ctx-row"><span class="ctx-k">Language</span><span class="ctx-v">Python + SQL</span></div>
-        <div class="ctx-row"><span class="ctx-k">AI Layer</span><span class="ctx-v">16 Bedrock / Claude Agents</span></div>
-      </div>
-      <div class="ctx-sec"><h3>Skill Categories</h3>
-        <div class="ctx-row"><span class="ctx-k">Cloud &amp; Infra</span><span class="ctx-v">VPC, IAM, EC2, S3, Terraform</span></div>
-        <div class="ctx-row"><span class="ctx-k">Data Engineering</span><span class="ctx-v">Glue, Spark, dbt, Kafka</span></div>
-        <div class="ctx-row"><span class="ctx-k">Data Formats</span><span class="ctx-v">Iceberg, Parquet, JSON</span></div>
-        <div class="ctx-row"><span class="ctx-k">AI / ML</span><span class="ctx-v">Bedrock, Claude, Multi-agent</span></div>
-        <div class="ctx-row"><span class="ctx-k">Analytics</span><span class="ctx-v">Athena, Pandas, boto3</span></div>
-        <div class="ctx-row"><span class="ctx-k">Governance</span><span class="ctx-v">Medallion, Lineage, RBAC</span></div>
-      </div>
-      <div class="ctx-sec"><h3>Click any node</h3>
-        <div style="font-size:10px;color:#555;line-height:1.5">Select a skill to see its description and connected skills.</div>
-      </div>
-    </div>
-    <div id="nd" style="display:none"></div>
-  </div>
-</div>
-
-<div id="top"><div class="badge">Neptune Skills <em>Knowledge Globe</em></div></div>
-<div id="tip"><div class="tl" id="tip-l"></div><div class="td" id="tip-d"></div></div>
-<div id="cbar">
-  <div class="cb-name" id="cb-n"></div>
-  <div class="cb-desc" id="cb-d"></div>
-  <div class="cb-tags" id="cb-t"></div>
-  <span class="cb-x" onclick="clearSel()">✕</span>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
-const NODES=[{"id": "cat_cloud", "label": "Cloud & Infra", "color": "#FF9900", "size": 42, "desc": "Core AWS infrastructure layer — VPC, IAM, EC2, S3 and Terraform IaC underpin every service in the platform."}, {"id": "cat_data_eng", "label": "Data Engineering", "color": "#00A1C9", "size": 42, "desc": "ETL and transformation layer — Glue jobs, Spark/PySpark, dbt, Kafka and Kinesis move data through the pipeline."}, {"id": "cat_data_fmt", "label": "Data Formats", "color": "#7B68EE", "size": 42, "desc": "Storage formats used in the data lake — Iceberg tables, Parquet columnar files, JSON and CSV raw ingestion."}, {"id": "cat_ai_ml", "label": "AI & ML Agents", "color": "#FF6B6B", "size": 42, "desc": "AI agent platform — 16 Bedrock agents powered by Anthropic Claude orchestrating multi-agent workflows."}, {"id": "cat_devops", "label": "DevOps & CI/CD", "color": "#2ECC71", "size": 42, "desc": "CI/CD and version control — GitLab pipelines automate Terraform deploys, Glue jobs and Bedrock agent updates."}, {"id": "cat_languages", "label": "Languages", "color": "#F39C12", "size": 42, "desc": "Programming languages and config formats — Python, SQL, HCL, Bash and YAML drive every layer of the stack."}, {"id": "cat_monitoring", "label": "Monitoring", "color": "#E74C3C", "size": 42, "desc": "Observability layer — CloudWatch alarms and logs surface Glue job failures; Great Expectations validates data."}, {"id": "cat_messaging", "label": "Messaging & Events", "color": "#9B59B6", "size": 42, "desc": "Event-driven wiring — EventBridge schedules Glue runs, SNS/SES send failure alerts and MR approval emails."}, {"id": "cat_analytics", "label": "Analytics & Query", "color": "#1ABC9C", "size": 42, "desc": "Query and analysis layer — Athena runs SQL on S3, Pandas handles wrangling, boto3 is the AWS Python SDK."}, {"id": "cat_governance", "label": "Governance", "color": "#95A5A6", "size": 42, "desc": "Data quality and compliance — Medallion architecture (Bronze→Silver→Gold), lineage tracking, RBAC via IAM."}, {"id": "cat_graph", "label": "Graph & Knowledge", "color": "#E67E22", "size": 42, "desc": "This knowledge graph — Neptune stores skill relationships; Gremlin and SPARQL are the query languages."}, {"id": "aws", "label": "Amazon Web Services", "color": "#FF9900cc", "size": 20, "desc": "Amazon Web Services — the cloud platform hosting every service in this project."}, {"id": "ec2", "label": "AWS EC2", "color": "#FF9900cc", "size": 12, "desc": "AWS EC2 — virtual machines used for compute-heavy workloads and SSM-managed access."}, {"id": "vpc", "label": "AWS VPC", "color": "#FF9900cc", "size": 12, "desc": "AWS VPC — private network isolating Neptune, Glue and EC2 from the public internet."}, {"id": "iam", "label": "AWS IAM", "color": "#FF9900cc", "size": 16, "desc": "AWS IAM — roles and policies enforcing least-privilege access across all services."}, {"id": "s3", "label": "AWS S3", "color": "#FF9900cc", "size": 20, "desc": "AWS S3 — central data lake storing raw, Bronze, Silver and Gold layer datasets."}, {"id": "terraform", "label": "Terraform", "color": "#FF9900cc", "size": 16, "desc": "Terraform (HCL) — provisions all AWS resources; state stored in S3, deployed via GitLab CI."}, {"id": "glue", "label": "AWS Glue", "color": "#00A1C9cc", "size": 20, "desc": "AWS Glue — serverless Spark ETL service running PySpark transformation jobs nightly."}, {"id": "glue_crawler", "label": "Glue Crawler", "color": "#00A1C9cc", "size": 16, "desc": "AWS Glue Crawler — auto-discovers S3 schemas and registers them in the Glue Catalog."}, {"id": "glue_catalog", "label": "Glue Catalog", "color": "#00A1C9cc", "size": 16, "desc": "AWS Glue Catalog — central metadata store used by Athena and Glue jobs for schema discovery."}, {"id": "spark", "label": "Apache Spark", "color": "#00A1C9cc", "size": 16, "desc": "Apache Spark — distributed compute engine powering all large-scale Glue ETL transformations."}, {"id": "pyspark", "label": "PySpark", "color": "#00A1C9cc", "size": 16, "desc": "PySpark — Python API for Spark, used in all Glue job scripts for data transformation."}, {"id": "dbt", "label": "dbt", "color": "#00A1C9cc", "size": 16, "desc": "dbt — SQL-based transformation framework running models in Snowflake with built-in testing."}, {"id": "kafka", "label": "Apache Kafka", "color": "#00A1C9cc", "size": 12, "desc": "Apache Kafka — distributed event streaming platform for high-throughput data ingestion."}, {"id": "kinesis", "label": "AWS Kinesis", "color": "#00A1C9cc", "size": 12, "desc": "AWS Kinesis — managed real-time streaming service feeding data directly into Glue jobs."}, {"id": "snowflake", "label": "Snowflake", "color": "#00A1C9cc", "size": 16, "desc": "Snowflake — cloud data warehouse where dbt models are materialised for analytics."}, {"id": "flink", "label": "Apache Flink", "color": "#00A1C9cc", "size": 12, "desc": "Apache Flink — stateful stream processing framework integrated with Kafka and Kinesis."}, {"id": "iceberg", "label": "Apache Iceberg", "color": "#7B68EEcc", "size": 16, "desc": "Apache Iceberg — open table format enabling ACID transactions and time-travel on S3."}, {"id": "parquet", "label": "Apache Parquet", "color": "#7B68EEcc", "size": 16, "desc": "Apache Parquet — columnar storage format optimised for Athena and Spark query performance."}, {"id": "json_fmt", "label": "JSON", "color": "#7B68EEcc", "size": 20, "desc": "JSON — universal data exchange format used across all API calls and agent responses."}, {"id": "csv", "label": "CSV", "color": "#7B68EEcc", "size": 20, "desc": "CSV — raw ingestion format for source data arriving in the Bronze S3 layer."}, {"id": "bedrock", "label": "AWS Bedrock", "color": "#FF6B6Bcc", "size": 16, "desc": "AWS Bedrock — fully managed AI service hosting the 16 Claude-powered digital worker agents."}, {"id": "claude", "label": "Anthropic Claude", "color": "#FF6B6Bcc", "size": 20, "desc": "Anthropic Claude (Sonnet 4) — foundation model powering all 16 Bedrock agents in this project."}, {"id": "multi_agents", "label": "Multi-Agent Orchestration", "color": "#FF6B6Bcc", "size": 20, "desc": "Multi-Agent Orchestration — 16 specialised agents (Mayor, Worker, Analytics Engineer, etc.) collaborating via Bedrock."}, {"id": "sagemaker", "label": "AWS SageMaker", "color": "#FF6B6Bcc", "size": 12, "desc": "AWS SageMaker — ML platform used for model training, this Neptune notebook and MLflow tracking."}, {"id": "mlflow", "label": "MLflow", "color": "#FF6B6Bcc", "size": 12, "desc": "MLflow — open-source MLOps platform for experiment tracking integrated with SageMaker."}, {"id": "gitlab_ci", "label": "GitLab CI/CD", "color": "#2ECC71cc", "size": 20, "desc": "GitLab CI/CD — pipeline automating validate → plan → apply for all Terraform modules."}, {"id": "git", "label": "Git", "color": "#2ECC71cc", "size": 20, "desc": "Git — version control underpinning all code changes across GitLab and GitHub repositories."}, {"id": "github", "label": "GitHub", "color": "#2ECC71cc", "size": 20, "desc": "GitHub — hosts the MULTI_DIGITAL_WORKERS agent CLAUDE.md source files."}, {"id": "gitlab", "label": "GitLab", "color": "#2ECC71cc", "size": 20, "desc": "GitLab — primary DevOps platform hosting CI/CD pipelines and the NishantKarri-project repo."}, {"id": "docker", "label": "Docker", "color": "#2ECC71cc", "size": 16, "desc": "Docker — container images used in GitLab CI runners for Terraform and Python jobs."}, {"id": "ssm", "label": "AWS SSM", "color": "#2ECC71cc", "size": 12, "desc": "AWS SSM — Systems Manager enabling secure shell access to EC2 without open SSH ports."}, {"id": "python", "label": "Python", "color": "#F39C12cc", "size": 20, "desc": "Python — primary language for Glue ETL scripts, agent tools, load scripts and this app."}, {"id": "sql", "label": "SQL", "color": "#F39C12cc", "size": 20, "desc": "SQL — query language used in Athena, dbt models and Snowflake transformations."}, {"id": "hcl", "label": "HCL (Terraform)", "color": "#F39C12cc", "size": 16, "desc": "HCL (HashiCorp Config Language) — the language all Terraform infrastructure is written in."}, {"id": "bash", "label": "Bash / Shell", "color": "#F39C12cc", "size": 16, "desc": "Bash / Shell — scripting language used in GitLab CI job steps and automation scripts."}, {"id": "yaml", "label": "YAML", "color": "#F39C12cc", "size": 20, "desc": "YAML — config format for .gitlab-ci.yml pipeline definitions and service configurations."}, {"id": "cloudwatch", "label": "AWS CloudWatch", "color": "#E74C3Ccc", "size": 16, "desc": "AWS CloudWatch — collects metrics and logs from Glue jobs, Lambda and Bedrock agents."}, {"id": "cw_alarms", "label": "CloudWatch Alarms", "color": "#E74C3Ccc", "size": 16, "desc": "CloudWatch Alarms — triggers SNS notifications when Glue jobs fail or breach thresholds."}, {"id": "cw_logs", "label": "CloudWatch Logs", "color": "#E74C3Ccc", "size": 16, "desc": "CloudWatch Logs — centralised log storage for all Glue job runs and Bedrock agent activity."}, {"id": "great_exp", "label": "Great Expectations", "color": "#E74C3Ccc", "size": 12, "desc": "Great Expectations — data quality framework running validation suites on pipeline outputs."}, {"id": "eventbridge", "label": "AWS EventBridge", "color": "#9B59B6cc", "size": 16, "desc": "AWS EventBridge — event bus scheduling nightly Glue triggers and detecting state changes."}, {"id": "sns", "label": "AWS SNS", "color": "#9B59B6cc", "size": 16, "desc": "AWS SNS — pub/sub service routing CloudWatch alarms and EventBridge events to email."}, {"id": "ses", "label": "AWS SES", "color": "#9B59B6cc", "size": 12, "desc": "AWS SES — email service sending MR approval requests and pipeline failure notifications."}, {"id": "athena", "label": "AWS Athena", "color": "#1ABC9Ccc", "size": 16, "desc": "AWS Athena — serverless SQL query engine running directly against S3 data lake files."}, {"id": "pandas", "label": "Pandas", "color": "#1ABC9Ccc", "size": 16, "desc": "Pandas — Python DataFrame library used for local data wrangling and analysis scripts."}, {"id": "boto3", "label": "boto3", "color": "#1ABC9Ccc", "size": 20, "desc": "boto3 — the AWS Python SDK used in every script to interact with AWS services."}, {"id": "lineage", "label": "Data Lineage", "color": "#95A5A6cc", "size": 16, "desc": "Data Lineage — tracks the flow of data from S3 source through Bronze→Silver→Gold layers."}, {"id": "rbac", "label": "RBAC", "color": "#95A5A6cc", "size": 12, "desc": "RBAC (Role-Based Access Control) — enforced via IAM roles restricting access by principle."}, {"id": "data_quality", "label": "Data Quality", "color": "#95A5A6cc", "size": 16, "desc": "Data Quality — validation and profiling implemented via Great Expectations and dbt tests."}, {"id": "medallion", "label": "Medallion Architecture", "color": "#95A5A6cc", "size": 20, "desc": "Medallion Architecture — Bronze (raw) → Silver (cleaned) → Gold (aggregated) data layers on S3."}, {"id": "neptune_svc", "label": "Amazon Neptune", "color": "#E67E22cc", "size": 12, "desc": "Amazon Neptune — this graph database storing the Skills Knowledge Graph you are exploring now."}, {"id": "gremlin", "label": "Gremlin", "color": "#E67E22cc", "size": 12, "desc": "Gremlin — graph traversal language used to query Neptune vertices and edges."}, {"id": "sparql", "label": "SPARQL", "color": "#E67E22cc", "size": 9, "desc": "SPARQL — RDF graph query language supported by Neptune for linked-data use cases."}];
-const EDGES = [{"source": "aws", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "ec2", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "vpc", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "iam", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "s3", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "terraform", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "glue", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_crawler", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_catalog", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "spark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "pyspark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "dbt", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kafka", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kinesis", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "snowflake", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "flink", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "iceberg", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "parquet", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "json_fmt", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "csv", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "bedrock", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "claude", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "multi_agents", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "sagemaker", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "mlflow", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "gitlab_ci", "target": "cat_devops", "rel": "PART_OF"}, {"source": "git", "target": "cat_devops", "rel": "PART_OF"}, {"source": "github", "target": "cat_devops", "rel": "PART_OF"}, {"source": "gitlab", "target": "cat_devops", "rel": "PART_OF"}, {"source": "docker", "target": "cat_devops", "rel": "PART_OF"}, {"source": "ssm", "target": "cat_devops", "rel": "PART_OF"}, {"source": "python", "target": "cat_languages", "rel": "PART_OF"}, {"source": "sql", "target": "cat_languages", "rel": "PART_OF"}, {"source": "hcl", "target": "cat_languages", "rel": "PART_OF"}, {"source": "bash", "target": "cat_languages", "rel": "PART_OF"}, {"source": "yaml", "target": "cat_languages", "rel": "PART_OF"}, {"source": "cloudwatch", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_alarms", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_logs", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "great_exp", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "eventbridge", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "sns", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "ses", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "athena", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "pandas", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "boto3", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "lineage", "target": "cat_governance", "rel": "PART_OF"}, {"source": "rbac", "target": "cat_governance", "rel": "PART_OF"}, {"source": "data_quality", "target": "cat_governance", "rel": "PART_OF"}, {"source": "medallion", "target": "cat_governance", "rel": "PART_OF"}, {"source": "neptune_svc", "target": "cat_graph", "rel": "PART_OF"}, {"source": "gremlin", "target": "cat_graph", "rel": "PART_OF"}, {"source": "sparql", "target": "cat_graph", "rel": "PART_OF"}, {"source": "terraform", "target": "aws", "rel": "DEPLOYS_TO"}, {"source": "terraform", "target": "ec2", "rel": "PROVISIONS"}, {"source": "terraform", "target": "vpc", "rel": "PROVISIONS"}, {"source": "terraform", "target": "iam", "rel": "PROVISIONS"}, {"source": "terraform", "target": "s3", "rel": "PROVISIONS"}, {"source": "terraform", "target": "glue", "rel": "PROVISIONS"}, {"source": "terraform", "target": "athena", "rel": "PROVISIONS"}, {"source": "terraform", "target": "eventbridge", "rel": "PROVISIONS"}, {"source": "terraform", "target": "bedrock", "rel": "PROVISIONS"}, {"source": "terraform", "target": "neptune_svc", "rel": "PROVISIONS"}, {"source": "gitlab_ci", "target": "terraform", "rel": "EXECUTES"}, {"source": "glue", "target": "s3", "rel": "READS_FROM"}, {"source": "glue", "target": "s3", "rel": "WRITES_TO"}, {"source": "glue", "target": "iceberg", "rel": "PRODUCES"}, {"source": "glue", "target": "parquet", "rel": "PRODUCES"}, {"source": "pyspark", "target": "glue", "rel": "RUNS_ON"}, {"source": "spark", "target": "glue", "rel": "POWERS"}, {"source": "glue_crawler", "target": "s3", "rel": "CRAWLS"}, {"source": "glue_crawler", "target": "glue_catalog", "rel": "POPULATES"}, {"source": "athena", "target": "s3", "rel": "QUERIES"}, {"source": "athena", "target": "glue_catalog", "rel": "USES"}, {"source": "dbt", "target": "snowflake", "rel": "TRANSFORMS_IN"}, {"source": "dbt", "target": "sql", "rel": "USES"}, {"source": "medallion", "target": "glue", "rel": "IMPLEMENTED_BY"}, {"source": "medallion", "target": "s3", "rel": "STORED_IN"}, {"source": "iceberg", "target": "s3", "rel": "STORED_IN"}, {"source": "kinesis", "target": "glue", "rel": "FEEDS"}, {"source": "kafka", "target": "flink", "rel": "INTEGRATES_WITH"}, {"source": "flink", "target": "kinesis", "rel": "INTEGRATES_WITH"}, {"source": "bedrock", "target": "claude", "rel": "USES_MODEL"}, {"source": "multi_agents", "target": "bedrock", "rel": "DEPLOYED_ON"}, {"source": "multi_agents", "target": "glue", "rel": "ORCHESTRATES"}, {"source": "claude", "target": "python", "rel": "GENERATES"}, {"source": "sagemaker", "target": "mlflow", "rel": "INTEGRATES_WITH"}, {"source": "sagemaker", "target": "python", "rel": "USES"}, {"source": "eventbridge", "target": "glue", "rel": "TRIGGERS"}, {"source": "eventbridge", "target": "sns", "rel": "PUBLISHES_TO"}, {"source": "sns", "target": "ses", "rel": "INTEGRATES_WITH"}, {"source": "ses", "target": "gitlab_ci", "rel": "NOTIFIES"}, {"source": "cloudwatch", "target": "eventbridge", "rel": "FEEDS"}, {"source": "cw_alarms", "target": "sns", "rel": "ALERTS_TO"}, {"source": "cw_logs", "target": "cloudwatch", "rel": "PART_OF"}, {"source": "python", "target": "glue", "rel": "POWERS"}, {"source": "python", "target": "boto3", "rel": "USES"}, {"source": "python", "target": "pandas", "rel": "USES"}, {"source": "python", "target": "great_exp", "rel": "USES"}, {"source": "sql", "target": "athena", "rel": "QUERIES_VIA"}, {"source": "sql", "target": "snowflake", "rel": "QUERIES_VIA"}, {"source": "hcl", "target": "terraform", "rel": "WRITTEN_IN"}, {"source": "bash", "target": "gitlab_ci", "rel": "USED_IN"}, {"source": "yaml", "target": "gitlab_ci", "rel": "CONFIGURES"}, {"source": "boto3", "target": "aws", "rel": "ACCESSES"}, {"source": "data_quality", "target": "great_exp", "rel": "IMPLEMENTED_BY"}, {"source": "data_quality", "target": "dbt", "rel": "IMPLEMENTED_BY"}, {"source": "lineage", "target": "glue_catalog", "rel": "TRACKED_IN"}, {"source": "rbac", "target": "iam", "rel": "ENFORCED_BY"}, {"source": "gitlab_ci", "target": "docker", "rel": "USES"}, {"source": "gitlab_ci", "target": "git", "rel": "USES"}, {"source": "gitlab", "target": "gitlab_ci", "rel": "HOSTS"}, {"source": "github", "target": "git", "rel": "HOSTS"}, {"source": "ssm", "target": "ec2", "rel": "ACCESSES"}, {"source": "neptune_svc", "target": "gremlin", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "sparql", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "aws", "rel": "PART_OF"}];
+var DESCRIPTIONS = {"cat_cloud": "Core AWS infrastructure layer \u2014 VPC, IAM, EC2, S3 and Terraform IaC underpin every service in the platform.", "cat_data_eng": "ETL and transformation layer \u2014 Glue jobs, Spark/PySpark, dbt, Kafka and Kinesis move data through the pipeline.", "cat_data_fmt": "Storage formats used in the data lake \u2014 Iceberg tables, Parquet columnar files, JSON and CSV raw ingestion.", "cat_ai_ml": "AI agent platform \u2014 16 Bedrock agents powered by Anthropic Claude orchestrating multi-agent workflows.", "cat_devops": "CI/CD and version control \u2014 GitLab pipelines automate Terraform deploys, Glue jobs and Bedrock agent updates.", "cat_languages": "Programming languages and config formats \u2014 Python, SQL, HCL, Bash and YAML drive every layer of the stack.", "cat_monitoring": "Observability layer \u2014 CloudWatch alarms and logs surface Glue job failures; Great Expectations validates data.", "cat_messaging": "Event-driven wiring \u2014 EventBridge schedules Glue runs, SNS/SES send failure alerts and MR approval emails.", "cat_analytics": "Query and analysis layer \u2014 Athena runs SQL on S3, Pandas handles wrangling, boto3 is the AWS Python SDK.", "cat_governance": "Data quality and compliance \u2014 Medallion architecture (Bronze\u2192Silver\u2192Gold), lineage tracking, RBAC via IAM.", "cat_graph": "This knowledge graph \u2014 Neptune stores skill relationships; Gremlin and SPARQL are the query languages.", "aws": "Amazon Web Services \u2014 the cloud platform hosting every service in this project.", "ec2": "AWS EC2 \u2014 virtual machines used for compute-heavy workloads and SSM-managed access.", "vpc": "AWS VPC \u2014 private network isolating Neptune, Glue and EC2 from the public internet.", "iam": "AWS IAM \u2014 roles and policies enforcing least-privilege access across all services.", "s3": "AWS S3 \u2014 central data lake storing raw, Bronze, Silver and Gold layer datasets.", "terraform": "Terraform (HCL) \u2014 provisions all AWS resources; state stored in S3, deployed via GitLab CI.", "glue": "AWS Glue \u2014 serverless Spark ETL service running PySpark transformation jobs nightly.", "glue_crawler": "AWS Glue Crawler \u2014 auto-discovers S3 schemas and registers them in the Glue Catalog.", "glue_catalog": "AWS Glue Catalog \u2014 central metadata store used by Athena and Glue jobs for schema discovery.", "spark": "Apache Spark \u2014 distributed compute engine powering all large-scale Glue ETL transformations.", "pyspark": "PySpark \u2014 Python API for Spark, used in all Glue job scripts for data transformation.", "dbt": "dbt \u2014 SQL-based transformation framework running models in Snowflake with built-in testing.", "kafka": "Apache Kafka \u2014 distributed event streaming platform for high-throughput data ingestion.", "kinesis": "AWS Kinesis \u2014 managed real-time streaming service feeding data directly into Glue jobs.", "snowflake": "Snowflake \u2014 cloud data warehouse where dbt models are materialised for analytics.", "flink": "Apache Flink \u2014 stateful stream processing framework integrated with Kafka and Kinesis.", "iceberg": "Apache Iceberg \u2014 open table format enabling ACID transactions and time-travel on S3.", "parquet": "Apache Parquet \u2014 columnar storage format optimised for Athena and Spark query performance.", "json_fmt": "JSON \u2014 universal data exchange format used across all API calls and agent responses.", "csv": "CSV \u2014 raw ingestion format for source data arriving in the Bronze S3 layer.", "bedrock": "AWS Bedrock \u2014 fully managed AI service hosting the 16 Claude-powered digital worker agents.", "claude": "Anthropic Claude (Sonnet 4) \u2014 foundation model powering all 16 Bedrock agents in this project.", "multi_agents": "Multi-Agent Orchestration \u2014 16 specialised agents (Mayor, Worker, Analytics Engineer, etc.) collaborating via Bedrock.", "sagemaker": "AWS SageMaker \u2014 ML platform used for model training, this Neptune notebook and MLflow tracking.", "mlflow": "MLflow \u2014 open-source MLOps platform for experiment tracking integrated with SageMaker.", "gitlab_ci": "GitLab CI/CD \u2014 pipeline automating validate \u2192 plan \u2192 apply for all Terraform modules.", "git": "Git \u2014 version control underpinning all code changes across GitLab and GitHub repositories.", "github": "GitHub \u2014 hosts the MULTI_DIGITAL_WORKERS agent CLAUDE.md source files.", "gitlab": "GitLab \u2014 primary DevOps platform hosting CI/CD pipelines and the NishantKarri-project repo.", "docker": "Docker \u2014 container images used in GitLab CI runners for Terraform and Python jobs.", "ssm": "AWS SSM \u2014 Systems Manager enabling secure shell access to EC2 without open SSH ports.", "python": "Python \u2014 primary language for Glue ETL scripts, agent tools, load scripts and this app.", "sql": "SQL \u2014 query language used in Athena, dbt models and Snowflake transformations.", "hcl": "HCL (HashiCorp Config Language) \u2014 the language all Terraform infrastructure is written in.", "bash": "Bash / Shell \u2014 scripting language used in GitLab CI job steps and automation scripts.", "yaml": "YAML \u2014 config format for .gitlab-ci.yml pipeline definitions and service configurations.", "cloudwatch": "AWS CloudWatch \u2014 collects metrics and logs from Glue jobs, Lambda and Bedrock agents.", "cw_alarms": "CloudWatch Alarms \u2014 triggers SNS notifications when Glue jobs fail or breach thresholds.", "cw_logs": "CloudWatch Logs \u2014 centralised log storage for all Glue job runs and Bedrock agent activity.", "great_exp": "Great Expectations \u2014 data quality framework running validation suites on pipeline outputs.", "eventbridge": "AWS EventBridge \u2014 event bus scheduling nightly Glue triggers and detecting state changes.", "sns": "AWS SNS \u2014 pub/sub service routing CloudWatch alarms and EventBridge events to email.", "ses": "AWS SES \u2014 email service sending MR approval requests and pipeline failure notifications.", "athena": "AWS Athena \u2014 serverless SQL query engine running directly against S3 data lake files.", "pandas": "Pandas \u2014 Python DataFrame library used for local data wrangling and analysis scripts.", "boto3": "boto3 \u2014 the AWS Python SDK used in every script to interact with AWS services.", "lineage": "Data Lineage \u2014 tracks the flow of data from S3 source through Bronze\u2192Silver\u2192Gold layers.", "rbac": "RBAC (Role-Based Access Control) \u2014 enforced via IAM roles restricting access by principle.", "data_quality": "Data Quality \u2014 validation and profiling implemented via Great Expectations and dbt tests.", "medallion": "Medallion Architecture \u2014 Bronze (raw) \u2192 Silver (cleaned) \u2192 Gold (aggregated) data layers on S3.", "neptune_svc": "Amazon Neptune \u2014 this graph database storing the Skills Knowledge Graph you are exploring now.", "gremlin": "Gremlin \u2014 graph traversal language used to query Neptune vertices and edges.", "sparql": "SPARQL \u2014 RDF graph query language supported by Neptune for linked-data use cases."};
 
-const W=()=>window.innerWidth, H=()=>window.innerHeight;
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x050810);
-const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
-camera.position.set(0,0,1400);
-const _wrap=document.getElementById("canvas-wrap");
-const W=()=>_wrap.clientWidth||window.innerWidth-520;
-const H=()=>_wrap.clientHeight||window.innerHeight;
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(W(),H());
-_wrap.appendChild(renderer.domElement);
-function updateCamera(){
-  renderer.setSize(W(),H());
-  camera.aspect=W()/H();
-  camera.updateProjectionMatrix();
-}
-window.addEventListener("resize",updateCamera);
-scene.add(new THREE.AmbientLight(0xffffff,0.5));
-const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
+/* ── Flowing particles along edges ───────────────────────────── */
+var flowCanvas, flowCtx, flowParticles = [], edgePositions = [];
+var activeEdges = null; // null = all edges active
 
-const R=340;
-scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,32,32),new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.05,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+4,1.2,8,80),new THREE.MeshBasicMaterial({color:0x1a2a4a,transparent:true,opacity:0.35})));
-
-let spinning=true,drag=false,px=0,py=0,rx=0,ry=0;
-const pivot=new THREE.Group();scene.add(pivot);
-renderer.domElement.addEventListener("mousedown",e=>{drag=true;px=e.clientX;py=e.clientY});
-renderer.domElement.addEventListener("mousemove",e=>{
-  if(drag){spinning=false;document.getElementById("btn-spin").classList.remove("on");
-    ry+=(e.clientX-px)*0.005;rx+=(e.clientY-py)*0.005;
-    rx=Math.max(-Math.PI/2,Math.min(Math.PI/2,rx));
-    pivot.rotation.y=ry;pivot.rotation.x=rx;px=e.clientX;py=e.clientY;
-  } else handleHover(e);
-});
-renderer.domElement.addEventListener("mouseup",()=>drag=false);
-renderer.domElement.addEventListener("mouseleave",()=>drag=false);
-renderer.domElement.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(3000,camera.position.z+e.deltaY))});
-renderer.domElement.addEventListener("click",e=>{const h=raycast(e);if(h)selectNode(h.object.userData.nid);else clearSelect()});
-function resetCamera(){camera.position.set(0,0,1400);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSelect()}
-function toggleSpin(){spinning=!spinning;document.getElementById("btn-spin").classList.toggle("on",spinning)}
-
-const raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();
-let meshMap={},lineObjects=[],hiddenCats=new Set();
-function raycast(e){
-  const rect=renderer.domElement.getBoundingClientRect();
-  mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
-  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
-  raycaster.setFromCamera(mouse,camera);
-  return raycaster.intersectObjects(Object.values(meshMap),false)[0]||null;
-}
-
-const tip=document.getElementById("tip");
-let hovered=null;
-function handleHover(e){
-  const h=raycast(e);
-  if(h){
-    const nid=h.object.userData.nid;
-    if(nid!==hovered){hovered=nid;const n=NODES.find(x=>x.id===nid);if(n){tip.innerHTML=`<div class="tl" style="color:${n.color}">${n.label}</div><div class="td">${n.desc}</div>`;tip.style.display="block";}}
-    document.body.style.cursor="pointer";
-  } else {tip.style.display="none";hovered=null;document.body.style.cursor="default"}
-  if(tip.style.display!=="none"){tip.style.left=(e.clientX+14)+"px";tip.style.top=(e.clientY-10)+"px"}
-}
-
-function fibonacci(n,R){
-  const pts=[],phi=Math.PI*(3-Math.sqrt(5));
-  for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R))}
-  return pts;
-}
-
-function build(){
-  const pos=fibonacci(NODES.length,R),idx={};
-  NODES.forEach((n,i)=>{n._pos=pos[i];idx[n.id]=i});
-
-  NODES.forEach((n,i)=>{
-    const r=Math.max(4,Math.min(12,n.size/5));
-    const geo=new THREE.SphereGeometry(r,12,12);
-    const mat=new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),emissive:new THREE.Color(n.color).multiplyScalar(0.3),transparent:true,opacity:1});
-    const mesh=new THREE.Mesh(geo,mat);
-    mesh.position.copy(pos[i]);mesh.userData={nid:n.id};
-    pivot.add(mesh);meshMap[n.id]=mesh;
-
-    const canvas=document.createElement("canvas");canvas.width=256;canvas.height=48;
-    const ctx=canvas.getContext("2d");
-    ctx.font="bold 17px -apple-system,sans-serif";ctx.fillStyle=n.color;ctx.textAlign="center";
-    ctx.fillText(n.label,128,28);
-    const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),transparent:true,opacity:0.85}));
-    sprite.scale.set(60,12,1);sprite.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+10);
-    pivot.add(sprite);
-  });
-
-  EDGES.forEach(e=>{
-    const si=idx[e.source],ti=idx[e.target];
-    if(si===undefined||ti===undefined)return;
-    const src=NODES[si]._pos,tgt=NODES[ti]._pos;
-    const mid=src.clone().add(tgt).multiplyScalar(0.5);
-    mid.normalize().multiplyScalar(R*1.38);
-    const curve=new THREE.QuadraticBezierCurve3(src,mid,tgt);
-    const geo=new THREE.BufferGeometry().setFromPoints(curve.getPoints(28));
-    const mat=new THREE.LineBasicMaterial({color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.75});
-    const line=new THREE.Line(geo,mat);
-    line.userData={src:e.source,tgt:e.target};
-    pivot.add(line);lineObjects.push(line);
+function initFlowCanvas() {
+  flowCanvas = document.createElement("canvas");
+  flowCanvas.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;";
+  flowCanvas.width  = window.innerWidth;
+  flowCanvas.height = window.innerHeight;
+  document.body.appendChild(flowCanvas);
+  flowCtx = flowCanvas.getContext("2d");
+  window.addEventListener("resize", function() {
+    flowCanvas.width  = window.innerWidth;
+    flowCanvas.height = window.innerHeight;
   });
 }
 
-function selectNode(nid){
-  const n=NODES.find(x=>x.id===nid);if(!n)return;
-  Object.entries(meshMap).forEach(([id,m])=>{m.material.opacity=id===nid?1:0.07;m.scale.setScalar(id===nid?2:1)});
-  lineObjects.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:0.03});
-  const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
-  const relsHtml=rels.slice(0,12).map(e=>{
-    const isOut=e.source===nid,other=isOut?e.target:e.source;
-    const on=NODES.find(x=>x.id===other);
-    return `<div class="ctx-rel"><span class="ra">${isOut?"→":"←"}</span><span class="rn">${e.rel||'CONNECTED'}</span><span class="ra">→</span><span class="rt" style="color:${on?.color||'#aaa'}">${on?.label||other}</span></div>`;
-  }).join("")+(rels.length>12?`<div style="font-size:9px;color:#555;margin-top:4px">+${rels.length-12} more</div>`:"");
-  document.getElementById("node-detail").innerHTML=`
-    <div style="font-size:13px;font-weight:700;color:${n.color};margin-bottom:3px">${n.label}</div>
-    <div class="ctx-desc">${n.desc}</div>
-    <div class="ctx-rels"><h4>Connections (${rels.length})</h4>${relsHtml}</div>`;
-  document.getElementById("ctx-overview").style.display="none";
-  document.getElementById("node-detail").style.display="block";
-  document.getElementById("back-btn").style.display="block";
-  document.getElementById("ctx-sub").textContent=n.label;
-  // Bottom bar
-  const bar=document.getElementById("conn-bar");
-  document.getElementById("cb-name").innerHTML=`<span style="color:${n.color}">${n.label}</span>`;
-  document.getElementById("cb-desc").textContent=n.desc;
-  const tags=rels.slice(0,6).map(e=>{
-    const isOut=e.source===nid,other=isOut?e.target:e.source;
-    const on=NODES.find(x=>x.id===other);
-    return `<span class="cb-tag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#333'}">${isOut?"→":"←"} ${e.rel||'connects'} ${on?.label||other}</span>`;
-  }).join("");
-  document.getElementById("cb-tags").innerHTML=tags+(rels.length>6?`<span style="font-size:9px;color:#555">+${rels.length-6} more</span>`:"");
-  bar.style.display="flex";
+function FlowParticle(fromPos, toPos, color) {
+  this.t     = Math.random();          // position along edge 0→1
+  this.speed = 0.003 + Math.random() * 0.004;
+  this.from  = fromPos;
+  this.to    = toPos;
+  this.color = color;
+  this.size  = Math.random() * 2.5 + 1;
+  this.trail = [];
 }
-function clearSelect(){
-  Object.values(meshMap).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
-  lineObjects.forEach(l=>{l.material.opacity=0.75});
-  document.getElementById("conn-bar").style.display="none";
-  showOverview();
-}
-function showOverview(){
-  document.getElementById("ctx-overview").style.display="block";
-  document.getElementById("node-detail").style.display="none";
-  document.getElementById("back-btn").style.display="none";
-  document.getElementById("ctx-sub").textContent="AWS & Data Engineering Stack";
+FlowParticle.prototype.update = function() {
+  this.t += this.speed;
+  if (this.t > 1) this.t = 0;
+  var x = this.from.x + (this.to.x - this.from.x) * this.t;
+  var y = this.from.y + (this.to.y - this.from.y) * this.t;
+  this.trail.push({ x:x, y:y });
+  if (this.trail.length > 12) this.trail.shift();
+};
+FlowParticle.prototype.draw = function(ctx, alpha) {
+  alpha = alpha === undefined ? 1 : alpha;
+  for (var i = 0; i < this.trail.length; i++) {
+    var a = (i / this.trail.length) * 0.8 * alpha;
+    var r = this.size * (i / this.trail.length);
+    ctx.beginPath();
+    ctx.arc(this.trail[i].x, this.trail[i].y, r, 0, Math.PI*2);
+    ctx.fillStyle = this.color + Math.round(a*255).toString(16).padStart(2,"0");
+    ctx.shadowBlur  = 8;
+    ctx.shadowColor = this.color;
+    ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+};
+
+var EDGE_COLORS_MAP = {
+  "PART_OF":"#334455","PROVISIONS":"#FF9900","TRIGGERS":"#FF6B6B",
+  "POWERS":"#FFD700","READS_FROM":"#00A1C9","WRITES_TO":"#00CED1",
+  "USES":"#2ECC71","DEPLOYED_ON":"#9B59B6","INTEGRATES_WITH":"#E67E22",
+  "EXECUTES":"#E74C3C","QUERIES":"#1ABC9C","USES_MODEL":"#FF6B6B",
+  "RUNS_ON":"#F39C12","FEEDS":"#E67E22","CRAWLS":"#7B68EE",
+  "POPULATES":"#7B68EE","TRANSFORMS_IN":"#1ABC9C","IMPLEMENTED_BY":"#95A5A6",
+  "STORED_IN":"#7B68EE","PRODUCES":"#2ECC71","NOTIFIES":"#9B59B6",
+  "PUBLISHES_TO":"#9B59B6","ALERTS_TO":"#E74C3C","ACCESSES":"#00A1C9",
+  "QUERIES_VIA":"#1ABC9C","WRITTEN_IN":"#F39C12","USED_IN":"#F39C12",
+  "CONFIGURES":"#F39C12","TRACKED_IN":"#95A5A6","ENFORCED_BY":"#95A5A6",
+  "SUPPORTS":"#E67E22","HOSTS":"#2ECC71","ORCHESTRATES":"#FF6B6B",
+  "GENERATES":"#FF6B6B","DEPLOYS_TO":"#FF9900"
+};
+
+function buildFlowParticles(network, edgeDataSet) {
+  flowParticles = [];
+  var edgesArr = edgeDataSet.get();
+  edgesArr.forEach(function(e) {
+    var fromId = e.from, toId = e.to;
+    var positions = network.getPositions([fromId, toId]);
+    if (!positions[fromId] || !positions[toId]) return;
+    var fromDOM = network.canvasToDOM(positions[fromId]);
+    var toDOM   = network.canvasToDOM(positions[toId]);
+    var rel   = e.title || "PART_OF";
+    var color = EDGE_COLORS_MAP[rel] || "#ffffff";
+    // Skip PART_OF — too many, make them subtle
+    var count = rel === "PART_OF" ? 1 : 3;
+    var speedMult = rel === "PART_OF" ? 0.5 : 1;
+    for (var i = 0; i < count; i++) {
+      var p = new FlowParticle(fromDOM, toDOM, color);
+      p.speed *= speedMult;
+      p.t = i / count;
+      flowParticles.push({ particle: p, edgeId: e.id, rel: rel });
+    }
+  });
 }
 
-function buildLegend(){
-  const cats=NODES.filter(n=>n.id.startsWith("cat_"));
-  const el=document.getElementById("cat-legend");el.innerHTML="";
-  cats.forEach(n=>{
-    const div=document.createElement("div");div.className="li";
-    div.innerHTML=`<div class="dot" style="background:${n.color}"></div><span class="li-label">${n.label}</span>`;
-    div.addEventListener("click",()=>{
-      const meshes=NODES.filter(x=>!x.id.startsWith("cat_")&&EDGES.some(e=>(e.source===x.id&&e.target===n.id)||(e.target===x.id&&e.source===n.id)));
-      if(hiddenCats.has(n.id)){hiddenCats.delete(n.id);div.classList.remove("off")}else{hiddenCats.add(n.id);div.classList.add("off")}
+function animateFlow() {
+  if (!flowCtx) { requestAnimationFrame(animateFlow); return; }
+  flowCtx.clearRect(0, 0, flowCanvas.width, flowCanvas.height);
+  flowParticles.forEach(function(fp) {
+    var active = activeEdges === null || activeEdges.indexOf(fp.edgeId) !== -1;
+    fp.particle.update();
+    fp.particle.draw(flowCtx, active ? (fp.rel === "PART_OF" ? 0.2 : 0.9) : 0.04);
+  });
+  requestAnimationFrame(animateFlow);
+}
+
+/* ── Graph interaction ────────────────────────────────────────── */
+document.addEventListener("DOMContentLoaded", function() {
+  initFlowCanvas();
+  var bar    = document.getElementById("info-bar");
+  var inName = document.getElementById("info-name");
+  var inDesc = document.getElementById("info-desc");
+  var inConn = document.getElementById("info-conn");
+
+
+  var timer = setInterval(function() {
+    if (typeof network === "undefined") return;
+    clearInterval(timer);
+
+    // ── Animated edges on vis canvas via controlled RAF ──────────
+    var dashOffset  = 0;
+    var edgeColorMap = {"PART_OF": "#334455", "PROVISIONS": "#FF9900", "TRIGGERS": "#FF6B6B", "POWERS": "#FFD700", "READS_FROM": "#00A1C9", "WRITES_TO": "#00CED1", "USES": "#2ECC71", "DEPLOYED_ON": "#9B59B6", "INTEGRATES_WITH": "#E67E22", "EXECUTES": "#E74C3C", "QUERIES": "#1ABC9C", "USES_MODEL": "#FF6B6B", "RUNS_ON": "#F39C12", "FEEDS": "#E67E22", "CRAWLS": "#7B68EE", "POPULATES": "#7B68EE", "TRANSFORMS_IN": "#1ABC9C", "IMPLEMENTED_BY": "#95A5A6", "STORED_IN": "#7B68EE", "PRODUCES": "#2ECC71", "NOTIFIES": "#9B59B6", "PUBLISHES_TO": "#9B59B6", "ALERTS_TO": "#E74C3C", "ACCESSES": "#00A1C9", "QUERIES_VIA": "#1ABC9C", "WRITTEN_IN": "#F39C12", "USED_IN": "#F39C12", "CONFIGURES": "#F39C12", "TRACKED_IN": "#95A5A6", "ENFORCED_BY": "#95A5A6", "SUPPORTS": "#E67E22", "HOSTS": "#2ECC71", "ORCHESTRATES": "#FF6B6B", "GENERATES": "#FF6B6B", "DEPLOYS_TO": "#FF9900"};
+    var lastRedraw  = 0;
+
+    network.on("afterDrawing", function(ctx) {
+      var allEdgesData = edges.get();
+      var nodeIds  = nodes.get().map(function(n){ return n.id; });
+      var positions = network.getPositions(nodeIds);
+
+      allEdgesData.forEach(function(e) {
+        var fromPos = positions[e.from];
+        var toPos   = positions[e.to];
+        if (!fromPos || !toPos) return;
+
+        var rel      = e.title || "PART_OF";
+        var color    = edgeColorMap[rel] || "#aaaaaa";
+        var isPartOf = rel === "PART_OF";
+        var isActive = activeEdges === null || activeEdges.indexOf(e.id) !== -1;
+        var alpha    = isActive ? (isPartOf ? 0.2 : 0.8) : 0.04;
+        var lw       = isActive && !isPartOf ? 2 : 1;
+        var dash     = isPartOf ? [3, 14] : [6, 6];
+        var offset   = dashOffset * (isPartOf ? 0.3 : 1);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash(dash);
+        ctx.lineDashOffset = offset;
+        ctx.lineWidth   = lw;
+        ctx.strokeStyle = color + Math.round(alpha * 255).toString(16).padStart(2,"0");
+        ctx.shadowBlur  = isActive && !isPartOf ? 5 : 0;
+        ctx.shadowColor = color;
+        ctx.moveTo(fromPos.x, fromPos.y);
+        ctx.lineTo(toPos.x,   toPos.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.shadowBlur = 0;
+        ctx.restore();
+      });
     });
-    el.appendChild(div);
-  });
-}
 
-build();buildLegend();
-(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();}
-requestAnimationFrame(init);
-</script>
+    // Controlled redraw loop — 30fps only
+    function animateEdges(ts) {
+      if (ts - lastRedraw > 33) {
+        dashOffset -= 1.2;
+        lastRedraw  = ts;
+        network.redraw();
+      }
+      requestAnimationFrame(animateEdges);
+    }
+    requestAnimationFrame(animateEdges);
 
-<div id="conn-bar">
-  <div class="cb-node" id="cb-name"></div>
-  <div class="cb-sep">|</div>
-  <div class="cb-desc" id="cb-desc"></div>
-  <div class="cb-tags" id="cb-tags"></div>
-  <span class="cb-close" onclick="clearSelect()">✕</span>
-</div>
-</body>
-</html;
-const EDGES=[{"source": "aws", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "ec2", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "vpc", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "iam", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "s3", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "terraform", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "glue", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_crawler", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_catalog", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "spark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "pyspark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "dbt", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kafka", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kinesis", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "snowflake", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "flink", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "iceberg", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "parquet", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "json_fmt", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "csv", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "bedrock", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "claude", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "multi_agents", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "sagemaker", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "mlflow", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "gitlab_ci", "target": "cat_devops", "rel": "PART_OF"}, {"source": "git", "target": "cat_devops", "rel": "PART_OF"}, {"source": "github", "target": "cat_devops", "rel": "PART_OF"}, {"source": "gitlab", "target": "cat_devops", "rel": "PART_OF"}, {"source": "docker", "target": "cat_devops", "rel": "PART_OF"}, {"source": "ssm", "target": "cat_devops", "rel": "PART_OF"}, {"source": "python", "target": "cat_languages", "rel": "PART_OF"}, {"source": "sql", "target": "cat_languages", "rel": "PART_OF"}, {"source": "hcl", "target": "cat_languages", "rel": "PART_OF"}, {"source": "bash", "target": "cat_languages", "rel": "PART_OF"}, {"source": "yaml", "target": "cat_languages", "rel": "PART_OF"}, {"source": "cloudwatch", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_alarms", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_logs", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "great_exp", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "eventbridge", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "sns", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "ses", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "athena", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "pandas", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "boto3", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "lineage", "target": "cat_governance", "rel": "PART_OF"}, {"source": "rbac", "target": "cat_governance", "rel": "PART_OF"}, {"source": "data_quality", "target": "cat_governance", "rel": "PART_OF"}, {"source": "medallion", "target": "cat_governance", "rel": "PART_OF"}, {"source": "neptune_svc", "target": "cat_graph", "rel": "PART_OF"}, {"source": "gremlin", "target": "cat_graph", "rel": "PART_OF"}, {"source": "sparql", "target": "cat_graph", "rel": "PART_OF"}, {"source": "terraform", "target": "aws", "rel": "DEPLOYS_TO"}, {"source": "terraform", "target": "ec2", "rel": "PROVISIONS"}, {"source": "terraform", "target": "vpc", "rel": "PROVISIONS"}, {"source": "terraform", "target": "iam", "rel": "PROVISIONS"}, {"source": "terraform", "target": "s3", "rel": "PROVISIONS"}, {"source": "terraform", "target": "glue", "rel": "PROVISIONS"}, {"source": "terraform", "target": "athena", "rel": "PROVISIONS"}, {"source": "terraform", "target": "eventbridge", "rel": "PROVISIONS"}, {"source": "terraform", "target": "bedrock", "rel": "PROVISIONS"}, {"source": "terraform", "target": "neptune_svc", "rel": "PROVISIONS"}, {"source": "gitlab_ci", "target": "terraform", "rel": "EXECUTES"}, {"source": "glue", "target": "s3", "rel": "READS_FROM"}, {"source": "glue", "target": "s3", "rel": "WRITES_TO"}, {"source": "glue", "target": "iceberg", "rel": "PRODUCES"}, {"source": "glue", "target": "parquet", "rel": "PRODUCES"}, {"source": "pyspark", "target": "glue", "rel": "RUNS_ON"}, {"source": "spark", "target": "glue", "rel": "POWERS"}, {"source": "glue_crawler", "target": "s3", "rel": "CRAWLS"}, {"source": "glue_crawler", "target": "glue_catalog", "rel": "POPULATES"}, {"source": "athena", "target": "s3", "rel": "QUERIES"}, {"source": "athena", "target": "glue_catalog", "rel": "USES"}, {"source": "dbt", "target": "snowflake", "rel": "TRANSFORMS_IN"}, {"source": "dbt", "target": "sql", "rel": "USES"}, {"source": "medallion", "target": "glue", "rel": "IMPLEMENTED_BY"}, {"source": "medallion", "target": "s3", "rel": "STORED_IN"}, {"source": "iceberg", "target": "s3", "rel": "STORED_IN"}, {"source": "kinesis", "target": "glue", "rel": "FEEDS"}, {"source": "kafka", "target": "flink", "rel": "INTEGRATES_WITH"}, {"source": "flink", "target": "kinesis", "rel": "INTEGRATES_WITH"}, {"source": "bedrock", "target": "claude", "rel": "USES_MODEL"}, {"source": "multi_agents", "target": "bedrock", "rel": "DEPLOYED_ON"}, {"source": "multi_agents", "target": "glue", "rel": "ORCHESTRATES"}, {"source": "claude", "target": "python", "rel": "GENERATES"}, {"source": "sagemaker", "target": "mlflow", "rel": "INTEGRATES_WITH"}, {"source": "sagemaker", "target": "python", "rel": "USES"}, {"source": "eventbridge", "target": "glue", "rel": "TRIGGERS"}, {"source": "eventbridge", "target": "sns", "rel": "PUBLISHES_TO"}, {"source": "sns", "target": "ses", "rel": "INTEGRATES_WITH"}, {"source": "ses", "target": "gitlab_ci", "rel": "NOTIFIES"}, {"source": "cloudwatch", "target": "eventbridge", "rel": "FEEDS"}, {"source": "cw_alarms", "target": "sns", "rel": "ALERTS_TO"}, {"source": "cw_logs", "target": "cloudwatch", "rel": "PART_OF"}, {"source": "python", "target": "glue", "rel": "POWERS"}, {"source": "python", "target": "boto3", "rel": "USES"}, {"source": "python", "target": "pandas", "rel": "USES"}, {"source": "python", "target": "great_exp", "rel": "USES"}, {"source": "sql", "target": "athena", "rel": "QUERIES_VIA"}, {"source": "sql", "target": "snowflake", "rel": "QUERIES_VIA"}, {"source": "hcl", "target": "terraform", "rel": "WRITTEN_IN"}, {"source": "bash", "target": "gitlab_ci", "rel": "USED_IN"}, {"source": "yaml", "target": "gitlab_ci", "rel": "CONFIGURES"}, {"source": "boto3", "target": "aws", "rel": "ACCESSES"}, {"source": "data_quality", "target": "great_exp", "rel": "IMPLEMENTED_BY"}, {"source": "data_quality", "target": "dbt", "rel": "IMPLEMENTED_BY"}, {"source": "lineage", "target": "glue_catalog", "rel": "TRACKED_IN"}, {"source": "rbac", "target": "iam", "rel": "ENFORCED_BY"}, {"source": "gitlab_ci", "target": "docker", "rel": "USES"}, {"source": "gitlab_ci", "target": "git", "rel": "USES"}, {"source": "gitlab", "target": "gitlab_ci", "rel": "HOSTS"}, {"source": "github", "target": "git", "rel": "HOSTS"}, {"source": "ssm", "target": "ec2", "rel": "ACCESSES"}, {"source": "neptune_svc", "target": "gremlin", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "sparql", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "aws", "rel": "PART_OF"}];
+    network.on("click", function(params) {
+      var allNodes = nodes.get();
+      var allEdges = edges.get();
 
-const W=()=>window.innerWidth, H=()=>window.innerHeight;
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x050810);
-const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
-camera.position.set(0,0,1400);
-const _wrap=document.getElementById("canvas-wrap");
-const W=()=>_wrap.clientWidth||window.innerWidth-520;
-const H=()=>_wrap.clientHeight||window.innerHeight;
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(W(),H());
-_wrap.appendChild(renderer.domElement);
-function updateCamera(){
-  renderer.setSize(W(),H());
-  camera.aspect=W()/H();
-  camera.updateProjectionMatrix();
-}
-window.addEventListener("resize",updateCamera);
-scene.add(new THREE.AmbientLight(0xffffff,0.5));
-const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
+      if (params.nodes.length > 0) {
+        var sel  = params.nodes[0];
+        var connEdges = network.getConnectedEdges(sel);
+        var connNodes = network.getConnectedNodes(sel);
+        connNodes.push(sel);
 
-const R=340;
-scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,32,32),new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.05,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+4,1.2,8,80),new THREE.MeshBasicMaterial({color:0x1a2a4a,transparent:true,opacity:0.35})));
+        // Highlight only connected flow particles
+        activeEdges = connEdges;
 
-let spinning=true,drag=false,px=0,py=0,rx=0,ry=0;
-const pivot=new THREE.Group();scene.add(pivot);
-renderer.domElement.addEventListener("mousedown",e=>{drag=true;px=e.clientX;py=e.clientY});
-renderer.domElement.addEventListener("mousemove",e=>{
-  if(drag){spinning=false;document.getElementById("btn-spin").classList.remove("on");
-    ry+=(e.clientX-px)*0.005;rx+=(e.clientY-py)*0.005;
-    rx=Math.max(-Math.PI/2,Math.min(Math.PI/2,rx));
-    pivot.rotation.y=ry;pivot.rotation.x=rx;px=e.clientX;py=e.clientY;
-  } else handleHover(e);
-});
-renderer.domElement.addEventListener("mouseup",()=>drag=false);
-renderer.domElement.addEventListener("mouseleave",()=>drag=false);
-renderer.domElement.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(3000,camera.position.z+e.deltaY))});
-renderer.domElement.addEventListener("click",e=>{const h=raycast(e);if(h)selectNode(h.object.userData.nid);else clearSelect()});
-function resetCamera(){camera.position.set(0,0,1400);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSelect()}
-function toggleSpin(){spinning=!spinning;document.getElementById("btn-spin").classList.toggle("on",spinning)}
+        var nd = nodes.get(sel);
+        var selColor = nd && nd.color && nd.color.border ? nd.color.border : "#ffffff";
 
-const raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();
-let meshMap={},lineObjects=[],hiddenCats=new Set();
-function raycast(e){
-  const rect=renderer.domElement.getBoundingClientRect();
-  mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
-  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
-  raycaster.setFromCamera(mouse,camera);
-  return raycaster.intersectObjects(Object.values(meshMap),false)[0]||null;
-}
+        // Highlight nodes
+        nodes.update(allNodes.map(function(n) {
+          var active = connNodes.indexOf(n.id) !== -1;
+          return { id: n.id, opacity: active ? 1.0 : 0.06,
+                   font: { color: active ? "#ffffff" : "#111111" } };
+        }));
+        edges.update(allEdges.map(function(e) {
+          var active = connEdges.indexOf(e.id) !== -1;
+          return { id: e.id,
+            color: active ? { color:"#ffcc00", opacity:1.0 } : { color:"#ffffff", opacity:0.02 },
+            width: active ? 4 : 1 };
+        }));
 
-const tip=document.getElementById("tip");
-let hovered=null;
-function handleHover(e){
-  const h=raycast(e);
-  if(h){
-    const nid=h.object.userData.nid;
-    if(nid!==hovered){hovered=nid;const n=NODES.find(x=>x.id===nid);if(n){tip.innerHTML=`<div class="tl" style="color:${n.color}">${n.label}</div><div class="td">${n.desc}</div>`;tip.style.display="block";}}
-    document.body.style.cursor="pointer";
-  } else {tip.style.display="none";hovered=null;document.body.style.cursor="default"}
-  if(tip.style.display!=="none"){tip.style.left=(e.clientX+14)+"px";tip.style.top=(e.clientY-10)+"px"}
-}
+        // Info bar
+        var desc = DESCRIPTIONS[sel] || "";
+        var conCount = connNodes.length - 1;
+        inName.textContent = nd ? nd.label : sel;
+        inName.style.color = selColor;
+        inDesc.textContent = desc;
+        inConn.textContent = conCount + " connection" + (conCount !== 1 ? "s" : "");
+        bar.style.borderTopColor = selColor + "55";
+        bar.classList.remove("hidden");
 
-function fibonacci(n,R){
-  const pts=[],phi=Math.PI*(3-Math.sqrt(5));
-  for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R))}
-  return pts;
-}
-
-function build(){
-  const pos=fibonacci(NODES.length,R),idx={};
-  NODES.forEach((n,i)=>{n._pos=pos[i];idx[n.id]=i});
-
-  NODES.forEach((n,i)=>{
-    const r=Math.max(4,Math.min(12,n.size/5));
-    const geo=new THREE.SphereGeometry(r,12,12);
-    const mat=new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),emissive:new THREE.Color(n.color).multiplyScalar(0.3),transparent:true,opacity:1});
-    const mesh=new THREE.Mesh(geo,mat);
-    mesh.position.copy(pos[i]);mesh.userData={nid:n.id};
-    pivot.add(mesh);meshMap[n.id]=mesh;
-
-    const canvas=document.createElement("canvas");canvas.width=256;canvas.height=48;
-    const ctx=canvas.getContext("2d");
-    ctx.font="bold 17px -apple-system,sans-serif";ctx.fillStyle=n.color;ctx.textAlign="center";
-    ctx.fillText(n.label,128,28);
-    const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),transparent:true,opacity:0.85}));
-    sprite.scale.set(60,12,1);sprite.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+10);
-    pivot.add(sprite);
-  });
-
-  EDGES.forEach(e=>{
-    const si=idx[e.source],ti=idx[e.target];
-    if(si===undefined||ti===undefined)return;
-    const src=NODES[si]._pos,tgt=NODES[ti]._pos;
-    const mid=src.clone().add(tgt).multiplyScalar(0.5);
-    mid.normalize().multiplyScalar(R*1.38);
-    const curve=new THREE.QuadraticBezierCurve3(src,mid,tgt);
-    const geo=new THREE.BufferGeometry().setFromPoints(curve.getPoints(28));
-    const mat=new THREE.LineBasicMaterial({color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.75});
-    const line=new THREE.Line(geo,mat);
-    line.userData={src:e.source,tgt:e.target};
-    pivot.add(line);lineObjects.push(line);
-  });
-}
-
-function selectNode(nid){
-  const n=NODES.find(x=>x.id===nid);if(!n)return;
-  Object.entries(meshMap).forEach(([id,m])=>{m.material.opacity=id===nid?1:0.07;m.scale.setScalar(id===nid?2:1)});
-  lineObjects.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:0.03});
-  const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
-  const relsHtml=rels.slice(0,12).map(e=>{
-    const isOut=e.source===nid,other=isOut?e.target:e.source;
-    const on=NODES.find(x=>x.id===other);
-    return `<div class="ctx-rel"><span class="ra">${isOut?"→":"←"}</span><span class="rn">${e.rel||'CONNECTED'}</span><span class="ra">→</span><span class="rt" style="color:${on?.color||'#aaa'}">${on?.label||other}</span></div>`;
-  }).join("")+(rels.length>12?`<div style="font-size:9px;color:#555;margin-top:4px">+${rels.length-12} more</div>`:"");
-  document.getElementById("node-detail").innerHTML=`
-    <div style="font-size:13px;font-weight:700;color:${n.color};margin-bottom:3px">${n.label}</div>
-    <div class="ctx-desc">${n.desc}</div>
-    <div class="ctx-rels"><h4>Connections (${rels.length})</h4>${relsHtml}</div>`;
-  document.getElementById("ctx-overview").style.display="none";
-  document.getElementById("node-detail").style.display="block";
-  document.getElementById("back-btn").style.display="block";
-  document.getElementById("ctx-sub").textContent=n.label;
-  // Bottom bar
-  const bar=document.getElementById("conn-bar");
-  document.getElementById("cb-name").innerHTML=`<span style="color:${n.color}">${n.label}</span>`;
-  document.getElementById("cb-desc").textContent=n.desc;
-  const tags=rels.slice(0,6).map(e=>{
-    const isOut=e.source===nid,other=isOut?e.target:e.source;
-    const on=NODES.find(x=>x.id===other);
-    return `<span class="cb-tag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#333'}">${isOut?"→":"←"} ${e.rel||'connects'} ${on?.label||other}</span>`;
-  }).join("");
-  document.getElementById("cb-tags").innerHTML=tags+(rels.length>6?`<span style="font-size:9px;color:#555">+${rels.length-6} more</span>`:"");
-  bar.style.display="flex";
-}
-function clearSelect(){
-  Object.values(meshMap).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
-  lineObjects.forEach(l=>{l.material.opacity=0.75});
-  document.getElementById("conn-bar").style.display="none";
-  showOverview();
-}
-function showOverview(){
-  document.getElementById("ctx-overview").style.display="block";
-  document.getElementById("node-detail").style.display="none";
-  document.getElementById("back-btn").style.display="none";
-  document.getElementById("ctx-sub").textContent="AWS & Data Engineering Stack";
-}
-
-function buildLegend(){
-  const cats=NODES.filter(n=>n.id.startsWith("cat_"));
-  const el=document.getElementById("cat-legend");el.innerHTML="";
-  cats.forEach(n=>{
-    const div=document.createElement("div");div.className="li";
-    div.innerHTML=`<div class="dot" style="background:${n.color}"></div><span class="li-label">${n.label}</span>`;
-    div.addEventListener("click",()=>{
-      const meshes=NODES.filter(x=>!x.id.startsWith("cat_")&&EDGES.some(e=>(e.source===x.id&&e.target===n.id)||(e.target===x.id&&e.source===n.id)));
-      if(hiddenCats.has(n.id)){hiddenCats.delete(n.id);div.classList.remove("off")}else{hiddenCats.add(n.id);div.classList.add("off")}
+      } else {
+        activeEdges = null; // show all flows
+        activeEdges = null;
+        nodes.update(nodes.get().map(function(n) {
+          return { id:n.id, opacity:1.0, font:{color:"#dddddd"} };
+        }));
+        edges.update(edges.get().map(function(e) {
+          return { id:e.id, color:{color:"#ffffff33", opacity:1.0}, width:1 };
+        }));
+        bar.classList.add("hidden");
+      }
     });
-    el.appendChild(div);
-  });
-}
-
-build();buildLegend();
-(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();}
-requestAnimationFrame(init);
-</script>
-
-<div id="conn-bar">
-  <div class="cb-node" id="cb-name"></div>
-  <div class="cb-sep">|</div>
-  <div class="cb-desc" id="cb-desc"></div>
-  <div class="cb-tags" id="cb-tags"></div>
-  <span class="cb-close" onclick="clearSelect()">✕</span>
-</div>
-</body>
-</html;
-
-const wrap=document.getElementById("globe-wrap");
-const W=()=>wrap.getBoundingClientRect().width||wrap.clientWidth||600;
-const H=()=>wrap.getBoundingClientRect().height||wrap.clientHeight||window.innerHeight;
-
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x050810);
-const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
-camera.position.set(0,0,1100);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(W(),H());
-renderer.domElement.style.cssText="display:block;width:100%;height:100%";
-wrap.appendChild(renderer.domElement);
-window.addEventListener("resize",()=>{renderer.setSize(W(),H());camera.aspect=W()/H();camera.updateProjectionMatrix()});
-
-scene.add(new THREE.AmbientLight(0xffffff,0.5));
-const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
-const R=300;
-scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,32,32),new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.05,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1,8,80),new THREE.MeshBasicMaterial({color:0x1a2a4a,transparent:true,opacity:0.35})));
-
-let spinning=true,drag=false,px=0,py=0,rx=0,ry=0;
-const pivot=new THREE.Group();scene.add(pivot);
-const el=renderer.domElement;
-el.addEventListener("mousedown",e=>{drag=true;px=e.clientX;py=e.clientY});
-el.addEventListener("mousemove",e=>{
-  if(drag){spinning=false;document.getElementById("btn-spin").classList.remove("on");
-    ry+=(e.clientX-px)*0.005;rx+=(e.clientY-py)*0.005;
-    rx=Math.max(-Math.PI/2,Math.min(Math.PI/2,rx));
-    pivot.rotation.y=ry;pivot.rotation.x=rx;px=e.clientX;py=e.clientY;
-  } else doHover(e);
+  }, 150);
 });
-el.addEventListener("mouseup",()=>drag=false);
-el.addEventListener("mouseleave",()=>drag=false);
-el.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(2500,camera.position.z+e.deltaY*0.7))});
-el.addEventListener("click",e=>{const h=cast(e);if(h)selNode(h.object.userData.nid);else clearSel()});
-function resetCam(){camera.position.set(0,0,1100);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSel()}
-function toggleSpin(){spinning=!spinning;document.getElementById("btn-spin").classList.toggle("on",spinning)}
-
-const rc=new THREE.Raycaster(),mo=new THREE.Vector2();
-let meshMap={},lines=[];
-function cast(e){
-  const r=el.getBoundingClientRect();
-  mo.x=((e.clientX-r.left)/r.width)*2-1;
-  mo.y=-((e.clientY-r.top)/r.height)*2+1;
-  rc.setFromCamera(mo,camera);
-  return rc.intersectObjects(Object.values(meshMap),false)[0]||null;
-}
-
-const tip=document.getElementById("tip");
-let hov=null;
-function doHover(e){
-  const h=cast(e);
-  if(h){
-    const nid=h.object.userData.nid;
-    if(nid!==hov){hov=nid;const n=NODES.find(x=>x.id===nid);if(n){document.getElementById("tip-l").style.color=n.color;document.getElementById("tip-l").textContent=n.label;document.getElementById("tip-d").textContent=n.desc;tip.style.display="block";}}
-    el.style.cursor="pointer";
-  } else {tip.style.display="none";hov=null;el.style.cursor="default"}
-  if(tip.style.display!=="none"){tip.style.left=(e.clientX+14)+"px";tip.style.top=(e.clientY-10)+"px"}
-}
-
-function fib(n,R){const pts=[],phi=Math.PI*(3-Math.sqrt(5));for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R))}return pts}
-
-function build(){
-  const pos=fib(NODES.length,R),idx={};
-  NODES.forEach((n,i)=>{n._pos=pos[i];idx[n.id]=i});
-  NODES.forEach((n,i)=>{
-    const r=Math.max(4,Math.min(11,n.size/5));
-    const geo=new THREE.SphereGeometry(r,12,12);
-    const mat=new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),emissive:new THREE.Color(n.color).multiplyScalar(0.3),transparent:true,opacity:1});
-    const m=new THREE.Mesh(geo,mat);m.position.copy(pos[i]);m.userData={nid:n.id};
-    pivot.add(m);meshMap[n.id]=m;
-    const c=document.createElement("canvas");c.width=256;c.height=48;
-    const cx=c.getContext("2d");cx.font="bold 16px sans-serif";cx.fillStyle=n.color;cx.textAlign="center";cx.fillText(n.label,128,28);
-    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.85}));
-    sp.scale.set(58,11,1);sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+9);
-    pivot.add(sp);
-  });
-  EDGES.forEach(e=>{
-    const si=idx[e.source],ti=idx[e.target];if(si===undefined||ti===undefined)return;
-    const s=NODES[si]._pos,t=NODES[ti]._pos;
-    const mid=s.clone().add(t).multiplyScalar(0.5);mid.normalize().multiplyScalar(R*1.38);
-    const geo=new THREE.BufferGeometry().setFromPoints(new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(28));
-    const mat=new THREE.LineBasicMaterial({color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.75});
-    const l=new THREE.Line(geo,mat);l.userData={src:e.source,tgt:e.target};
-    pivot.add(l);lines.push(l);
-  });
-}
-
-function selNode(nid){
-  const n=NODES.find(x=>x.id===nid);if(!n)return;
-  Object.entries(meshMap).forEach(([id,m])=>{m.material.opacity=id===nid?1:0.07;m.scale.setScalar(id===nid?2:1)});
-  const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
-  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:0.03});
-  const rh=rels.slice(0,12).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="ctx-r"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel||'connects'}</span><span class="ra">→</span><span style="color:${on?.color||'#aaa'};font-size:9px">${on?.label||ot}</span></div>`}).join("")+(rels.length>12?`<div style="font-size:9px;color:#555;margin-top:4px">+${rels.length-12} more</div>`:"");
-  document.getElementById("nd").innerHTML=`<div style="font-size:13px;font-weight:700;color:${n.color};margin-bottom:3px">${n.label}</div><div class="ctx-desc">${n.desc}</div><div class="ctx-rh">Connections (${rels.length})</div>${rh}`;
-  document.getElementById("ctx-ov").style.display="none";
-  document.getElementById("nd").style.display="block";
-  document.getElementById("back").style.display="block";
-  document.getElementById("ctx-sub").textContent=n.label;
-  document.getElementById("cb-n").innerHTML=`<span style="color:${n.color}">${n.label}</span>`;
-  document.getElementById("cb-d").textContent=n.desc;
-  document.getElementById("cb-t").innerHTML=rels.slice(0,7).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<span class="cb-tag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#555'}">${io?"→":"←"} ${e.rel||'connects'} ${on?.label||ot}</span>`}).join("")+(rels.length>7?`<span style="font-size:9px;color:#555">+${rels.length-7} more</span>`:"");
-  document.getElementById("cbar").style.display="flex";
-}
-function clearSel(){
-  Object.values(meshMap).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
-  lines.forEach(l=>{l.material.opacity=0.75});
-  document.getElementById("cbar").style.display="none";showOv();
-}
-function showOv(){
-  document.getElementById("ctx-ov").style.display="block";
-  document.getElementById("nd").style.display="none";
-  document.getElementById("back").style.display="none";
-  document.getElementById("ctx-sub").textContent="AWS & Data Engineering Stack";
-}
-
-function buildLeg(){
-  const cats=NODES.filter(n=>n.id.startsWith("cat_"));
-  const leg=document.getElementById("cat-leg");leg.innerHTML="";
-  cats.forEach(n=>{
-    const d=document.createElement("div");d.className="li";
-    d.innerHTML=`<div class="dot" style="background:${n.color}"></div><span class="li-label">${n.label}</span>`;
-    leg.appendChild(d);
-  });
-}
-
-function init(){build();buildLeg();(function anim(){requestAnimationFrame(anim);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();}
-requestAnimationFrame(init);
 </script>
-</body></html>
+
+        <div id="nav-bar"><a href="business_graph.html">⬡ Business Globe →</a></div>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": {"background": "#FF9900", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_cloud", "label": "Cloud \u0026 Infra", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#FF9900\u0027\u003eCloud \u0026 Infra\u003c/b\u003e", "x": 380, "y": -120}, {"color": {"background": "#00A1C9", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_data_eng", "label": "Data Engineering", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/b\u003e", "x": -260, "y": -280}, {"color": {"background": "#7B68EE", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_data_fmt", "label": "Data Formats", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#7B68EE\u0027\u003eData Formats\u003c/b\u003e", "x": 50, "y": -420}, {"color": {"background": "#FF6B6B", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_ai_ml", "label": "AI \u0026 ML Agents", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#FF6B6B\u0027\u003eAI \u0026 ML Agents\u003c/b\u003e", "x": -120, "y": -320}, {"color": {"background": "#2ECC71", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_devops", "label": "DevOps \u0026 CI/CD", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#2ECC71\u0027\u003eDevOps \u0026 CI/CD\u003c/b\u003e", "x": 150, "y": -300}, {"color": {"background": "#F39C12", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_languages", "label": "Languages", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#F39C12\u0027\u003eLanguages\u003c/b\u003e", "x": 420, "y": 100}, {"color": {"background": "#E74C3C", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_monitoring", "label": "Monitoring", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#E74C3C\u0027\u003eMonitoring\u003c/b\u003e", "x": 280, "y": 310}, {"color": {"background": "#9B59B6", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_messaging", "label": "Messaging \u0026 Events", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#9B59B6\u0027\u003eMessaging \u0026 Events\u003c/b\u003e", "x": -420, "y": -100}, {"color": {"background": "#1ABC9C", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_analytics", "label": "Analytics \u0026 Query", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#1ABC9C\u0027\u003eAnalytics \u0026 Query\u003c/b\u003e", "x": 40, "y": 390}, {"color": {"background": "#95A5A6", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_governance", "label": "Governance", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#95A5A6\u0027\u003eGovernance\u003c/b\u003e", "x": -400, "y": 160}, {"color": {"background": "#E67E22", "border": "#ffffff", "highlight": {"background": "#ffffff", "border": "#ffffff"}, "hover": {"background": "#ffffff", "border": "#ffffff"}}, "fixed": {"x": true, "y": true}, "font": {"color": "#ffffff"}, "id": "cat_graph", "label": "Graph \u0026 Knowledge", "shape": "dot", "size": 42, "title": "\u003cb style=\u0027color:#E67E22\u0027\u003eGraph \u0026 Knowledge\u003c/b\u003e", "x": -220, "y": 350}, {"color": {"background": "#FF9900cc", "border": "#FF9900", "highlight": {"background": "#ffffff", "border": "#FF9900"}, "hover": {"background": "#FF9900", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "aws", "label": "Amazon Web Services", "shape": "dot", "size": 20, "title": "\u003cb\u003eAmazon Web Services\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF9900\u0027\u003eCloud \u0026 Infra\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 460.0, "y": -120.0}, {"color": {"background": "#FF9900cc", "border": "#FF9900", "highlight": {"background": "#ffffff", "border": "#FF9900"}, "hover": {"background": "#FF9900", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "ec2", "label": "AWS EC2", "shape": "dot", "size": 12, "title": "\u003cb\u003eAWS EC2\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF9900\u0027\u003eCloud \u0026 Infra\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": 298.8994929508864, "y": -45.685077162277366}, {"color": {"background": "#FF9900cc", "border": "#FF9900", "highlight": {"background": "#ffffff", "border": "#FF9900"}, "hover": {"background": "#FF9900", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "vpc", "label": "AWS VPC", "shape": "dot", "size": 12, "title": "\u003cb\u003eAWS VPC\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF9900\u0027\u003eCloud \u0026 Infra\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": 392.2018039846721, "y": -259.46725773284436}, {"color": {"background": "#FF9900cc", "border": "#FF9900", "highlight": {"background": "#ffffff", "border": "#FF9900"}, "hover": {"background": "#FF9900", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "iam", "label": "AWS IAM", "shape": "dot", "size": 16, "title": "\u003cb\u003eAWS IAM\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF9900\u0027\u003eCloud \u0026 Infra\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 428.7009143206976, "y": -56.53173277670119}, {"color": {"background": "#FF9900cc", "border": "#FF9900", "highlight": {"background": "#ffffff", "border": "#FF9900"}, "hover": {"background": "#FF9900", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "s3", "label": "AWS S3", "shape": "dot", "size": 20, "title": "\u003cb\u003eAWS S3\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF9900\u0027\u003eCloud \u0026 Infra\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 271.6711471686571, "y": -139.10129954336236}, {"color": {"background": "#FF9900cc", "border": "#FF9900", "highlight": {"background": "#ffffff", "border": "#FF9900"}, "hover": {"background": "#FF9900", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "terraform", "label": "Terraform", "shape": "dot", "size": 16, "title": "\u003cb\u003eTerraform\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF9900\u0027\u003eCloud \u0026 Infra\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 498.074802413804, "y": -195.2219451685554}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "glue", "label": "AWS Glue", "shape": "dot", "size": 20, "title": "\u003cb\u003eAWS Glue\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": -280.70552360820164, "y": -202.72593389687455}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "glue_crawler", "label": "Glue Crawler", "shape": "dot", "size": 16, "title": "\u003cb\u003eGlue Crawler\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -310.79234745585376, "y": -377.5711916496044}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "glue_catalog", "label": "Glue Catalog", "shape": "dot", "size": 16, "title": "\u003cb\u003eGlue Catalog\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -128.44303308997283, "y": -232.11717993440638}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "spark", "label": "Apache Spark", "shape": "dot", "size": 16, "title": "\u003cb\u003eApache Spark\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -333.91036260090294, "y": -249.3853254107928}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "pyspark", "label": "PySpark", "shape": "dot", "size": 16, "title": "\u003cb\u003ePySpark\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -213.51199120852306, "y": -379.6938565740315}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "dbt", "label": "dbt", "shape": "dot", "size": 16, "title": "\u003cb\u003edbt\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -217.90118806940177, "y": -146.47962689524823}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "kafka", "label": "Apache Kafka", "shape": "dot", "size": 12, "title": "\u003cb\u003eApache Kafka\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -329.28203230275506, "y": -320.0}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "kinesis", "label": "AWS Kinesis", "shape": "dot", "size": 12, "title": "\u003cb\u003eAWS Kinesis\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -152.60743921680734, "y": -303.8083575331913}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "snowflake", "label": "Snowflake", "shape": "dot", "size": 16, "title": "\u003cb\u003eSnowflake\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -340.30070108914646, "y": -165.31871379954117}, {"color": {"background": "#00A1C9cc", "border": "#00A1C9", "highlight": {"background": "#ffffff", "border": "#00A1C9"}, "hover": {"background": "#00A1C9", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "flink", "label": "Apache Flink", "shape": "dot", "size": 12, "title": "\u003cb\u003eApache Flink\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#00A1C9\u0027\u003eData Engineering\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -270.4420953776041, "y": -359.3155889099048}, {"color": {"background": "#7B68EEcc", "border": "#7B68EE", "highlight": {"background": "#ffffff", "border": "#7B68EE"}, "hover": {"background": "#7B68EE", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "iceberg", "label": "Apache Iceberg", "shape": "dot", "size": 16, "title": "\u003cb\u003eApache Iceberg\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#7B68EE\u0027\u003eData Formats\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 134.2648887430876, "y": -349.2933629344807}, {"color": {"background": "#7B68EEcc", "border": "#7B68EE", "highlight": {"background": "#ffffff", "border": "#7B68EE"}, "hover": {"background": "#7B68EE", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "parquet", "label": "Apache Parquet", "shape": "dot", "size": 16, "title": "\u003cb\u003eApache Parquet\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#7B68EE\u0027\u003eData Formats\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -89.86675102146009, "y": -413.89328576885293}, {"color": {"background": "#7B68EEcc", "border": "#7B68EE", "highlight": {"background": "#ffffff", "border": "#7B68EE"}, "hover": {"background": "#7B68EE", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "json_fmt", "label": "JSON", "shape": "dot", "size": 20, "title": "\u003cb\u003eJSON\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#7B68EE\u0027\u003eData Formats\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 106.5685424949238, "y": -476.5685424949238}, {"color": {"background": "#7B68EEcc", "border": "#7B68EE", "highlight": {"background": "#ffffff", "border": "#7B68EE"}, "hover": {"background": "#7B68EE", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "csv", "label": "CSV", "shape": "dot", "size": 20, "title": "\u003cb\u003eCSV\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#7B68EE\u0027\u003eData Formats\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 45.20186738981305, "y": -310.10469562599565}, {"color": {"background": "#FF6B6Bcc", "border": "#FF6B6B", "highlight": {"background": "#ffffff", "border": "#FF6B6B"}, "hover": {"background": "#FF6B6B", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "bedrock", "label": "AWS Bedrock", "shape": "dot", "size": 16, "title": "\u003cb\u003eAWS Bedrock\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF6B6B\u0027\u003eAI \u0026 ML Agents\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -209.99026535611554, "y": -427.2462220366569}, {"color": {"background": "#FF6B6Bcc", "border": "#FF6B6B", "highlight": {"background": "#ffffff", "border": "#FF6B6B"}, "hover": {"background": "#FF6B6B", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "claude", "label": "Anthropic Claude", "shape": "dot", "size": 20, "title": "\u003cb\u003eAnthropic Claude\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF6B6B\u0027\u003eAI \u0026 ML Agents\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": -40.68441109009517, "y": -309.5579046223959}, {"color": {"background": "#FF6B6Bcc", "border": "#FF6B6B", "highlight": {"background": "#ffffff", "border": "#FF6B6B"}, "hover": {"background": "#FF6B6B", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "multi_agents", "label": "Multi-Agent Orchestration", "shape": "dot", "size": 20, "title": "\u003cb\u003eMulti-Agent Orchestration\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF6B6B\u0027\u003eAI \u0026 ML Agents\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": -210.1067248717891, "y": -256.9065920013849}, {"color": {"background": "#FF6B6Bcc", "border": "#FF6B6B", "highlight": {"background": "#ffffff", "border": "#FF6B6B"}, "hover": {"background": "#FF6B6B", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "sagemaker", "label": "AWS SageMaker", "shape": "dot", "size": 12, "title": "\u003cb\u003eAWS SageMaker\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF6B6B\u0027\u003eAI \u0026 ML Agents\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -89.69845404866567, "y": -456.6814409967907}, {"color": {"background": "#FF6B6Bcc", "border": "#FF6B6B", "highlight": {"background": "#ffffff", "border": "#FF6B6B"}, "hover": {"background": "#FF6B6B", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "mlflow", "label": "MLflow", "shape": "dot", "size": 12, "title": "\u003cb\u003eMLflow\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#FF6B6B\u0027\u003eAI \u0026 ML Agents\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -80.0, "y": -250.71796769724492}, {"color": {"background": "#2ECC71cc", "border": "#2ECC71", "highlight": {"background": "#ffffff", "border": "#2ECC71"}, "hover": {"background": "#2ECC71", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "gitlab_ci", "label": "GitLab CI/CD", "shape": "dot", "size": 20, "title": "\u003cb\u003eGitLab CI/CD\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#2ECC71\u0027\u003eDevOps \u0026 CI/CD\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 45.09113541769504, "y": -333.07763794547003}, {"color": {"background": "#2ECC71cc", "border": "#2ECC71", "highlight": {"background": "#ffffff", "border": "#2ECC71"}, "hover": {"background": "#2ECC71", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "git", "label": "Git", "shape": "dot", "size": 20, "title": "\u003cb\u003eGit\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#2ECC71\u0027\u003eDevOps \u0026 CI/CD\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 276.883090185131, "y": -359.1665566436979}, {"color": {"background": "#2ECC71cc", "border": "#2ECC71", "highlight": {"background": "#ffffff", "border": "#2ECC71"}, "hover": {"background": "#2ECC71", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "github", "label": "GitHub", "shape": "dot", "size": 20, "title": "\u003cb\u003eGitHub\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#2ECC71\u0027\u003eDevOps \u0026 CI/CD\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 119.38532541079283, "y": -226.08963739909706}, {"color": {"background": "#2ECC71cc", "border": "#2ECC71", "highlight": {"background": "#ffffff", "border": "#2ECC71"}, "hover": {"background": "#2ECC71", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "gitlab", "label": "GitLab", "shape": "dot", "size": 20, "title": "\u003cb\u003eGitLab\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#2ECC71\u0027\u003eDevOps \u0026 CI/CD\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 112.37778423417646, "y": -403.3661882864499}, {"color": {"background": "#2ECC71cc", "border": "#2ECC71", "highlight": {"background": "#ffffff", "border": "#2ECC71"}, "hover": {"background": "#2ECC71", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "docker", "label": "Docker", "shape": "dot", "size": 16, "title": "\u003cb\u003eDocker\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#2ECC71\u0027\u003eDevOps \u0026 CI/CD\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 274.18151664495105, "y": -235.35519414709523}, {"color": {"background": "#2ECC71cc", "border": "#2ECC71", "highlight": {"background": "#ffffff", "border": "#2ECC71"}, "hover": {"background": "#2ECC71", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "ssm", "label": "AWS SSM", "shape": "dot", "size": 12, "title": "\u003cb\u003eAWS SSM\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#2ECC71\u0027\u003eDevOps \u0026 CI/CD\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": 72.72593389687455, "y": -279.2944763917983}, {"color": {"background": "#F39C12cc", "border": "#F39C12", "highlight": {"background": "#ffffff", "border": "#F39C12"}, "hover": {"background": "#F39C12", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "python", "label": "Python", "shape": "dot", "size": 20, "title": "\u003cb\u003ePython\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#F39C12\u0027\u003eLanguages\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 479.10295691815065, "y": 7.226940960582567}, {"color": {"background": "#F39C12cc", "border": "#F39C12", "highlight": {"background": "#ffffff", "border": "#F39C12"}, "hover": {"background": "#F39C12", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "sql", "label": "SQL", "shape": "dot", "size": 20, "title": "\u003cb\u003eSQL\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#F39C12\u0027\u003eLanguages\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 444.31074487337025, "y": 237.87308542170913}, {"color": {"background": "#F39C12cc", "border": "#F39C12", "highlight": {"background": "#ffffff", "border": "#F39C12"}, "hover": {"background": "#F39C12", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "hcl", "label": "HCL (Terraform)", "shape": "dot", "size": 16, "title": "\u003cb\u003eHCL (Terraform)\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#F39C12\u0027\u003eLanguages\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 356.5317327767012, "y": 51.29908567930235}, {"color": {"background": "#F39C12cc", "border": "#F39C12", "highlight": {"background": "#ffffff", "border": "#F39C12"}, "hover": {"background": "#F39C12", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "bash", "label": "Bash / Shell", "shape": "dot", "size": 16, "title": "\u003cb\u003eBash / Shell\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#F39C12\u0027\u003eLanguages\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 529.581416790092, "y": 90.41286829775758}, {"color": {"background": "#F39C12cc", "border": "#F39C12", "highlight": {"background": "#ffffff", "border": "#F39C12"}, "hover": {"background": "#F39C12", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "yaml", "label": "YAML", "shape": "dot", "size": 20, "title": "\u003cb\u003eYAML\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#F39C12\u0027\u003eLanguages\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 325.41737093380755, "y": 203.21882715341735}, {"color": {"background": "#E74C3Ccc", "border": "#E74C3C", "highlight": {"background": "#ffffff", "border": "#E74C3C"}, "hover": {"background": "#E74C3C", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "cloudwatch", "label": "AWS CloudWatch", "shape": "dot", "size": 16, "title": "\u003cb\u003eAWS CloudWatch\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#E74C3C\u0027\u003eMonitoring\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 280.0, "y": 230.0}, {"color": {"background": "#E74C3Ccc", "border": "#E74C3C", "highlight": {"background": "#ffffff", "border": "#E74C3C"}, "hover": {"background": "#E74C3C", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "cw_alarms", "label": "CloudWatch Alarms", "shape": "dot", "size": 16, "title": "\u003cb\u003eCloudWatch Alarms\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#E74C3C\u0027\u003eMonitoring\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 354.31492283772263, "y": 391.1005070491136}, {"color": {"background": "#E74C3Ccc", "border": "#E74C3C", "highlight": {"background": "#ffffff", "border": "#E74C3C"}, "hover": {"background": "#E74C3C", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "cw_logs", "label": "CloudWatch Logs", "shape": "dot", "size": 16, "title": "\u003cb\u003eCloudWatch Logs\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#E74C3C\u0027\u003eMonitoring\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 140.5327422671556, "y": 297.7981960153279}, {"color": {"background": "#E74C3Ccc", "border": "#E74C3C", "highlight": {"background": "#ffffff", "border": "#E74C3C"}, "hover": {"background": "#E74C3C", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "great_exp", "label": "Great Expectations", "shape": "dot", "size": 12, "title": "\u003cb\u003eGreat Expectations\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#E74C3C\u0027\u003eMonitoring\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": 343.46826722329877, "y": 261.2990856793023}, {"color": {"background": "#9B59B6cc", "border": "#9B59B6", "highlight": {"background": "#ffffff", "border": "#9B59B6"}, "hover": {"background": "#9B59B6", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "eventbridge", "label": "AWS EventBridge", "shape": "dot", "size": 16, "title": "\u003cb\u003eAWS EventBridge\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#9B59B6\u0027\u003eMessaging \u0026 Events\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -439.10129954336236, "y": 8.328852831342886}, {"color": {"background": "#9B59B6cc", "border": "#9B59B6", "highlight": {"background": "#ffffff", "border": "#9B59B6"}, "hover": {"background": "#9B59B6", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "sns", "label": "AWS SNS", "shape": "dot", "size": 16, "title": "\u003cb\u003eAWS SNS\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#9B59B6\u0027\u003eMessaging \u0026 Events\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -495.2219451685554, "y": -218.07480241380398}, {"color": {"background": "#9B59B6cc", "border": "#9B59B6", "highlight": {"background": "#ffffff", "border": "#9B59B6"}, "hover": {"background": "#9B59B6", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "ses", "label": "AWS SES", "shape": "dot", "size": 12, "title": "\u003cb\u003eAWS SES\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#9B59B6\u0027\u003eMessaging \u0026 Events\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -342.72593389687455, "y": -79.29447639179834}, {"color": {"background": "#1ABC9Ccc", "border": "#1ABC9C", "highlight": {"background": "#ffffff", "border": "#1ABC9C"}, "hover": {"background": "#1ABC9C", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "athena", "label": "AWS Athena", "shape": "dot", "size": 16, "title": "\u003cb\u003eAWS Athena\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#1ABC9C\u0027\u003eAnalytics \u0026 Query\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -57.57119164960439, "y": 440.7923474558537}, {"color": {"background": "#1ABC9Ccc", "border": "#1ABC9C", "highlight": {"background": "#ffffff", "border": "#1ABC9C"}, "hover": {"background": "#1ABC9C", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "pandas", "label": "Pandas", "shape": "dot", "size": 16, "title": "\u003cb\u003ePandas\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#1ABC9C\u0027\u003eAnalytics \u0026 Query\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": 87.88282006559368, "y": 258.4430330899728}, {"color": {"background": "#1ABC9Ccc", "border": "#1ABC9C", "highlight": {"background": "#ffffff", "border": "#1ABC9C"}, "hover": {"background": "#1ABC9C", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "boto3", "label": "boto3", "shape": "dot", "size": 20, "title": "\u003cb\u003eboto3\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#1ABC9C\u0027\u003eAnalytics \u0026 Query\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": 70.61467458920718, "y": 463.91036260090294}, {"color": {"background": "#95A5A6cc", "border": "#95A5A6", "highlight": {"background": "#ffffff", "border": "#95A5A6"}, "hover": {"background": "#95A5A6", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "lineage", "label": "Data Lineage", "shape": "dot", "size": 16, "title": "\u003cb\u003eData Lineage\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#95A5A6\u0027\u003eGovernance\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -499.6938565740315, "y": 113.51199120852309}, {"color": {"background": "#95A5A6cc", "border": "#95A5A6", "highlight": {"background": "#ffffff", "border": "#95A5A6"}, "hover": {"background": "#95A5A6", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "rbac", "label": "RBAC", "shape": "dot", "size": 12, "title": "\u003cb\u003eRBAC\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#95A5A6\u0027\u003eGovernance\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -266.4796268952482, "y": 117.90118806940177}, {"color": {"background": "#95A5A6cc", "border": "#95A5A6", "highlight": {"background": "#ffffff", "border": "#95A5A6"}, "hover": {"background": "#95A5A6", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "data_quality", "label": "Data Quality", "shape": "dot", "size": 16, "title": "\u003cb\u003eData Quality\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#95A5A6\u0027\u003eGovernance\u003c/span\u003e\u003cbr\u003eLevel: Advanced", "x": -440.0, "y": 229.2820323027551}, {"color": {"background": "#95A5A6cc", "border": "#95A5A6", "highlight": {"background": "#ffffff", "border": "#95A5A6"}, "hover": {"background": "#95A5A6", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "medallion", "label": "Medallion Architecture", "shape": "dot", "size": 20, "title": "\u003cb\u003eMedallion Architecture\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#95A5A6\u0027\u003eGovernance\u003c/span\u003e\u003cbr\u003eLevel: Expert", "x": -423.8083575331913, "y": 52.607439216807336}, {"color": {"background": "#E67E22cc", "border": "#E67E22", "highlight": {"background": "#ffffff", "border": "#E67E22"}, "hover": {"background": "#E67E22", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "neptune_svc", "label": "Amazon Neptune", "shape": "dot", "size": 12, "title": "\u003cb\u003eAmazon Neptune\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#E67E22\u0027\u003eGraph \u0026 Knowledge\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -105.31871379954114, "y": 430.30070108914646}, {"color": {"background": "#E67E22cc", "border": "#E67E22", "highlight": {"background": "#ffffff", "border": "#E67E22"}, "hover": {"background": "#E67E22", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "gremlin", "label": "Gremlin", "shape": "dot", "size": 12, "title": "\u003cb\u003eGremlin\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#E67E22\u0027\u003eGraph \u0026 Knowledge\u003c/span\u003e\u003cbr\u003eLevel: Intermediate", "x": -299.3155889099048, "y": 360.4420953776041}, {"color": {"background": "#E67E22cc", "border": "#E67E22", "highlight": {"background": "#ffffff", "border": "#E67E22"}, "hover": {"background": "#E67E22", "border": "#ffffff"}}, "font": {"color": "#ffffff"}, "id": "sparql", "label": "SPARQL", "shape": "dot", "size": 9, "title": "\u003cb\u003eSPARQL\u003c/b\u003e\u003cbr\u003e\u003cspan style=\u0027color:#E67E22\u0027\u003eGraph \u0026 Knowledge\u003c/span\u003e\u003cbr\u003eLevel: Beginner", "x": -149.29336293448068, "y": 265.73511125691243}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "aws", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_cloud", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "ec2", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_cloud", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "vpc", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_cloud", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "iam", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_cloud", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "s3", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_cloud", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_cloud", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue_crawler", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue_catalog", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "spark", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "pyspark", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "dbt", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "kafka", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "kinesis", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "snowflake", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "flink", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_eng", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "iceberg", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_fmt", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "parquet", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_fmt", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "json_fmt", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_fmt", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "csv", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_data_fmt", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "bedrock", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_ai_ml", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "claude", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_ai_ml", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "multi_agents", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_ai_ml", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sagemaker", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_ai_ml", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "mlflow", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_ai_ml", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "gitlab_ci", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_devops", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "git", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_devops", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "github", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_devops", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "gitlab", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_devops", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "docker", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_devops", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "ssm", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_devops", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "python", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_languages", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sql", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_languages", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "hcl", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_languages", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "bash", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_languages", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "yaml", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_languages", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "cloudwatch", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_monitoring", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "cw_alarms", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_monitoring", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "cw_logs", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_monitoring", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "great_exp", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_monitoring", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "eventbridge", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_messaging", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sns", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_messaging", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "ses", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_messaging", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "athena", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_analytics", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "pandas", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_analytics", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "boto3", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_analytics", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "lineage", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_governance", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "rbac", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_governance", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "data_quality", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_governance", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "medallion", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_governance", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "neptune_svc", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_graph", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "gremlin", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_graph", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sparql", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cat_graph", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "DEPLOYS_TO", "to": "aws", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "ec2", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "vpc", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "iam", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "s3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "athena", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "eventbridge", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "bedrock", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "terraform", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PROVISIONS", "to": "neptune_svc", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "gitlab_ci", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "EXECUTES", "to": "terraform", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "READS_FROM", "to": "s3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "WRITES_TO", "to": "s3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PRODUCES", "to": "iceberg", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PRODUCES", "to": "parquet", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "pyspark", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "RUNS_ON", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "spark", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "POWERS", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue_crawler", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "CRAWLS", "to": "s3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "glue_crawler", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "POPULATES", "to": "glue_catalog", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "athena", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "QUERIES", "to": "s3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "athena", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "glue_catalog", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "dbt", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "TRANSFORMS_IN", "to": "snowflake", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "dbt", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "sql", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "medallion", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "IMPLEMENTED_BY", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "medallion", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "STORED_IN", "to": "s3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "iceberg", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "STORED_IN", "to": "s3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "kinesis", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "FEEDS", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "kafka", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "INTEGRATES_WITH", "to": "flink", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "flink", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "INTEGRATES_WITH", "to": "kinesis", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "bedrock", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES_MODEL", "to": "claude", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "multi_agents", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "DEPLOYED_ON", "to": "bedrock", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "multi_agents", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "ORCHESTRATES", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "claude", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "GENERATES", "to": "python", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sagemaker", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "INTEGRATES_WITH", "to": "mlflow", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sagemaker", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "python", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "eventbridge", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "TRIGGERS", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "eventbridge", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PUBLISHES_TO", "to": "sns", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sns", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "INTEGRATES_WITH", "to": "ses", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "ses", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "NOTIFIES", "to": "gitlab_ci", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "cloudwatch", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "FEEDS", "to": "eventbridge", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "cw_alarms", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "ALERTS_TO", "to": "sns", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "cw_logs", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "cloudwatch", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "python", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "POWERS", "to": "glue", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "python", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "boto3", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "python", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "pandas", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "python", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "great_exp", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sql", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "QUERIES_VIA", "to": "athena", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "sql", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "QUERIES_VIA", "to": "snowflake", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "hcl", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "WRITTEN_IN", "to": "terraform", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "bash", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USED_IN", "to": "gitlab_ci", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "yaml", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "CONFIGURES", "to": "gitlab_ci", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "boto3", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "ACCESSES", "to": "aws", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "data_quality", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "IMPLEMENTED_BY", "to": "great_exp", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "data_quality", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "IMPLEMENTED_BY", "to": "dbt", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "lineage", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "TRACKED_IN", "to": "glue_catalog", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "rbac", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "ENFORCED_BY", "to": "iam", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "gitlab_ci", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "docker", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "gitlab_ci", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "USES", "to": "git", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "gitlab", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "HOSTS", "to": "gitlab_ci", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "github", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "HOSTS", "to": "git", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "ssm", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "ACCESSES", "to": "ec2", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "neptune_svc", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "SUPPORTS", "to": "gremlin", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "neptune_svc", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "SUPPORTS", "to": "sparql", "width": 1}, {"arrows": "to", "color": {"color": "#ffffff08", "highlight": "#ffffff08", "hover": "#ffffff08"}, "from": "neptune_svc", "label": "", "smooth": {"roundness": 0, "type": "straightCross"}, "title": "PART_OF", "to": "aws", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "solver": "forceAtlas2Based", "forceAtlas2Based": {"gravitationalConstant": -60, "centralGravity": 0.002, "springLength": 90, "springConstant": 0.12, "damping": 0.5, "avoidOverlap": 0.8}, "stabilization": {"iterations": 300, "fit": true}}, "edges": {"arrows": {"to": {"enabled": true, "scaleFactor": 0.4}}, "smooth": {"type": "dynamic"}, "font": {"size": 0}, "scaling": {"min": 1, "max": 3}}, "nodes": {"font": {"size": 11, "color": "#e0e0e0", "strokeWidth": 2, "strokeColor": "#0d0d1a"}, "shadow": {"enabled": true, "color": "rgba(0,0,0,0.8)", "size": 12}}, "interaction": {"hover": true, "tooltipDelay": 80, "navigationButtons": false, "keyboard": false, "zoomView": true, "dragView": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
