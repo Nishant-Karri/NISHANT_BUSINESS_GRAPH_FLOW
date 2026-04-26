@@ -5,95 +5,119 @@
 <title>Neptune Skills Knowledge Globe</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e0;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-/* Canvas sits behind everything */
-#cv{position:fixed;left:0;top:0;width:100%;height:100%;z-index:1}
-/* Sidebars sit on top */
+html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
+  color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+/* Canvas behind sidebars */
+#cv{position:fixed;left:0;top:0;z-index:1}
+/* Sidebars */
 #SB{position:fixed;left:0;top:0;bottom:0;width:240px;
-  background:rgba(6,8,20,0.96);border-right:1px solid #1a1f3a;
-  z-index:10;display:flex;flex-direction:column}
-#CTX{position:fixed;right:0;top:0;bottom:0;width:280px;
-  background:rgba(6,8,20,0.96);border-left:1px solid #1a1f3a;
-  z-index:10;display:flex;flex-direction:column}
+  background:#ffffff;border-right:2px solid #e8eaed;
+  z-index:10;display:flex;flex-direction:column;
+  box-shadow:2px 0 12px rgba(0,0,0,0.06)}
+#CTX{position:fixed;right:0;top:0;bottom:0;width:300px;
+  background:#ffffff;border-left:2px solid #e8eaed;
+  z-index:10;display:flex;flex-direction:column;
+  box-shadow:-2px 0 12px rgba(0,0,0,0.06)}
 /* Sidebar internals */
-.logo{padding:14px 14px 10px;border-bottom:1px solid #1a1f3a;font-size:11px;font-weight:700;color:#fff;line-height:1.5}
-.logo em{color:#FF9900;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
-.sbox{padding:9px 14px;border-bottom:1px solid #1a1f3a}
+.logo{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;
+  font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.5}
+.logo em{color:#ea580c;font-style:normal;display:block;font-size:9px;
+  margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+.sbox{padding:9px 14px;border-bottom:1px solid #e8eaed;background:#f8f9ff}
 .stat{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
-.stat b{color:#FF9900}
+.stat b{color:#c2410c;font-weight:700}
 .leg{flex:1;overflow-y:auto;padding:10px 14px}
-.leg h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#444;margin:10px 0 6px}
+.leg h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;
+  color:#9ca3af;margin:10px 0 6px;font-weight:600}
 .leg h4:first-child{margin-top:0}
-.li{display:flex;align-items:center;gap:6px;padding:3px 5px;font-size:10px;cursor:pointer;border-radius:4px}
-.li:hover{background:#111830}
-.li.off{opacity:.2}
+.li{display:flex;align-items:center;gap:6px;padding:4px 6px;
+  font-size:10px;cursor:pointer;border-radius:6px;color:#374151}
+.li:hover{background:#f3f4f6}
+.li.off{opacity:.3}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .lbl{flex:1;line-height:1.3}
-.cnt{font-size:9px;color:#555}
-.ctrl{padding:10px 14px;border-top:1px solid #1a1f3a;display:flex;gap:6px}
-.btn{padding:5px 12px;background:#0a0e22;border:1px solid #252a48;border-radius:5px;
-  color:#bbb;font-size:10px;cursor:pointer;transition:.2s}
-.btn:hover,.btn.on{border-color:#FF9900;color:#FF9900}
-.navl{padding:8px 14px;border-top:1px solid #1a1f3a;font-size:10px}
-.navl a{color:#4E79A7;text-decoration:none}
-.navl a:hover{color:#fff}
+.cnt{font-size:9px;color:#9ca3af}
+.ctrl{padding:10px 14px;border-top:1px solid #e8eaed;display:flex;gap:6px;background:#fafafa}
+.btn{padding:5px 12px;background:#ffffff;border:1.5px solid #d1d5db;
+  border-radius:6px;color:#374151;font-size:10px;cursor:pointer;
+  font-weight:500;transition:.15s}
+.btn:hover,.btn.on{border-color:#ea580c;color:#ea580c;background:#f0fdf4}
+.navl{padding:8px 14px;border-top:1px solid #e8eaed;font-size:10px;background:#fafafa}
+.navl a{color:#ea580c;text-decoration:none;font-weight:500}
+.navl a:hover{color:#c2410c}
 /* Right panel */
-.ch{padding:14px 14px 10px;border-bottom:1px solid #1a1f3a}
-.ch h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff}
-.ch p{font-size:9px;color:#555;margin-top:2px}
+.ch{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;background:#f8f9ff}
+.ch h2{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:#1a1a2e}
+.ch p{font-size:9px;color:#6b7280;margin-top:2px}
 .cb{flex:1;overflow-y:auto;padding:12px 14px}
-.cs{margin-bottom:15px}
-.cs h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
-  color:#FF9900;margin-bottom:7px;border-bottom:1px solid #1a1f3a;padding-bottom:3px}
-.cr{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #0d1020;font-size:10px}
+.cs{margin-bottom:16px}
+.cs h3{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:#c2410c;margin-bottom:7px;
+  border-bottom:1.5px solid #e8eaed;padding-bottom:3px}
+.cr{display:flex;justify-content:space-between;padding:4px 0;
+  border-bottom:1px solid #f3f4f6;font-size:10px}
 .cr:last-child{border:none}
-.ck{color:#888;width:44%}
-.cv2{color:#ddd;text-align:right;width:54%;font-size:9.5px;line-height:1.4}
-.cf{background:#0d1025;border:1px solid #1a1f3a;border-radius:5px;padding:5px 8px;
-  font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;margin:2px 0;line-height:1.5}
+.ck{color:#6b7280;width:44%}
+.cv2{color:#1f2937;text-align:right;width:54%;font-size:9.5px;line-height:1.4;font-weight:500}
+.cf{background:#f3f4f6;border:1px solid #e8eaed;border-left:3px solid #ea580c;
+  border-radius:5px;padding:5px 8px;font-family:Menlo,monospace;
+  font-size:8.5px;color:#1f2937;margin:2px 0;line-height:1.5}
+/* Node detail */
 #ND{display:none}
 #ND .nl{font-size:13px;font-weight:700;margin-bottom:2px}
-#ND .nt{font-size:9px;text-transform:uppercase;color:#888;margin-bottom:8px;letter-spacing:1px}
-#ND .nd2{font-size:10px;color:#aaa;line-height:1.5;padding:7px;background:#0d1025;
-  border-radius:6px;border-left:3px solid;margin-bottom:8px}
-#ND .nmh{font-size:9px;text-transform:uppercase;color:#FF9900;margin-bottom:5px;letter-spacing:.8px}
-#ND .nm{font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;background:#0d1025;
-  padding:3px 8px;border-radius:4px;margin:2px 0;border:1px solid #1a1f3a}
-#ND .nrh{font-size:9px;text-transform:uppercase;color:#76B7B2;margin:10px 0 4px;letter-spacing:.8px}
-#ND .nr{display:flex;align-items:center;gap:5px;font-size:9px;padding:2px 0;border-bottom:1px solid #0d1020}
+#ND .nt{font-size:9px;text-transform:uppercase;color:#9ca3af;
+  margin-bottom:8px;letter-spacing:1px}
+#ND .nd2{font-size:10px;color:#374151;line-height:1.5;padding:8px;
+  background:#f8f9ff;border-radius:8px;border-left:3px solid;
+  margin-bottom:8px}
+#ND .nmh{font-size:9px;text-transform:uppercase;color:#c2410c;
+  margin-bottom:5px;letter-spacing:.8px;font-weight:600}
+#ND .nm{font-family:Menlo,monospace;font-size:8.5px;color:#1f2937;
+  background:#f3f4f6;padding:3px 8px;border-radius:4px;margin:2px 0;
+  border:1px solid #e8eaed}
+#ND .nrh{font-size:9px;text-transform:uppercase;color:#2563eb;
+  margin:10px 0 4px;letter-spacing:.8px;font-weight:600}
+#ND .nr{display:flex;align-items:center;gap:5px;font-size:9px;
+  padding:3px 0;border-bottom:1px solid #f3f4f6}
 #ND .nr:last-child{border:none}
-.ra{color:#555;font-size:8px}
-.rn{color:#F1CE63;font-family:Menlo,monospace;font-size:8px}
-#BK{font-size:10px;color:#76B7B2;cursor:pointer;padding:5px 0;display:none;margin-bottom:8px}
-#BK:hover{color:#fff}
+.ra{color:#9ca3af;font-size:8px}
+.rn{color:#d97706;font-family:Menlo,monospace;font-size:8px;font-weight:600}
+#BK{font-size:10px;color:#ea580c;cursor:pointer;padding:5px 0;
+  display:none;margin-bottom:8px;font-weight:500}
+#BK:hover{color:#c2410c}
 /* Top badge */
-#TOP{position:fixed;top:14px;left:240px;right:280px;
+#TOP{position:fixed;top:14px;left:240px;right:300px;
   z-index:20;display:flex;justify-content:center;pointer-events:none}
-.badge{background:rgba(6,8,20,.92);border:1px solid #252a48;border-radius:20px;
-  padding:6px 20px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;
-  pointer-events:auto;white-space:nowrap}
-.badge em{color:#FF9900;font-style:normal}
+.badge{background:#ffffff;border:1.5px solid #e8eaed;border-radius:20px;
+  padding:7px 22px;font-size:11px;font-weight:700;color:#1a1a2e;
+  letter-spacing:.5px;pointer-events:auto;white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.badge em{color:#ea580c;font-style:normal}
 /* Tooltip */
-#TIP{position:fixed;background:rgba(6,8,20,.97);border:1px solid #2a2f50;
-  border-radius:8px;padding:8px 12px;font-size:10px;pointer-events:none;
-  display:none;z-index:30;max-width:210px;box-shadow:0 4px 20px rgba(0,0,0,.7)}
+#TIP{position:fixed;background:#ffffff;border:1.5px solid #e8eaed;
+  border-radius:10px;padding:8px 12px;font-size:10px;pointer-events:none;
+  display:none;z-index:30;max-width:210px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12)}
 .tl{font-weight:700;font-size:11px;margin-bottom:2px}
-.td2{font-size:9px;color:#888;line-height:1.4}
+.td2{font-size:9px;color:#6b7280;line-height:1.4}
 /* Bottom connection bar */
-#BAR{position:fixed;bottom:18px;left:256px;right:296px;
-  z-index:20;display:none;background:rgba(6,8,20,.96);border:1px solid #1a1f3a;
-  border-radius:12px;padding:10px 16px;gap:10px;flex-wrap:wrap;align-items:flex-start}
+#BAR{position:fixed;bottom:18px;left:256px;right:316px;
+  z-index:20;display:none;background:#ffffff;
+  border:1.5px solid #e8eaed;border-radius:14px;
+  padding:10px 16px;gap:10px;flex-wrap:wrap;align-items:flex-start;
+  box-shadow:0 4px 20px rgba(0,0,0,0.10)}
 #BAR .bn{font-size:12px;font-weight:700;flex-shrink:0}
-#BAR .bd{font-size:10px;color:#888;flex:1;line-height:1.4;min-width:160px}
+#BAR .bd{font-size:10px;color:#6b7280;flex:1;line-height:1.4;min-width:160px}
 #BAR .bt{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
-.btag{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:600;border:1px solid;opacity:.9}
-#BAR .bx{color:#444;cursor:pointer;font-size:14px;flex-shrink:0;line-height:1}
-#BAR .bx:hover{color:#fff}
+.btag{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;
+  border:1.5px solid;background:#f8f9ff}
+#BAR .bx{color:#9ca3af;cursor:pointer;font-size:14px;flex-shrink:0;line-height:1}
+#BAR .bx:hover{color:#1a1a2e}
 </style>
 </head><body>
 
-<canvas id="cv" style="position:fixed;left:0;top:0;z-index:1"></canvas>
+<canvas id="cv"></canvas>
 
 <div id="SB">
   <div class="logo">Neptune Skills <em>Knowledge Globe</em><em>Interactive Knowledge Globe</em></div>
@@ -126,15 +150,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e
     <div class="cr"><span class="ck">Language</span><span class="cv2">Python + SQL</span></div>
     <div class="cr"><span class="ck">AI Layer</span><span class="cv2">16 Bedrock / Claude Agents</span></div>
   </div>
-  <div class="cs"><h3>Categories</h3>
-    <div class="cr"><span class="ck">Cloud &amp; Infra</span><span class="cv2">VPC, IAM, EC2, S3</span></div>
+  <div class="cs"><h3>Skill Categories</h3>
+    <div class="cr"><span class="ck">Cloud &amp; Infra</span><span class="cv2">VPC, IAM, EC2, S3, Terraform</span></div>
     <div class="cr"><span class="ck">Data Engineering</span><span class="cv2">Glue, Spark, dbt, Kafka</span></div>
-    <div class="cr"><span class="ck">AI / ML</span><span class="cv2">Bedrock, Claude Agents</span></div>
+    <div class="cr"><span class="ck">Data Formats</span><span class="cv2">Iceberg, Parquet, JSON</span></div>
+    <div class="cr"><span class="ck">AI / ML</span><span class="cv2">Bedrock, Claude, Multi-agent</span></div>
     <div class="cr"><span class="ck">Analytics</span><span class="cv2">Athena, Pandas, boto3</span></div>
     <div class="cr"><span class="ck">Governance</span><span class="cv2">Medallion, Lineage, RBAC</span></div>
   </div>
   <div class="cs"><h3>Click any node</h3>
-    <div style="font-size:10px;color:#555;line-height:1.5">Select a skill to see connections and description.</div>
+    <div style="font-size:10px;color:#9ca3af;line-height:1.5">Select a skill to see its description and connections.</div>
   </div></div>
     <div id="ND"></div>
   </div>
@@ -157,14 +182,14 @@ const NAME_KEY="label";
 
 const cv=document.getElementById("cv");
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x050810);
+scene.background=new THREE.Color(0xf5f6fa);
 const camera=new THREE.PerspectiveCamera(50,1,1,5000);
 camera.position.set(0,0,1250);
 const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
 
 function updateCam(){
-  const W=window.innerWidth,H=window.innerHeight,cw=W-240-280;
+  const W=window.innerWidth,H=window.innerHeight,cw=W-240-300;
   renderer.setSize(W,H);
   camera.aspect=cw/H;
   camera.setViewOffset(W,H,240,0,cw,H);
@@ -173,13 +198,13 @@ function updateCam(){
 updateCam();
 window.addEventListener("resize",updateCam);
 
-scene.add(new THREE.AmbientLight(0xffffff,0.5));
-const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
+scene.add(new THREE.AmbientLight(0xffffff,0.9));
+const dl=new THREE.DirectionalLight(0xffffff,0.6);dl.position.set(1,1,2);scene.add(dl);
 const R=320;
 scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,40,40),
-  new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.06,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1.2,8,100),
-  new THREE.MeshBasicMaterial({color:0x1e3050,transparent:true,opacity:0.4})));
+  new THREE.MeshBasicMaterial({color:0xdddddd,wireframe:true,opacity:0.25,transparent:true})));
+scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1.5,8,100),
+  new THREE.MeshBasicMaterial({color:0xcccccc,transparent:true,opacity:0.5})));
 
 let spin=true,drag=false,ox=0,oy=0,rx=0,ry=0;
 const piv=new THREE.Group();scene.add(piv);
@@ -240,29 +265,28 @@ function fib(n,R){
 function build(){
   const pos=fib(NODES.length,R),idx={};
   NODES.forEach((n,i)=>{n._p=pos[i];idx[n.id]=i});
-
   NODES.forEach((n,i)=>{
     const r=Math.max(4,Math.min(13,n.size/4.5));
     const m=new THREE.Mesh(
       new THREE.SphereGeometry(r,14,14),
-      new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),
-        emissive:new THREE.Color(n.color).multiplyScalar(0.35),
-        transparent:true,opacity:1})
+      new THREE.MeshPhongMaterial({
+        color:new THREE.Color(n.color),
+        emissive:new THREE.Color(n.color).multiplyScalar(0.05),
+        shininess:60,transparent:true,opacity:0.95})
     );
     m.position.copy(pos[i]);m.userData={nid:n.id};
     piv.add(m);meshes[n.id]=m;
-
     const c=document.createElement("canvas");c.width=320;c.height=56;
     const cx=c.getContext("2d");
-    cx.font="bold 18px -apple-system,sans-serif";
-    cx.fillStyle=n.color;cx.textAlign="center";
+    cx.font="bold 17px -apple-system,sans-serif";
+    cx.fillStyle="#1a1a2e";
+    cx.textAlign="center";
     cx.fillText(n[NAME_KEY].length>18?n[NAME_KEY].slice(0,17)+"…":n[NAME_KEY],160,34);
-    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.88}));
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.9}));
     sp.scale.set(70,13,1);
     sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+12);
     piv.add(sp);
   });
-
   EDGES.forEach(e=>{
     const si=idx[e.source],ti=idx[e.target];
     if(si===undefined||ti===undefined)return;
@@ -272,7 +296,7 @@ function build(){
     const geo=new THREE.BufferGeometry().setFromPoints(
       new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(32));
     const l=new THREE.Line(geo,new THREE.LineBasicMaterial({
-      color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.78}));
+      color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.55}));
     l.userData={src:e.source,tgt:e.target,rel:e.rel};
     piv.add(l);lines.push(l);
   });
@@ -281,41 +305,35 @@ function build(){
 function selNode(nid){
   const n=NODES.find(x=>x.id===nid);if(!n)return;
   const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
-  Object.entries(meshes).forEach(([id,m])=>{m.material.opacity=id===nid?1:.06;m.scale.setScalar(id===nid?2:1)});
-  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:.03});
-  
-  // Right panel for skills
-  const on2=NODES.find(x=>x.id===nid);
-  const rh=rels.slice(0,12).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="nr"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel||"connects"}</span><span class="ra">→</span><span style="color:${on?.color||'#aaa'};font-size:9px">${on?.label||ot}</span></div>`}).join("")+(rels.length>12?`<div style="font-size:9px;color:#555;margin-top:3px">+${rels.length-12} more</div>`:"");
+  Object.entries(meshes).forEach(([id,m])=>{m.material.opacity=id===nid?1:.12;m.scale.setScalar(id===nid?2:1)});
+  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?0.9:.04});
+  const rh=rels.slice(0,12).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="nr"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel||"connects"}</span><span class="ra">→</span><span style="color:${on?.color||'#374151'};font-size:9px">${on?.label||ot}</span></div>`}).join("")+(rels.length>12?`<div style="font-size:9px;color:#9ca3af;margin-top:3px">+${rels.length-12} more</div>`:"");
   document.getElementById("ND").innerHTML=`<div class="nl" style="color:${n.color}">${n.label}</div><div class="nd2" style="border-color:${n.color}">${n.desc}</div><div class="nrh">Connections (${rels.length})</div>${rh}`;
   document.getElementById("OV").style.display="none";
   document.getElementById("ND").style.display="block";
   document.getElementById("BK").style.display="block";
   document.getElementById("CTX-S").textContent=n.label;
-  // Bottom bar
   document.getElementById("BN").innerHTML=`<span style="color:${n.color}">${n[NAME_KEY]}</span>`;
   document.getElementById("BD").textContent=n.desc;
   document.getElementById("BT").innerHTML=rels.slice(0,7).map(e=>{
     const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);
-    return`<span class="btag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#555'}">${io?"→":"←"} ${e.rel||"connects"} ${on?.[NAME_KEY]||ot}</span>`;
-  }).join("")+(rels.length>7?`<span style="font-size:9px;color:#555">+${rels.length-7} more</span>`:"");
+    return`<span class="btag" style="color:${on?.color||'#374151'};border-color:${on?.color||'#e8eaed'}">${io?"→":"←"} ${e.rel||"connects"} ${on?.[NAME_KEY]||ot}</span>`;
+  }).join("")+(rels.length>7?`<span style="font-size:9px;color:#9ca3af">+${rels.length-7} more</span>`:"");
   document.getElementById("BAR").style.display="flex";
 }
 
 function clearSel(){
-  Object.values(meshes).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
-  lines.forEach(l=>{l.material.opacity=0.78});
+  Object.values(meshes).forEach(m=>{m.material.opacity=0.95;m.scale.setScalar(1)});
+  lines.forEach(l=>{l.material.opacity=0.55});
   document.getElementById("BAR").style.display="none";
   showOv();
 }
-
 function showOv(){
   document.getElementById("OV").style.display="block";
   document.getElementById("ND").style.display="none";
   document.getElementById("BK").style.display="none";
 }
 
-// Build category legend
 (()=>{
   const cats=NODES.filter(n=>n.id.startsWith("cat_"));
   const leg=document.getElementById("CAT-LEG");
