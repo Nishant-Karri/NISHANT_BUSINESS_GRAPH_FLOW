@@ -336,7 +336,7 @@ const mouse=new THREE.Vector2();
 let meshMap={},lineObjects=[],hiddenTiers=new Set(),hiddenEdgeTypes=new Set();
 
 function raycast(e){
-  const cw=CW();mouse.x=((e.clientX-LW)/cw)*2-1;mouse.y=-(e.clientY/H())*2+1;
+  mouse.x=(e.clientX/window.innerWidth)*2-1;mouse.y=-(e.clientY/H())*2+1;
   raycaster.setFromCamera(mouse,camera);
   const hits=raycaster.intersectObjects(Object.values(meshMap),false);
   return hits.length?hits[0]:null;
