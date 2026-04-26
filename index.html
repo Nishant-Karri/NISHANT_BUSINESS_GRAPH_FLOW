@@ -53,6 +53,10 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
+  #nav-bar{position:fixed;top:14px;right:16px;z-index:999}
+  #nav-bar a{display:inline-block;padding:7px 16px;background:rgba(8,10,22,.88);border:1px solid #252a48;border-radius:20px;font-size:11px;font-weight:600;color:#59A14F;text-decoration:none;backdrop-filter:blur(8px);letter-spacing:.4px;transition:border-color .2s,color .2s}
+  #nav-bar a:hover{border-color:#59A14F;color:#fff}
+
   * { box-sizing: border-box; }
   body { margin:0; overflow:hidden; background:#000000; }
   #graph-container, #mynetwork { background:#000000 !important; }
@@ -339,6 +343,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+        <div id="nav-bar"><a href="business_graph.html">⬡ Business Globe →</a></div>
         <div class="card" style="width: 100%">
             
             
