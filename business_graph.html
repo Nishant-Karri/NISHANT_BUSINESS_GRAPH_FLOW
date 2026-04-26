@@ -301,7 +301,7 @@ function build(){
     const geo=new THREE.BufferGeometry().setFromPoints(
       new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(32));
     const l=new THREE.Line(geo,new THREE.LineBasicMaterial({
-      color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.55}));
+      color:new THREE.Color(NODES[si].color),transparent:false,opacity:1.0}));
     l.userData={src:e.source,tgt:e.target,rel:e.rel};
     piv.add(l);lines.push(l);
   });
@@ -311,7 +311,7 @@ function selNode(nid){
   const n=NODES.find(x=>x.id===nid);if(!n)return;
   const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
   Object.entries(meshes).forEach(([id,m])=>{m.material.opacity=id===nid?1:.12;m.scale.setScalar(id===nid?2:1)});
-  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?0.9:.04});
+  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1.0:.08});
   const metrics=(n.metrics||[]).map(m=>`<div class="nm">${m}</div>`).join("");
   const rh=rels.map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="nr"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel}</span><span class="ra">→</span><span style="color:${on?.color||'#374151'};font-size:9px">${ot}</span></div>`}).join("");
   document.getElementById("ND").innerHTML=`<div class="nl" style="color:${n.color}">${n.id}</div><div class="nt">${n.tier||""} tier</div><div class="nd2" style="border-color:${n.color}">${n.desc}</div>${metrics?`<div class="nmh">Attributes</div>${metrics}`:""}<div class="nrh">Relationships (${rels.length})</div>${rh}`;
@@ -330,7 +330,7 @@ function selNode(nid){
 
 function clearSel(){
   Object.values(meshes).forEach(m=>{m.material.opacity=0.95;m.scale.setScalar(1)});
-  lines.forEach(l=>{l.material.opacity=0.55});
+  lines.forEach(l=>{l.material.opacity=1.0});
   document.getElementById("BAR").style.display="none";
   showOv();
 }
