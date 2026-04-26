@@ -12,12 +12,33 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
 /* Sidebars */
 #SB{position:fixed;left:0;top:0;bottom:0;width:240px;
   background:#ffffff;border-right:2px solid #e8eaed;
-  z-index:10;display:flex;flex-direction:column;
-  box-shadow:2px 0 12px rgba(0,0,0,0.06)}
+  z-index:100;display:flex;flex-direction:column;
+  box-shadow:2px 0 12px rgba(0,0,0,0.06);
+  transition:transform .3s ease}
 #CTX{position:fixed;right:0;top:0;bottom:0;width:300px;
   background:#ffffff;border-left:2px solid #e8eaed;
-  z-index:10;display:flex;flex-direction:column;
-  box-shadow:-2px 0 12px rgba(0,0,0,0.06)}
+  z-index:100;display:flex;flex-direction:column;
+  box-shadow:-2px 0 12px rgba(0,0,0,0.06);
+  transition:transform .3s ease}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99}
+
+/* Mobile — sidebars hidden off-screen by default */
+@media(max-width:900px){
+  #SB{transform:translateX(-100%);width:min(240px,85vw)}
+  #CTX{transform:translateX(100%);width:min(300px,85vw)}
+  #SB.open{transform:translateX(0)}
+  #CTX.open{transform:translateX(0)}
+  #overlay.show{display:block}
+  #TOP{left:52px!important;right:52px!important;top:10px}
+  .badge{font-size:10px;padding:5px 12px}
+  #BAR{left:10px!important;right:10px!important;bottom:12px;flex-direction:column;gap:6px}
+  #BAR .bt{margin-top:3px}
+}
+/* Tablet — narrower sidebars, still visible */
+@media(min-width:901px) and (max-width:1200px){
+  #SB{width:200px}
+  #CTX{width:220px}
+}
 /* Sidebar internals */
 .logo{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;
   font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.5}
@@ -108,7 +129,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
   padding:10px 16px;gap:10px;flex-wrap:wrap;align-items:flex-start;
   box-shadow:0 4px 20px rgba(0,0,0,0.10)}
 #BAR .bn{font-size:12px;font-weight:700;flex-shrink:0}
-#BAR .bd{font-size:10px;color:#6b7280;flex:1;line-height:1.4;min-width:160px}
+#BAR .bd{font-size:10px;color:#6b7280;flex:1;line-height:1.4;min-width:120px;max-width:100%}
 #BAR .bt{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
 .btag{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;
   border:1.5px solid;background:#f8f9ff}
@@ -118,6 +139,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
 </head><body>
 
 <canvas id="cv"></canvas>
+<div id="overlay" onclick="closePanels()"></div>
+<!-- Mobile nav buttons -->
+<button id="btn-sb"  onclick="toggleSB()"  aria-label="Menu"
+  style="display:none;position:fixed;left:10px;top:10px;z-index:200;
+  width:40px;height:40px;border-radius:10px;border:1.5px solid #e8eaed;
+  background:#fff;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)">☰</button>
+<button id="btn-ctx" onclick="toggleCTX()" aria-label="Info"
+  style="display:none;position:fixed;right:10px;top:10px;z-index:200;
+  width:40px;height:40px;border-radius:10px;border:1.5px solid #e8eaed;
+  background:#fff;font-size:16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)">ℹ</button>
 
 <div id="SB">
   <div class="logo">Nishant_Knowledge_<em>skill Graph</em><em>Interactive Knowledge Globe</em></div>
@@ -188,15 +219,51 @@ camera.position.set(0,0,1250);
 const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
 
+function getSidebarWidths(){
+  const mobile=window.innerWidth<=900;
+  const tablet=window.innerWidth<=1200&&!mobile;
+  const sbW = mobile?0:(tablet?200:240);
+  const ctxW= mobile?0:(tablet?220:300);
+  return{sbW,ctxW};
+}
 function updateCam(){
-  const W=window.innerWidth,H=window.innerHeight,cw=W-240-300;
+  const W=window.innerWidth,H=window.innerHeight;
+  const{sbW,ctxW}=getSidebarWidths();
+  const cw=Math.max(200,W-sbW-ctxW);
   renderer.setSize(W,H);
   camera.aspect=cw/H;
-  camera.setViewOffset(W,H,240,0,cw,H);
+  camera.setViewOffset(W,H,sbW,0,cw,H);
   camera.updateProjectionMatrix();
+  // Show/hide mobile buttons
+  const mobile=window.innerWidth<=900;
+  document.getElementById("btn-sb").style.display=mobile?"block":"none";
+  document.getElementById("btn-ctx").style.display=mobile?"block":"none";
+  if(!mobile){
+    document.getElementById("SB").classList.remove("open");
+    document.getElementById("CTX").classList.remove("open");
+    document.getElementById("overlay").classList.remove("show");
+  }
 }
 updateCam();
 window.addEventListener("resize",updateCam);
+
+function toggleSB(){
+  document.getElementById("SB").classList.toggle("open");
+  document.getElementById("CTX").classList.remove("open");
+  document.getElementById("overlay").classList.toggle("show",
+    document.getElementById("SB").classList.contains("open"));
+}
+function toggleCTX(){
+  document.getElementById("CTX").classList.toggle("open");
+  document.getElementById("SB").classList.remove("open");
+  document.getElementById("overlay").classList.toggle("show",
+    document.getElementById("CTX").classList.contains("open"));
+}
+function closePanels(){
+  document.getElementById("SB").classList.remove("open");
+  document.getElementById("CTX").classList.remove("open");
+  document.getElementById("overlay").classList.remove("show");
+}
 
 scene.add(new THREE.AmbientLight(0xffffff,0.9));
 const dl=new THREE.DirectionalLight(0xffffff,0.6);dl.position.set(1,1,2);scene.add(dl);
@@ -219,6 +286,31 @@ cv.addEventListener("mousemove",e=>{
   }else doHover(e);
 });
 cv.addEventListener("mouseup",()=>drag=false);
+// Touch support
+let lastTouchDist=0;
+cv.addEventListener("touchstart",e=>{
+  if(e.touches.length===1){drag=true;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}
+  if(e.touches.length===2){
+    lastTouchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
+      e.touches[0].clientY-e.touches[1].clientY);
+  }
+  e.preventDefault();},{passive:false});
+cv.addEventListener("touchmove",e=>{
+  if(e.touches.length===1&&drag){
+    spin=false;document.getElementById("SPIN").classList.remove("on");
+    ry+=(e.touches[0].clientX-ox)*0.005;rx+=(e.touches[0].clientY-oy)*0.005;
+    rx=Math.max(-1.5,Math.min(1.5,rx));
+    piv.rotation.y=ry;piv.rotation.x=rx;
+    ox=e.touches[0].clientX;oy=e.touches[0].clientY;
+  }
+  if(e.touches.length===2){
+    const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
+      e.touches[0].clientY-e.touches[1].clientY);
+    camera.position.z=Math.max(400,Math.min(3000,camera.position.z-(d-lastTouchDist)*2));
+    lastTouchDist=d;
+  }
+  e.preventDefault();},{passive:false});
+cv.addEventListener("touchend",()=>drag=false);
 cv.addEventListener("mouseleave",()=>drag=false);
 cv.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(3000,camera.position.z+e.deltaY*0.8))});
 cv.addEventListener("click",e=>{const h=cast(e);h?selNode(h.object.userData.nid):clearSel()});
