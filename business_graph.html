@@ -125,7 +125,9 @@ const NODES=[{"id": "SalesTransaction", "color": "#59A14F", "size": 22, "tier": 
 const EDGES=[{"source": "SalesTransaction", "target": "Customer", "rel": "BY_CUSTOMER", "type": "fact"}, {"source": "SalesTransaction", "target": "Product", "rel": "FOR_PRODUCT", "type": "fact"}, {"source": "SalesTransaction", "target": "Store", "rel": "AT_STORE", "type": "fact"}, {"source": "SalesTransaction", "target": "Promotion", "rel": "USED_PROMOTION", "type": "fact"}, {"source": "SalesTransaction", "target": "Month", "rel": "ON_DATE", "type": "fact"}, {"source": "Customer", "target": "Product", "rel": "PURCHASED", "type": "business"}, {"source": "Customer", "target": "Store", "rel": "SHOPPED_AT", "type": "business"}, {"source": "Customer", "target": "LoyaltyTier", "rel": "HAS_TIER", "type": "hierarchy"}, {"source": "Customer", "target": "CustomerSegment", "rel": "IN_SEGMENT", "type": "hierarchy"}, {"source": "Customer", "target": "AgeGroup", "rel": "IN_AGE_GROUP", "type": "hierarchy"}, {"source": "Customer", "target": "City", "rel": "LIVES_IN", "type": "geography"}, {"source": "Product", "target": "Category", "rel": "IN_CATEGORY", "type": "hierarchy"}, {"source": "Product", "target": "SubCategory", "rel": "IN_SUBCATEGORY", "type": "hierarchy"}, {"source": "Product", "target": "Brand", "rel": "MADE_BY", "type": "hierarchy"}, {"source": "Product", "target": "Supplier", "rel": "SUPPLIED_BY", "type": "hierarchy"}, {"source": "Product", "target": "Store", "rel": "SOLD_AT", "type": "business"}, {"source": "Category", "target": "SubCategory", "rel": "HAS_SUBCATEGORY", "type": "hierarchy"}, {"source": "Store", "target": "City", "rel": "LOCATED_IN", "type": "geography"}, {"source": "Store", "target": "Region", "rel": "IN_REGION", "type": "geography"}, {"source": "Store", "target": "District", "rel": "IN_DISTRICT", "type": "geography"}, {"source": "Store", "target": "StoreType", "rel": "IS_TYPE", "type": "hierarchy"}, {"source": "City", "target": "State", "rel": "IN_STATE", "type": "geography"}, {"source": "State", "target": "Region", "rel": "IN_REGION", "type": "geography"}, {"source": "Promotion", "target": "PromotionType", "rel": "IS_PROMO_TYPE", "type": "hierarchy"}, {"source": "Promotion", "target": "Channel", "rel": "AVAILABLE_ON", "type": "hierarchy"}, {"source": "Month", "target": "Quarter", "rel": "IN_QUARTER", "type": "time"}, {"source": "Month", "target": "FiscalYear", "rel": "IN_FISCAL_YEAR", "type": "time"}, {"source": "Quarter", "target": "FiscalYear", "rel": "IN_FISCAL_YEAR", "type": "time"}];
 const NK="id";
 const wrap=document.getElementById('WRAP');
-let W=()=>wrap.offsetWidth, H=()=>wrap.offsetHeight;
+const LW=240, RW=300;
+let W=()=>Math.max(100, window.innerWidth-LW-RW);
+let H=()=>window.innerHeight;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0xf5f6fa);
 const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
@@ -136,9 +138,11 @@ renderer.domElement.style.display='block';
 wrap.appendChild(renderer.domElement);
 function resize(){
   const w=W(),h=H();
-  if(w>0&&h>0){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}
+  renderer.setSize(w,h);
+  camera.aspect=w/h;
+  camera.updateProjectionMatrix();
 }
-setTimeout(resize,0);
+resize();
 window.addEventListener('resize',resize);
 scene.add(new THREE.AmbientLight(0xffffff,.8));
 const dl=new THREE.DirectionalLight(0xffffff,.5);dl.position.set(1,1,2);scene.add(dl);
