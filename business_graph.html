@@ -1,194 +1,159 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Nishant_Star_Model_Business_Globe</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;width:100vw;height:100vh;display:grid;grid-template-columns:240px 1fr 300px}
-
-/* ── Left sidebar ── */
-#sidebar{position:relative;width:240px;background:rgba(8,10,22,0.93);border-right:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px)}
+html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+/* Layout: fixed sidebars, fixed center canvas */
+#sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:rgba(8,10,22,0.95);border-right:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column}
+#context{position:fixed;right:0;top:0;bottom:0;width:300px;background:rgba(8,10,22,0.95);border-left:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column}
+#globe-wrap{position:fixed;left:240px;right:300px;top:0;bottom:0;z-index:1;background:#050810}
+/* Sidebar internals */
 #logo{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
-#logo h1{font-size:11px;font-weight:700;letter-spacing:.5px;color:#fff;line-height:1.5}
+#logo h1{font-size:11px;font-weight:700;color:#fff;line-height:1.5}
 #logo h1 em{color:#59A14F;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
-#stats-box{padding:10px 14px;border-bottom:1px solid #1a1f3a}
+.stats-box{padding:10px 14px;border-bottom:1px solid #1a1f3a}
 .stat{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
 .stat .v{font-weight:700;color:#59A14F}
 #legend{flex:1;overflow-y:auto;padding:10px 14px}
 #legend h3{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:#444;margin-bottom:7px;margin-top:10px}
 #legend h3:first-child{margin-top:0}
-.li{display:flex;align-items:center;gap:6px;padding:3px 5px;font-size:10px;cursor:pointer;border-radius:4px;transition:background .15s}
+.li{display:flex;align-items:center;gap:6px;padding:3px 5px;font-size:10px;cursor:pointer;border-radius:4px}
 .li:hover{background:#151830}
 .li.off{opacity:.2}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .li-label{flex:1}
-.li-type{font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.5px}
+.li-cnt{font-size:9px;color:#555}
 #ctrl{padding:10px 14px;border-top:1px solid #1a1f3a;display:flex;gap:6px;flex-wrap:wrap}
-.btn{padding:5px 10px;background:#0e1025;border:1px solid #252a48;border-radius:5px;color:#bbb;font-size:10px;cursor:pointer;transition:border-color .2s,color .2s}
-.btn:hover{border-color:#59A14F;color:#fff}
-.btn.on{border-color:#59A14F;color:#59A14F}
-#back-to-skills{padding:8px 14px;border-top:1px solid #1a1f3a;font-size:10px}
-#back-to-skills a{color:#4E79A7;text-decoration:none}
-#back-to-skills a:hover{color:#fff}
-
-/* ── Right panel ── */
-#context{position:relative;width:300px;background:rgba(8,10,22,0.93);border-left:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px);overflow:hidden}
+.btn{padding:5px 10px;background:#0e1025;border:1px solid #252a48;border-radius:5px;color:#bbb;font-size:10px;cursor:pointer}
+.btn:hover,.btn.on{border-color:#59A14F;color:#59A14F}
+#nav-link{padding:8px 14px;border-top:1px solid #1a1f3a;font-size:10px}
+#nav-link a{color:#4E79A7;text-decoration:none}
+#nav-link a:hover{color:#fff}
+/* Right panel */
 #ctx-header{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
 #ctx-header h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff}
 #ctx-header p{font-size:9px;color:#555;margin-top:3px}
 #ctx-body{flex:1;overflow-y:auto;padding:12px 14px}
-.ctx-section{margin-bottom:18px}
-.ctx-section h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#59A14F;margin-bottom:8px;border-bottom:1px solid #1a1f3a;padding-bottom:4px}
-.ctx-row{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid #0e1025;font-size:10px}
+.ctx-sec{margin-bottom:16px}
+.ctx-sec h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#59A14F;margin-bottom:7px;border-bottom:1px solid #1a1f3a;padding-bottom:3px}
+.ctx-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #0e1025;font-size:10px}
 .ctx-row:last-child{border:none}
-.ctx-key{color:#888;flex-shrink:0;width:45%}
-.ctx-val{color:#e0e0e0;text-align:right;width:53%;font-size:9.5px;line-height:1.4}
-.ctx-formula{background:#0d1025;border:1px solid #1a1f3a;border-radius:5px;padding:6px 8px;font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;margin:3px 0;line-height:1.5}
-#node-detail{display:none}
-#node-detail .nd-label{font-size:13px;font-weight:700;margin-bottom:3px}
-#node-detail .nd-tier{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:10px}
-#node-detail .nd-desc{font-size:10px;color:#aaa;line-height:1.5;margin-bottom:12px;padding:8px;background:#0d1025;border-radius:6px;border-left:3px solid}
-#node-detail .nd-metrics h4{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#59A14F;margin-bottom:6px}
-#node-detail .nd-metric{font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;background:#0d1025;padding:4px 8px;border-radius:4px;margin:2px 0;border:1px solid #1a1f3a}
-#node-detail .nd-rels h4{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#76B7B2;margin:12px 0 6px}
-#node-detail .nd-rel{display:flex;align-items:center;gap:6px;font-size:9px;padding:3px 0;border-bottom:1px solid #0e1025}
-#node-detail .nd-rel:last-child{border:none}
-.rel-arrow{color:#555;font-size:8px}
-.rel-name{color:#F1CE63;font-family:Menlo,monospace;font-size:8px}
-.rel-target{color:#aaa}
-#back-btn{font-size:10px;color:#76B7B2;cursor:pointer;padding:6px 0;display:none;margin-bottom:8px}
-#back-btn:hover{color:#fff}
-
-/* ── Top title ── */
-#top-bar{position:fixed;top:14px;left:240px;right:300px;display:flex;justify-content:center;z-index:10;pointer-events:none}
-.title-badge{pointer-events:auto}
-.title-badge{background:rgba(8,10,22,.88);border:1px solid #252a48;border-radius:20px;padding:6px 20px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;backdrop-filter:blur(8px);white-space:nowrap}
-.title-badge em{color:#59A14F;font-style:normal}
-
-/* ── Tooltip ── */
-#tip{position:fixed;background:rgba(8,10,22,.97);border:1px solid #2a2f50;border-radius:8px;padding:8px 12px;font-size:10px;pointer-events:none;display:none;z-index:20;max-width:200px;box-shadow:0 4px 24px rgba(0,0,0,.7)}
+.ctx-k{color:#888;width:44%}
+.ctx-v{color:#e0e0e0;text-align:right;width:54%;font-size:9.5px;line-height:1.4}
+.ctx-f{background:#0d1025;border:1px solid #1a1f3a;border-radius:5px;padding:5px 8px;font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;margin:2px 0;line-height:1.5}
+#nd{display:none}
+#nd .nd-lbl{font-size:13px;font-weight:700;margin-bottom:3px}
+#nd .nd-tier{font-size:9px;text-transform:uppercase;color:#888;margin-bottom:8px;letter-spacing:1px}
+#nd .nd-desc{font-size:10px;color:#aaa;line-height:1.5;padding:7px;background:#0d1025;border-radius:6px;border-left:3px solid;margin-bottom:10px}
+#nd .nd-mh{font-size:9px;text-transform:uppercase;color:#59A14F;margin-bottom:5px;letter-spacing:.8px}
+#nd .nd-m{font-family:Menlo,monospace;font-size:8.5px;color:#A0CBE8;background:#0d1025;padding:3px 8px;border-radius:4px;margin:2px 0;border:1px solid #1a1f3a}
+#nd .nd-rh{font-size:9px;text-transform:uppercase;color:#76B7B2;margin:10px 0 5px;letter-spacing:.8px}
+#nd .nd-r{display:flex;align-items:center;gap:5px;font-size:9px;padding:2px 0;border-bottom:1px solid #0e1025}
+#nd .nd-r:last-child{border:none}
+.ra{color:#555;font-size:8px}
+.rn{color:#F1CE63;font-family:Menlo,monospace;font-size:8px}
+.rt{color:#aaa}
+#back{font-size:10px;color:#76B7B2;cursor:pointer;padding:5px 0;display:none;margin-bottom:8px}
+#back:hover{color:#fff}
+/* Top badge */
+#top{position:fixed;top:14px;left:240px;right:300px;z-index:20;display:flex;justify-content:center;pointer-events:none}
+.badge{background:rgba(8,10,22,.9);border:1px solid #252a48;border-radius:20px;padding:6px 20px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;pointer-events:auto}
+.badge em{color:#59A14F;font-style:normal}
+/* Tooltip */
+#tip{position:fixed;background:rgba(8,10,22,.97);border:1px solid #2a2f50;border-radius:8px;padding:8px 12px;font-size:10px;pointer-events:none;display:none;z-index:30;max-width:200px}
 #tip .tl{font-weight:700;font-size:11px;margin-bottom:2px}
 #tip .td{font-size:9px;color:#888;line-height:1.4}
-
-/* ── Loading ── */
-#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.96);z-index:50;flex-direction:column;gap:12px}
+/* Bottom connection bar */
+#cbar{position:fixed;bottom:20px;left:260px;right:320px;z-index:20;display:none;background:rgba(8,10,22,0.95);border:1px solid #1a1f3a;border-radius:12px;padding:10px 16px;align-items:flex-start;gap:10px;flex-wrap:wrap}
+#cbar .cb-name{font-size:12px;font-weight:700;flex-shrink:0}
+#cbar .cb-desc{font-size:10px;color:#888;flex:1;line-height:1.4;min-width:200px}
+#cbar .cb-tags{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
+#cbar .cb-tag{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:600;border:1px solid;opacity:.85}
+#cbar .cb-x{color:#444;cursor:pointer;font-size:14px;flex-shrink:0}
+#cbar .cb-x:hover{color:#fff}
+/* Loading */
+#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:rgba(5,8,16,.96);z-index:50}
 #loading p{font-size:14px;color:#59A14F;letter-spacing:1px}
 #loading small{font-size:10px;color:#444}
 .pulse{animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
-canvas{display:block}
-#canvas-wrap{position:relative;overflow:hidden;background:#050810}
-#canvas-wrap canvas{display:block;position:absolute;left:0;top:0}
-
-
-/* ── Bottom connection bar ── */
-#conn-bar{position:fixed;bottom:20px;left:260px;right:320px;z-index:10;
-  display:none;background:rgba(8,10,22,0.92);border:1px solid #1a1f3a;
-  border-radius:12px;padding:10px 18px;backdrop-filter:blur(12px);
-  display:none;align-items:center;gap:12px;flex-wrap:wrap}
-#conn-bar .cb-node{font-size:12px;font-weight:700}
-#conn-bar .cb-sep{color:#333;font-size:10px}
-#conn-bar .cb-desc{font-size:10px;color:#888;flex:1;line-height:1.4}
-#conn-bar .cb-tags{display:flex;gap:6px;flex-wrap:wrap}
-#conn-bar .cb-tag{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;border:1px solid;opacity:.85}
-#conn-bar .cb-close{color:#444;cursor:pointer;font-size:14px;margin-left:auto;flex-shrink:0}
-#conn-bar .cb-close:hover{color:#fff}
 </style>
 </head>
 <body>
 
 <div id="sidebar">
-  <div id="logo">
-    <h1>Nishant_Star_Model_Business_Globe<em>Business Logic — Schema View</em></h1>
-  </div>
-  <div id="stats-box">
-    <div class="stat"><span>Schema Nodes</span><span class="v" id="sn">22</span></div>
-    <div class="stat"><span>Relationships</span><span class="v" id="se">28</span></div>
-    <div class="stat"><span>Schema Tiers</span><span class="v" id="st">6</span></div>
+  <div id="logo"><h1>Nishant_Star_Model_Business_Globe<em>Business Logic — Schema View</em></h1></div>
+  <div class="stats-box">
+    <div class="stat"><span>Schema Nodes</span><span class="v">22</span></div>
+    <div class="stat"><span>Relationships</span><span class="v">28</span></div>
+    <div class="stat"><span>Tiers</span><span class="v">6</span></div>
   </div>
   <div id="legend">
-    <h3>Node Tiers</h3>
-    <div id="tier-legend"></div>
-    <h3>Edge Types</h3>
-    <div id="edge-legend"></div>
+    <h3>Node Tiers</h3><div id="tier-leg"></div>
+    <h3>Edge Types</h3><div id="edge-leg"></div>
   </div>
   <div id="ctrl">
     <button class="btn on" id="btn-spin" onclick="toggleSpin()">⟳ Spin</button>
-    <button class="btn" onclick="resetCamera()">⌖ Reset</button>
+    <button class="btn" onclick="resetCam()">⌖ Reset</button>
   </div>
-  <div id="back-to-skills">
-    <a href="index.html">← Skills Knowledge Graph</a>
-  </div>
+  <div id="nav-link"><a href="index.html">← Skills Globe</a></div>
 </div>
-<div id="canvas-wrap"></div>
 
-<div id="top-bar">
-  <div class="title-badge">Nishant_Star_Model_<em>Business_Globe</em></div>
-</div>
+<div id="globe-wrap"></div>
 
 <div id="context">
-  <div id="ctx-header">
-    <h2>Business Context</h2>
-    <p id="ctx-sub">Star Schema Retail Sales Model</p>
-  </div>
+  <div id="ctx-header"><h2>Business Context</h2><p id="ctx-sub">Star Schema Retail Sales</p></div>
   <div id="ctx-body">
-    <span id="back-btn" onclick="showOverview()">← Overview</span>
-
-    <div id="ctx-overview">
-      <div class="ctx-section">
-        <h3>Model Overview</h3>
-        <div class="ctx-row"><span class="ctx-key">Schema Type</span><span class="ctx-val">Star Schema → Property Graph</span></div>
-        <div class="ctx-row"><span class="ctx-key">Domain</span><span class="ctx-val">Retail Sales (B2C + B2B)</span></div>
-        <div class="ctx-row"><span class="ctx-key">Grain</span><span class="ctx-val">One order line item per SalesTransaction</span></div>
-        <div class="ctx-row"><span class="ctx-key">Graph Store</span><span class="ctx-val">Amazon Neptune (Gremlin)</span></div>
-        <div class="ctx-row"><span class="ctx-key">Schema Source</span><span class="ctx-val">star_schema/data_model/erd_diagram.md</span></div>
+    <span id="back" onclick="showOv()">← Overview</span>
+    <div id="ctx-ov">
+      <div class="ctx-sec"><h3>Model Overview</h3>
+        <div class="ctx-row"><span class="ctx-k">Schema Type</span><span class="ctx-v">Star Schema → Property Graph</span></div>
+        <div class="ctx-row"><span class="ctx-k">Domain</span><span class="ctx-v">Retail Sales (B2C + B2B)</span></div>
+        <div class="ctx-row"><span class="ctx-k">Grain</span><span class="ctx-v">One order line item per SalesTransaction</span></div>
+        <div class="ctx-row"><span class="ctx-k">Graph Store</span><span class="ctx-v">Amazon Neptune (Gremlin)</span></div>
+        <div class="ctx-row"><span class="ctx-k">Source</span><span class="ctx-v">star_schema/erd_diagram.md</span></div>
       </div>
-      <div class="ctx-section">
-        <h3>Key Business Metrics</h3>
-        <div class="ctx-formula">Gross Sales = Qty × Unit Price</div>
-        <div class="ctx-formula">Net Sales = Gross Sales − Discount</div>
-        <div class="ctx-formula">COGS = Qty × Unit Cost</div>
-        <div class="ctx-formula">Gross Profit = Net Sales − COGS</div>
-        <div class="ctx-formula">Margin % = Gross Profit / Net Sales × 100</div>
-        <div class="ctx-formula">Total Amount = Net Sales + Tax (8%)</div>
-        <div class="ctx-formula">AOV = SUM(Total) / COUNT(Orders)</div>
-        <div class="ctx-formula">Return Rate = Return Qty / Qty × 100</div>
+      <div class="ctx-sec"><h3>Key Business Metrics</h3>
+        <div class="ctx-f">Gross Sales = Qty × Unit Price</div>
+        <div class="ctx-f">Net Sales = Gross − Discount</div>
+        <div class="ctx-f">COGS = Qty × Unit Cost</div>
+        <div class="ctx-f">Gross Profit = Net Sales − COGS</div>
+        <div class="ctx-f">Margin % = Gross Profit / Net Sales × 100</div>
+        <div class="ctx-f">Total = Net Sales + Tax (8%)</div>
+        <div class="ctx-f">AOV = SUM(Total) / COUNT(Orders)</div>
+        <div class="ctx-f">Return Rate = Return Qty / Qty × 100</div>
       </div>
-      <div class="ctx-section">
-        <h3>Business Segments</h3>
-        <div class="ctx-row"><span class="ctx-key">Customer</span><span class="ctx-val">Retail (B2C) · Wholesale (B2B)</span></div>
-        <div class="ctx-row"><span class="ctx-key">Loyalty</span><span class="ctx-val">Bronze → Silver → Gold → Platinum</span></div>
-        <div class="ctx-row"><span class="ctx-key">Store Types</span><span class="ctx-val">Flagship · Retail · E-Commerce</span></div>
-        <div class="ctx-row"><span class="ctx-key">Promotions</span><span class="ctx-val">Seasonal · Clearance · Loyalty · Volume · Major Sale</span></div>
-        <div class="ctx-row"><span class="ctx-key">Channels</span><span class="ctx-val">All · In-Store · Online</span></div>
-        <div class="ctx-row"><span class="ctx-key">Regions</span><span class="ctx-val">NE · West · Midwest · South · SE · National</span></div>
+      <div class="ctx-sec"><h3>Business Segments</h3>
+        <div class="ctx-row"><span class="ctx-k">Customer</span><span class="ctx-v">Retail B2C · Wholesale B2B</span></div>
+        <div class="ctx-row"><span class="ctx-k">Loyalty</span><span class="ctx-v">Bronze → Silver → Gold → Platinum</span></div>
+        <div class="ctx-row"><span class="ctx-k">Store Types</span><span class="ctx-v">Flagship · Retail · E-Commerce</span></div>
+        <div class="ctx-row"><span class="ctx-k">Promotions</span><span class="ctx-v">Seasonal · Clearance · Loyalty · Volume</span></div>
+        <div class="ctx-row"><span class="ctx-k">Channels</span><span class="ctx-v">All · In-Store · Online</span></div>
+        <div class="ctx-row"><span class="ctx-k">Regions</span><span class="ctx-v">NE · West · Midwest · South · SE · National</span></div>
       </div>
-      <div class="ctx-section">
-        <h3>Business Questions</h3>
-        <div class="ctx-formula">Who are Gold loyalty customers & their stores?</div>
-        <div class="ctx-formula">Which promotions drive the highest gross profit?</div>
-        <div class="ctx-formula">Best margin categories by region?</div>
-        <div class="ctx-formula">Return rate by store type?</div>
-        <div class="ctx-formula">Most profitable supplier relationships?</div>
-      </div>
-      <div class="ctx-section">
-        <h3>Click any node for details</h3>
-        <div class="ctx-formula">Select a schema node on the globe to see its business definition, attributes, and relationships.</div>
+      <div class="ctx-sec"><h3>Click any node</h3>
+        <div style="font-size:10px;color:#555;line-height:1.5">Select a schema node to see its business definition, attributes, and relationships.</div>
       </div>
     </div>
-
-    <div id="node-detail"></div>
+    <div id="nd"></div>
   </div>
 </div>
 
-<div id="tip"></div>
-<div id="loading"><p class="pulse">Building Business Globe…</p><small>Schema-level view · No data</small></div>
+<div id="top"><div class="badge">Nishant_Star_Model_<em>Business_Globe</em></div></div>
+<div id="tip"><div class="tl" id="tip-l"></div><div class="td" id="tip-d"></div></div>
+<div id="cbar">
+  <div class="cb-name" id="cb-n"></div>
+  <div class="cb-desc" id="cb-d"></div>
+  <div class="cb-tags" id="cb-t"></div>
+  <span class="cb-x" onclick="clearSel()">✕</span>
+</div>
+<div id="loading"><p class="pulse">Building Business Globe…</p><small>Schema view · No data</small></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
-// ── Schema data (embedded — no backend needed) ────────────────────────────
 const SCHEMA_NODES = [
   {id:"SalesTransaction",color:"#59A14F",size:22,tier:"fact",
    desc:"Central fact. One row per order line item. Atomic unit of revenue.",
@@ -257,7 +222,6 @@ const SCHEMA_NODES = [
    desc:"Fiscal year label used for financial reporting alignment.",
    metrics:["Fiscal Year (e.g. FY2023)"]},
 ];
-
 const SCHEMA_EDGES = [
   {source:"SalesTransaction",target:"Customer",   rel:"BY_CUSTOMER",   type:"fact"},
   {source:"SalesTransaction",target:"Product",    rel:"FOR_PRODUCT",   type:"fact"},
@@ -291,227 +255,152 @@ const SCHEMA_EDGES = [
 
 const TIER_COLORS  = {fact:"#59A14F",dimension:"#4E79A7",hierarchy:"#B07AA1",geography:"#F1CE63",segment:"#76B7B2",time:"#FABFD2"};
 const EDGE_COLORS  = {fact:"#59A14F",business:"#4E79A7",hierarchy:"#B07AA1",geography:"#F1CE63",time:"#FABFD2"};
+const TIER_COLORS={fact:"#59A14F",dimension:"#4E79A7",hierarchy:"#B07AA1",geography:"#F1CE63",segment:"#76B7B2",time:"#FABFD2"};
+const EDGE_COLORS={fact:"#59A14F",business:"#4E79A7",hierarchy:"#B07AA1",geography:"#F1CE63",time:"#FABFD2"};
 
-// ── Three.js setup ─────────────────────────────────────────────────────────
-const W=()=>window.innerWidth, H=()=>window.innerHeight;
+// Three.js — mount to #globe-wrap
+const wrap=document.getElementById("globe-wrap");
+const W=()=>wrap.clientWidth||600, H=()=>wrap.clientHeight||window.innerHeight;
+
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x050810);
 const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
-camera.position.set(0,0,1400);
-const _wrap=document.getElementById("canvas-wrap");
-const W=()=>_wrap.clientWidth||window.innerWidth-540;
-const H=()=>_wrap.clientHeight||window.innerHeight;
+camera.position.set(0,0,1100);
 const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(devicePixelRatio);
 renderer.setSize(W(),H());
-_wrap.appendChild(renderer.domElement);
-function updateCamera(){
-  renderer.setSize(W(),H());
-  camera.aspect=W()/H();
-  camera.updateProjectionMatrix();
-}
-window.addEventListener("resize",updateCamera);
+renderer.domElement.style.cssText="display:block;width:100%;height:100%";
+wrap.appendChild(renderer.domElement);
+window.addEventListener("resize",()=>{renderer.setSize(W(),H());camera.aspect=W()/H();camera.updateProjectionMatrix()});
+
 scene.add(new THREE.AmbientLight(0xffffff,0.5));
 const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
+const R=280;
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,32,32),new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.05,transparent:true})));
+scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1,8,80),new THREE.MeshBasicMaterial({color:0x1a2a4a,transparent:true,opacity:0.35})));
 
-const RADIUS=300;
-scene.add(new THREE.Mesh(new THREE.SphereGeometry(RADIUS,32,32),
-  new THREE.MeshBasicMaterial({color:0x080c1e,wireframe:true,opacity:0.05,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(RADIUS+4,1,8,80),
-  new THREE.MeshBasicMaterial({color:0x1a2a4a,transparent:true,opacity:0.35})));
-
-// ── Orbit controls ─────────────────────────────────────────────────────────
 let spinning=true,drag=false,px=0,py=0,rx=0,ry=0;
 const pivot=new THREE.Group();scene.add(pivot);
-
-renderer.domElement.addEventListener("mousedown",e=>{drag=true;px=e.clientX;py=e.clientY});
-renderer.domElement.addEventListener("mousemove",e=>{
-  if(drag){
-    spinning=false;document.getElementById("btn-spin").classList.remove("on");
+const el=renderer.domElement;
+el.addEventListener("mousedown",e=>{drag=true;px=e.clientX;py=e.clientY});
+el.addEventListener("mousemove",e=>{
+  if(drag){spinning=false;document.getElementById("btn-spin").classList.remove("on");
     ry+=(e.clientX-px)*0.005;rx+=(e.clientY-py)*0.005;
     rx=Math.max(-Math.PI/2,Math.min(Math.PI/2,rx));
     pivot.rotation.y=ry;pivot.rotation.x=rx;px=e.clientX;py=e.clientY;
-  } else handleHover(e);
+  } else doHover(e);
 });
-renderer.domElement.addEventListener("mouseup",()=>drag=false);
-renderer.domElement.addEventListener("mouseleave",()=>drag=false);
-renderer.domElement.addEventListener("wheel",e=>{camera.position.z=Math.max(300,Math.min(2500,camera.position.z+e.deltaY*0.8))});
-renderer.domElement.addEventListener("click",e=>{const h=raycast(e);if(h)selectNode(h.object.userData.nid);else clearSelect()});
-
-function resetCamera(){camera.position.set(0,0,1400);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSelect()}
+el.addEventListener("mouseup",()=>drag=false);
+el.addEventListener("mouseleave",()=>drag=false);
+el.addEventListener("wheel",e=>{camera.position.z=Math.max(350,Math.min(2500,camera.position.z+e.deltaY*0.7))});
+el.addEventListener("click",e=>{const h=cast(e);if(h)selNode(h.object.userData.nid);else clearSel()});
+function resetCam(){camera.position.set(0,0,1100);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSel()}
 function toggleSpin(){spinning=!spinning;document.getElementById("btn-spin").classList.toggle("on",spinning)}
 
-// ── Raycasting ─────────────────────────────────────────────────────────────
-const raycaster=new THREE.Raycaster();
-const mouse=new THREE.Vector2();
-let meshMap={},lineObjects=[],hiddenTiers=new Set(),hiddenEdgeTypes=new Set();
-
-function raycast(e){
-  const rect=renderer.domElement.getBoundingClientRect();
-  mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
-  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
-  raycaster.setFromCamera(mouse,camera);
-  const hits=raycaster.intersectObjects(Object.values(meshMap),false);
-  return hits.length?hits[0]:null;
+const rc=new THREE.Raycaster(),mo=new THREE.Vector2();
+let meshMap={},lines=[],hidT=new Set(),hidE=new Set();
+function cast(e){
+  const r=el.getBoundingClientRect();
+  mo.x=((e.clientX-r.left)/r.width)*2-1;
+  mo.y=-((e.clientY-r.top)/r.height)*2+1;
+  rc.setFromCamera(mo,camera);
+  return rc.intersectObjects(Object.values(meshMap),false)[0]||null;
 }
 
-// ── Tooltip ─────────────────────────────────────────────────────────────────
 const tip=document.getElementById("tip");
-let hovered=null;
-function handleHover(e){
-  const h=raycast(e);
+let hov=null;
+function doHover(e){
+  const h=cast(e);
   if(h){
     const nid=h.object.userData.nid;
-    if(nid!==hovered){hovered=nid;const n=SCHEMA_NODES.find(x=>x.id===nid);if(n){tip.innerHTML=`<div class="tl" style="color:${n.color}">${n.id}</div><div class="td">${n.desc}</div>`;tip.style.display="block";}}
-    document.body.style.cursor="pointer";
-  } else {tip.style.display="none";hovered=null;document.body.style.cursor="default"}
+    if(nid!==hov){hov=nid;const n=SCHEMA_NODES.find(x=>x.id===nid);if(n){document.getElementById("tip-l").style.color=n.color;document.getElementById("tip-l").textContent=n.id;document.getElementById("tip-d").textContent=n.desc;tip.style.display="block";}}
+    el.style.cursor="pointer";
+  } else {tip.style.display="none";hov=null;el.style.cursor="default"}
   if(tip.style.display!=="none"){tip.style.left=(e.clientX+14)+"px";tip.style.top=(e.clientY-10)+"px"}
 }
 
-// ── Build ──────────────────────────────────────────────────────────────────
-function fibonacci(n,R){
-  const pts=[],phi=Math.PI*(3-Math.sqrt(5));
-  for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R))}
-  return pts;
-}
+function fib(n,R){const pts=[],phi=Math.PI*(3-Math.sqrt(5));for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R))}return pts}
 
 function build(){
-  const pos=fibonacci(SCHEMA_NODES.length,RADIUS);
-  const idx={};
+  const pos=fib(SCHEMA_NODES.length,R),idx={};
   SCHEMA_NODES.forEach((n,i)=>{n._pos=pos[i];idx[n.id]=i});
-
   SCHEMA_NODES.forEach((n,i)=>{
-    const geo=new THREE.SphereGeometry(n.size/2,14,14);
-    const mat=new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),emissive:new THREE.Color(n.color).multiplyScalar(0.35),transparent:true,opacity:1});
-    const mesh=new THREE.Mesh(geo,mat);
-    mesh.position.copy(pos[i]);
-    mesh.userData={nid:n.id};
-    pivot.add(mesh);
-    meshMap[n.id]=mesh;
-
-    const canvas=document.createElement("canvas");
-    canvas.width=256;canvas.height=48;
-    const ctx=canvas.getContext("2d");
-    ctx.font="bold 18px -apple-system,sans-serif";
-    ctx.fillStyle=n.color;ctx.textAlign="center";
-    ctx.fillText(n.id,128,28);
-    const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),transparent:true,opacity:0.9}));
-    sprite.scale.set(64,13,1);
-    sprite.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),n.size/2+12);
-    pivot.add(sprite);
+    const geo=new THREE.SphereGeometry(n.size/2,12,12);
+    const mat=new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),emissive:new THREE.Color(n.color).multiplyScalar(0.3),transparent:true,opacity:1});
+    const m=new THREE.Mesh(geo,mat);m.position.copy(pos[i]);m.userData={nid:n.id};
+    pivot.add(m);meshMap[n.id]=m;
+    const c=document.createElement("canvas");c.width=256;c.height=48;
+    const cx=c.getContext("2d");cx.font="bold 17px sans-serif";cx.fillStyle=n.color;cx.textAlign="center";cx.fillText(n.id,128,28);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.9}));
+    sp.scale.set(60,12,1);sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),n.size/2+10);
+    pivot.add(sp);
   });
-
   SCHEMA_EDGES.forEach(e=>{
-    const si=idx[e.source],ti=idx[e.target];
-    if(si===undefined||ti===undefined)return;
-    const src=SCHEMA_NODES[si]._pos,tgt=SCHEMA_NODES[ti]._pos;
-    const mid=src.clone().add(tgt).multiplyScalar(0.5);
-    mid.normalize().multiplyScalar(RADIUS*1.4);
-    const curve=new THREE.QuadraticBezierCurve3(src,mid,tgt);
-    const geo=new THREE.BufferGeometry().setFromPoints(curve.getPoints(30));
+    const si=idx[e.source],ti=idx[e.target];if(si===undefined||ti===undefined)return;
+    const s=SCHEMA_NODES[si]._pos,t=SCHEMA_NODES[ti]._pos;
+    const mid=s.clone().add(t).multiplyScalar(0.5);mid.normalize().multiplyScalar(R*1.4);
+    const geo=new THREE.BufferGeometry().setFromPoints(new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(30));
     const mat=new THREE.LineBasicMaterial({color:new THREE.Color(EDGE_COLORS[e.type]||"#fff"),transparent:true,opacity:0.8});
-    const line=new THREE.Line(geo,mat);
-    line.userData={src:e.source,tgt:e.target,type:e.type,rel:e.rel};
-    pivot.add(line);
-    lineObjects.push(line);
+    const l=new THREE.Line(geo,mat);l.userData={src:e.source,tgt:e.target,type:e.type,rel:e.rel};
+    pivot.add(l);lines.push(l);
   });
 }
 
-// ── Node select ────────────────────────────────────────────────────────────
-function selectNode(nid){
+function selNode(nid){
   const n=SCHEMA_NODES.find(x=>x.id===nid);if(!n)return;
-  Object.entries(meshMap).forEach(([id,m])=>{m.material.opacity=id===nid?1:0.07;m.scale.setScalar(id===nid?1.9:1)});
-  lineObjects.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1.0:0.03});
-
+  Object.entries(meshMap).forEach(([id,m])=>{m.material.opacity=id===nid?1:0.07;m.scale.setScalar(id===nid?1.8:1)});
   const rels=SCHEMA_EDGES.filter(e=>e.source===nid||e.target===nid);
-  const relsHtml=rels.map(e=>{
-    const isOut=e.source===nid,other=isOut?e.target:e.source;
-    const on=SCHEMA_NODES.find(x=>x.id===other);
-    return `<div class="nd-rel"><span class="rel-arrow">${isOut?"→":"←"}</span><span class="rel-name">${e.rel}</span><span class="rel-arrow">→</span><span class="rel-target" style="color:${on?.color||'#aaa'}">${other}</span></div>`;
-  }).join("");
-
-  document.getElementById("node-detail").innerHTML=`
-    <div class="nd-label" style="color:${n.color}">${n.id}</div>
-    <div class="nd-tier">${n.tier} tier</div>
-    <div class="nd-desc" style="border-color:${n.color}">${n.desc}</div>
-    <div class="nd-metrics"><h4>Business Attributes & Metrics</h4>${n.metrics.map(m=>`<div class="nd-metric">${m}</div>`).join("")}</div>
-    <div class="nd-rels"><h4>Relationships (${rels.length})</h4>${relsHtml}</div>`;
-
-  document.getElementById("ctx-overview").style.display="none";
-  document.getElementById("node-detail").style.display="block";
-  document.getElementById("back-btn").style.display="block";
-  document.getElementById("ctx-sub").textContent=n.id+" — "+n.tier;
+  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:0.03});
+  // Right panel
+  const rh=rels.map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=SCHEMA_NODES.find(x=>x.id===ot);return`<div class="nd-r"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel}</span><span class="ra">→</span><span class="rt" style="color:${on?.color||'#aaa'}">${ot}</span></div>`}).join("");
+  document.getElementById("nd").innerHTML=`<div class="nd-lbl" style="color:${n.color}">${n.id}</div><div class="nd-tier">${n.tier} tier</div><div class="nd-desc" style="border-color:${n.color}">${n.desc}</div><div class="nd-mh">Attributes & Metrics</div>${n.metrics.map(m=>`<div class="nd-m">${m}</div>`).join("")}<div class="nd-rh">Relationships (${rels.length})</div>${rh}`;
+  document.getElementById("ctx-ov").style.display="none";
+  document.getElementById("nd").style.display="block";
+  document.getElementById("back").style.display="block";
+  document.getElementById("ctx-sub").textContent=n.id;
   // Bottom bar
-  const bar=document.getElementById("conn-bar");
-  document.getElementById("cb-name").innerHTML=`<span style="color:${n.color}">${n.id}</span>`;
-  document.getElementById("cb-desc").textContent=n.desc;
-  const tags=rels.slice(0,6).map(e=>{
-    const isOut=e.source===nid,other=isOut?e.target:e.source;
-    const on=SCHEMA_NODES.find(x=>x.id===other);
-    return `<span class="cb-tag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#333'}">${isOut?"→":"←"} ${e.rel} ${other}</span>`;
-  }).join("");
-  document.getElementById("cb-tags").innerHTML=tags+(rels.length>6?`<span style="font-size:9px;color:#555">+${rels.length-6} more</span>`:"");
-  bar.style.display="flex";
+  document.getElementById("cb-n").innerHTML=`<span style="color:${n.color}">${n.id}</span>`;
+  document.getElementById("cb-d").textContent=n.desc;
+  document.getElementById("cb-t").innerHTML=rels.slice(0,7).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=SCHEMA_NODES.find(x=>x.id===ot);return`<span class="cb-tag" style="color:${on?.color||'#aaa'};border-color:${on?.color||'#555'}">${io?"→":"←"} ${e.rel} ${ot}</span>`}).join("")+(rels.length>7?`<span style="font-size:9px;color:#555">+${rels.length-7} more</span>`:"");
+  document.getElementById("cbar").style.display="flex";
 }
-
-function clearSelect(){
+function clearSel(){
   Object.values(meshMap).forEach(m=>{m.material.opacity=1;m.scale.setScalar(1)});
-  lineObjects.forEach(l=>{l.material.opacity=hiddenEdgeTypes.has(l.userData.type)?0:0.8});
-  document.getElementById("conn-bar").style.display="none";
-  showOverview();
+  lines.forEach(l=>{l.material.opacity=hidE.has(l.userData.type)?0:0.8});
+  document.getElementById("cbar").style.display="none";
+  showOv();
 }
-function showOverview(){
-  document.getElementById("ctx-overview").style.display="block";
-  document.getElementById("node-detail").style.display="none";
-  document.getElementById("back-btn").style.display="none";
-  document.getElementById("ctx-sub").textContent="Star Schema Retail Sales Model";
+function showOv(){
+  document.getElementById("ctx-ov").style.display="block";
+  document.getElementById("nd").style.display="none";
+  document.getElementById("back").style.display="none";
+  document.getElementById("ctx-sub").textContent="Star Schema Retail Sales";
 }
 
-// ── Legend ─────────────────────────────────────────────────────────────────
-function buildLegend(){
-  const tl=document.getElementById("tier-legend");
+function buildLeg(){
+  const tl=document.getElementById("tier-leg"),el2=document.getElementById("edge-leg");
   const tiers={};SCHEMA_NODES.forEach(n=>tiers[n.tier]=(tiers[n.tier]||0)+1);
   tl.innerHTML="";
-  Object.entries(tiers).forEach(([tier,cnt])=>{
-    const color=TIER_COLORS[tier]||"#aaa";
-    const div=document.createElement("div");div.className="li";div.dataset.tier=tier;
-    div.innerHTML=`<div class="dot" style="background:${color}"></div><span class="li-label">${tier}</span><span class="li-type">${cnt}</span>`;
-    div.addEventListener("click",()=>{
-      if(hiddenTiers.has(tier)){hiddenTiers.delete(tier);div.classList.remove("off")}else{hiddenTiers.add(tier);div.classList.add("off")}
-      Object.entries(meshMap).forEach(([id,m])=>{const n=SCHEMA_NODES.find(x=>x.id===id);m.material.opacity=hiddenTiers.has(n?.tier)?0:1;m.scale.setScalar(hiddenTiers.has(n?.tier)?0.01:1)});
-    });
-    tl.appendChild(div);
+  Object.entries(tiers).forEach(([t,c])=>{
+    const color=TIER_COLORS[t]||"#aaa";
+    const d=document.createElement("div");d.className="li";
+    d.innerHTML=`<div class="dot" style="background:${color}"></div><span class="li-label">${t}</span><span class="li-cnt">${c}</span>`;
+    d.onclick=()=>{hidT.has(t)?hidT.delete(t):hidT.add(t);d.classList.toggle("off");Object.entries(meshMap).forEach(([id,m])=>{const n=SCHEMA_NODES.find(x=>x.id===id);m.material.opacity=hidT.has(n?.tier)?0:1;m.scale.setScalar(hidT.has(n?.tier)?0.01:1)})};
+    tl.appendChild(d);
   });
-
-  const el=document.getElementById("edge-legend");el.innerHTML="";
   const etypes={};SCHEMA_EDGES.forEach(e=>etypes[e.type]=(etypes[e.type]||0)+1);
-  Object.entries(etypes).forEach(([type,cnt])=>{
-    const color=EDGE_COLORS[type]||"#aaa";
-    const div=document.createElement("div");div.className="li";
-    div.innerHTML=`<div class="dot" style="background:${color};border-radius:2px"></div><span class="li-label">${type}</span><span class="li-type">${cnt}</span>`;
-    div.addEventListener("click",()=>{
-      if(hiddenEdgeTypes.has(type)){hiddenEdgeTypes.delete(type);div.classList.remove("off")}else{hiddenEdgeTypes.add(type);div.classList.add("off")}
-      lineObjects.forEach(l=>{l.material.opacity=hiddenEdgeTypes.has(l.userData.type)?0:0.8});
-    });
-    el.appendChild(div);
+  el2.innerHTML="";
+  Object.entries(etypes).forEach(([t,c])=>{
+    const color=EDGE_COLORS[t]||"#aaa";
+    const d=document.createElement("div");d.className="li";
+    d.innerHTML=`<div class="dot" style="background:${color};border-radius:2px"></div><span class="li-label">${t}</span><span class="li-cnt">${c}</span>`;
+    d.onclick=()=>{hidE.has(t)?hidE.delete(t):hidE.add(t);d.classList.toggle("off");lines.forEach(l=>{l.material.opacity=hidE.has(l.userData.type)?0:0.8})};
+    el2.appendChild(d);
   });
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
-build();
-buildLegend();
+build();buildLeg();
 document.getElementById("loading").style.display="none";
-
-// ── Animate ────────────────────────────────────────────────────────────────
-(function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
+(function anim(){requestAnimationFrame(anim);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
 </script>
-
-<div id="conn-bar">
-  <div class="cb-node" id="cb-name"></div>
-  <div class="cb-sep">|</div>
-  <div class="cb-desc" id="cb-desc"></div>
-  <div class="cb-tags" id="cb-tags"></div>
-  <span class="cb-close" onclick="clearSelect()">✕</span>
-</div>
-</body>
-</html>
+</body></html>
