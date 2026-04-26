@@ -1,0 +1,21 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Test</title>
+<style>*{margin:0;padding:0}body{background:#f5f6fa;overflow:hidden}</style>
+</head><body>
+<canvas id="cv" style="display:block"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+const cv=document.getElementById("cv");
+const W=window.innerWidth, H=window.innerHeight;
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0xf5f6fa);
+const camera=new THREE.PerspectiveCamera(45,W/H,1,5000);
+camera.position.set(0,0,800);
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(W,H);
+scene.add(new THREE.AmbientLight(0xffffff,1));
+const mesh=new THREE.Mesh(new THREE.SphereGeometry(200,32,32),
+  new THREE.MeshPhongMaterial({color:0x4E79A7}));
+scene.add(mesh);
+(function anim(){requestAnimationFrame(anim);mesh.rotation.y+=0.01;renderer.render(scene,camera)})();
+</script></body></html>
