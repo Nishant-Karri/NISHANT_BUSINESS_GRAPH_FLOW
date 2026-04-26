@@ -1,493 +1,263 @@
 <!DOCTYPE html>
 <html><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Nishant_Star_Model_Business_Globe</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
-  color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-/* Canvas behind sidebars */
-#cv{position:fixed;left:0;top:0;z-index:1}
-/* Sidebars */
-#SB{position:fixed;left:0;top:0;bottom:0;width:240px;
-  background:#ffffff;border-right:2px solid #e8eaed;
-  z-index:100;display:flex;flex-direction:column;
-  box-shadow:2px 0 12px rgba(0,0,0,0.06);
-  transition:transform .3s ease}
-#CTX{position:fixed;right:0;top:0;bottom:0;width:300px;
-  background:#ffffff;border-left:2px solid #e8eaed;
-  z-index:100;display:flex;flex-direction:column;
-  box-shadow:-2px 0 12px rgba(0,0,0,0.06);
-  transition:transform .3s ease}
-#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99}
-
-/* Mobile — sidebars hidden off-screen by default */
+body{background:#f5f6fa;color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;height:100vh;width:100vw}
+#SB{position:fixed;left:0;top:0;bottom:0;width:240px;background:#fff;border-right:2px solid #e8eaed;z-index:10;display:flex;flex-direction:column;box-shadow:2px 0 8px rgba(0,0,0,.06);transition:transform .3s}
+#CTX{position:fixed;right:0;top:0;bottom:0;width:300px;background:#fff;border-left:2px solid #e8eaed;z-index:10;display:flex;flex-direction:column;box-shadow:-2px 0 8px rgba(0,0,0,.06);transition:transform .3s}
+#WRAP{position:fixed;left:240px;right:300px;top:0;bottom:0;background:#f5f6fa}
+#OVL{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9}
 @media(max-width:900px){
   #SB{transform:translateX(-100%);width:min(240px,85vw)}
   #CTX{transform:translateX(100%);width:min(300px,85vw)}
   #SB.open{transform:translateX(0)}
   #CTX.open{transform:translateX(0)}
-  #overlay.show{display:block}
-  #TOP{left:52px!important;right:52px!important;top:10px}
-  .badge{font-size:10px;padding:5px 12px}
-  #BAR{left:10px!important;right:10px!important;bottom:12px;flex-direction:column;gap:6px}
-  #BAR .bt{margin-top:3px}
+  #OVL.show{display:block}
+  #WRAP{left:0;right:0}
+  #TOP{left:52px!important;right:52px!important}
 }
-/* Tablet — narrower sidebars, still visible */
-@media(min-width:901px) and (max-width:1200px){
-  #SB{width:200px}
-  #CTX{width:220px}
-}
-/* Sidebar internals */
-.logo{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;
-  font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.5}
-.logo em{color:#16a34a;font-style:normal;display:block;font-size:9px;
-  margin-top:2px;letter-spacing:1px;text-transform:uppercase}
-.sbox{padding:9px 14px;border-bottom:1px solid #e8eaed;background:#f8f9ff}
-.stat{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
-.stat b{color:#15803d;font-weight:700}
+.logo{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.5}
+.logo em{color:#16a34a;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+.sb2{padding:9px 14px;border-bottom:1px solid #e8eaed;background:#f8f9ff}
+.st{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
+.st b{color:#16a34a;font-weight:700}
 .leg{flex:1;overflow-y:auto;padding:10px 14px}
-.leg h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;
-  color:#9ca3af;margin:10px 0 6px;font-weight:600}
+.leg h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin:10px 0 6px;font-weight:600}
 .leg h4:first-child{margin-top:0}
-.li{display:flex;align-items:center;gap:6px;padding:4px 6px;
-  font-size:10px;cursor:pointer;border-radius:6px;color:#374151}
+.li{display:flex;align-items:center;gap:6px;padding:3px 5px;font-size:10px;cursor:pointer;border-radius:4px;color:#374151}
 .li:hover{background:#f3f4f6}
-.li.off{opacity:.3}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .lbl{flex:1;line-height:1.3}
 .cnt{font-size:9px;color:#9ca3af}
-.ctrl{padding:10px 14px;border-top:1px solid #e8eaed;display:flex;gap:6px;background:#fafafa}
-.btn{padding:5px 12px;background:#ffffff;border:1.5px solid #d1d5db;
-  border-radius:6px;color:#374151;font-size:10px;cursor:pointer;
-  font-weight:500;transition:.15s}
-.btn:hover,.btn.on{border-color:#16a34a;color:#16a34a;background:#f0fdf4}
+.ctrl{padding:10px 14px;border-top:1px solid #e8eaed;display:flex;gap:6px;flex-wrap:wrap;background:#fafafa}
+.btn{padding:5px 12px;background:#fff;border:1.5px solid #d1d5db;border-radius:6px;color:#374151;font-size:10px;cursor:pointer;font-weight:500}
+.btn:hover,.btn.on{border-color:#16a34a;color:#16a34a}
 .navl{padding:8px 14px;border-top:1px solid #e8eaed;font-size:10px;background:#fafafa}
-.navl a{color:#16a34a;text-decoration:none;font-weight:500}
-.navl a:hover{color:#15803d}
-/* Right panel */
+.navl a{color:#16a34a;text-decoration:none;font-weight:500;display:block;padding:1px 0}
 .ch{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;background:#f8f9ff}
-.ch h2{font-size:11px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:#1a1a2e}
+.ch h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1a1a2e}
 .ch p{font-size:9px;color:#6b7280;margin-top:2px}
 .cb{flex:1;overflow-y:auto;padding:12px 14px}
-.cs{margin-bottom:16px}
-.cs h3{font-size:10px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.8px;color:#15803d;margin-bottom:7px;
-  border-bottom:1.5px solid #e8eaed;padding-bottom:3px}
-.cr{display:flex;justify-content:space-between;padding:4px 0;
-  border-bottom:1px solid #f3f4f6;font-size:10px}
+.cs{margin-bottom:15px}
+.cs h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#16a34a;margin-bottom:7px;border-bottom:1.5px solid #e8eaed;padding-bottom:3px}
+.cr{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:10px}
 .cr:last-child{border:none}
 .ck{color:#6b7280;width:44%}
 .cv2{color:#1f2937;text-align:right;width:54%;font-size:9.5px;line-height:1.4;font-weight:500}
-.cf{background:#f3f4f6;border:1px solid #e8eaed;border-left:3px solid #16a34a;
-  border-radius:5px;padding:5px 8px;font-family:Menlo,monospace;
-  font-size:8.5px;color:#1f2937;margin:2px 0;line-height:1.5}
-/* Node detail */
+.cf{background:#f3f4f6;border:1px solid #e8eaed;border-left:3px solid #16a34a;border-radius:5px;padding:5px 8px;font-family:Menlo,monospace;font-size:8.5px;color:#1f2937;margin:2px 0;line-height:1.5}
 #ND{display:none}
-#ND .nl{font-size:13px;font-weight:700;margin-bottom:2px}
-#ND .nt{font-size:9px;text-transform:uppercase;color:#9ca3af;
-  margin-bottom:8px;letter-spacing:1px}
-#ND .nd2{font-size:10px;color:#374151;line-height:1.5;padding:8px;
-  background:#f8f9ff;border-radius:8px;border-left:3px solid;
-  margin-bottom:8px}
-#ND .nmh{font-size:9px;text-transform:uppercase;color:#15803d;
-  margin-bottom:5px;letter-spacing:.8px;font-weight:600}
-#ND .nm{font-family:Menlo,monospace;font-size:8.5px;color:#1f2937;
-  background:#f3f4f6;padding:3px 8px;border-radius:4px;margin:2px 0;
-  border:1px solid #e8eaed}
-#ND .nrh{font-size:9px;text-transform:uppercase;color:#2563eb;
-  margin:10px 0 4px;letter-spacing:.8px;font-weight:600}
-#ND .nr{display:flex;align-items:center;gap:5px;font-size:9px;
-  padding:3px 0;border-bottom:1px solid #f3f4f6}
-#ND .nr:last-child{border:none}
+.nl{font-size:13px;font-weight:700;margin-bottom:2px}
+.nt{font-size:9px;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;letter-spacing:1px}
+.nd2{font-size:10px;color:#374151;line-height:1.5;padding:7px;background:#f8f9ff;border-radius:6px;border-left:3px solid;margin-bottom:8px}
+.nmh{font-size:9px;text-transform:uppercase;color:#16a34a;margin-bottom:5px;letter-spacing:.8px;font-weight:600}
+.nm{font-family:Menlo,monospace;font-size:8.5px;color:#1f2937;background:#f3f4f6;padding:3px 8px;border-radius:4px;margin:2px 0;border:1px solid #e8eaed}
+.nrh{font-size:9px;text-transform:uppercase;color:#2563eb;margin:10px 0 4px;letter-spacing:.8px;font-weight:600}
+.nr{display:flex;align-items:center;gap:5px;font-size:9px;padding:2px 0;border-bottom:1px solid #f3f4f6}
+.nr:last-child{border:none}
 .ra{color:#9ca3af;font-size:8px}
 .rn{color:#d97706;font-family:Menlo,monospace;font-size:8px;font-weight:600}
-#BK{font-size:10px;color:#16a34a;cursor:pointer;padding:5px 0;
-  display:none;margin-bottom:8px;font-weight:500}
-#BK:hover{color:#15803d}
-/* Top badge */
-#TOP{position:fixed;top:14px;left:240px;right:300px;
-  z-index:20;display:flex;justify-content:center;pointer-events:none}
-.badge{background:#ffffff;border:1.5px solid #e8eaed;border-radius:20px;
-  padding:7px 22px;font-size:11px;font-weight:700;color:#1a1a2e;
-  letter-spacing:.5px;pointer-events:auto;white-space:nowrap;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+#BK{font-size:10px;color:#16a34a;cursor:pointer;padding:5px 0;display:none;margin-bottom:8px;font-weight:500}
+#TOP{position:fixed;top:14px;left:240px;right:300px;z-index:20;display:flex;justify-content:center;pointer-events:none}
+.badge{background:#fff;border:1.5px solid #e8eaed;border-radius:20px;padding:6px 20px;font-size:11px;font-weight:700;color:#1a1a2e;letter-spacing:.5px;box-shadow:0 2px 8px rgba(0,0,0,.08);pointer-events:auto;white-space:nowrap}
 .badge em{color:#16a34a;font-style:normal}
-/* Tooltip */
-#TIP{position:fixed;background:#ffffff;border:1.5px solid #e8eaed;
-  border-radius:10px;padding:8px 12px;font-size:10px;pointer-events:none;
-  display:none;z-index:30;max-width:210px;
-  box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+#BSB,#BCTX{display:none;position:fixed;top:10px;z-index:200;width:40px;height:40px;border-radius:10px;border:1.5px solid #e8eaed;background:#fff;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+#BSB{left:10px}
+#BCTX{right:10px;font-size:16px}
+#TIP{position:fixed;background:#fff;border:1.5px solid #e8eaed;border-radius:10px;padding:8px 12px;font-size:10px;pointer-events:none;display:none;z-index:30;max-width:210px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .tl{font-weight:700;font-size:11px;margin-bottom:2px}
 .td2{font-size:9px;color:#6b7280;line-height:1.4}
-/* Bottom connection bar */
-#BAR{position:fixed;bottom:18px;left:256px;right:316px;
-  z-index:20;display:none;background:#ffffff;
-  border:1.5px solid #e8eaed;border-radius:14px;
-  padding:10px 16px;gap:10px;flex-wrap:wrap;align-items:flex-start;
-  box-shadow:0 4px 20px rgba(0,0,0,0.10)}
-#BAR .bn{font-size:12px;font-weight:700;flex-shrink:0}
-#BAR .bd{font-size:10px;color:#6b7280;flex:1;line-height:1.4;min-width:120px;max-width:100%}
-#BAR .bt{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
-.btag{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;
-  border:1.5px solid;background:#f8f9ff}
-#BAR .bx{color:#9ca3af;cursor:pointer;font-size:14px;flex-shrink:0;line-height:1}
-#BAR .bx:hover{color:#1a1a2e}
+#BAR{position:fixed;bottom:18px;left:256px;right:316px;z-index:20;display:none;background:#fff;border:1.5px solid #e8eaed;border-radius:14px;padding:10px 16px;gap:10px;flex-wrap:wrap;align-items:flex-start;box-shadow:0 4px 20px rgba(0,0,0,.10)}
+.bn{font-size:12px;font-weight:700;flex-shrink:0}
+.bd{font-size:10px;color:#6b7280;flex:1;line-height:1.4;min-width:160px}
+.bt{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
+.btag{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;border:1.5px solid;background:#f8f9ff}
+.bx{color:#9ca3af;cursor:pointer;font-size:14px;flex-shrink:0}
+@media(max-width:900px){#BAR{left:10px;right:10px}}
 </style>
 </head><body>
-
-<canvas id="cv"></canvas>
-<div id="overlay" onclick="closePanels()"></div>
-<!-- Mobile nav buttons -->
-<button id="btn-sb"  onclick="toggleSB()"  aria-label="Menu"
-  style="display:none;position:fixed;left:10px;top:10px;z-index:200;
-  width:40px;height:40px;border-radius:10px;border:1.5px solid #e8eaed;
-  background:#fff;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)">☰</button>
-<button id="btn-ctx" onclick="toggleCTX()" aria-label="Info"
-  style="display:none;position:fixed;right:10px;top:10px;z-index:200;
-  width:40px;height:40px;border-radius:10px;border:1.5px solid #e8eaed;
-  background:#fff;font-size:16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)">ℹ</button>
-
+<button id="BSB" onclick="tSB()">☰</button>
+<button id="BCTX" onclick="tCTX()">ℹ</button>
+<div id="OVL" onclick="cPan()"></div>
 <div id="SB">
   <div class="logo">Nishant_Star_Model_<em>Business_Globe</em><em>Interactive Knowledge Globe</em></div>
-  
-  <div class="sbox">
-    <div class="stat"><span>Schema Nodes</span><b>22</b></div>
-    <div class="stat"><span>Relationships</span><b>28</b></div>
-    <div class="stat"><span>Tiers</span><b>6</b></div>
-  </div>
-  <div class="leg">
-    <h4>Node Tiers</h4><div id="TIER-LEG"></div>
-    <h4>Edge Types</h4><div id="EDGE-LEG"></div>
-  </div>
+  <div class="sb2"><div class="st"><span>Nodes</span><b>22</b></div><div class="st"><span>Edges</span><b>28</b></div></div>
+  <div class="leg"><h4>Node Tiers</h4><div id="TL2"></div><h4>Edge Types</h4><div id="EL2"></div></div>
   <div class="ctrl">
-    <button class="btn on" id="SPIN" onclick="toggleSpin()">⟳ Spin</button>
-    <button class="btn" onclick="resetCam()">⌖ Reset</button>
+    <button class="btn on" id="SPIN" onclick="tSpin()">⟳ Spin</button>
+    <button class="btn" onclick="rCam()">⌖ Reset</button>
   </div>
-  <div class="navl"><a href="index.html">← Skills Globe</a></div>
+  <div class="navl"><a href="index.html">← Skills Globe</a>
+<a href="drift_dashboard.html" style="color:#7c3aed">📊 Drift Dashboard</a></div>
 </div>
-
+<div id="WRAP"></div>
 <div id="CTX">
-  <div class="ch"><h2 id="CTX-H">Context</h2><p id="CTX-S"></p></div>
+  <div class="ch"><h2>Context</h2><p id="CS"></p></div>
   <div class="cb">
     <span id="BK" onclick="showOv()">← Overview</span>
-    <div id="OV">
-  <div class="cs"><h3>Model Overview</h3>
-    <div class="cr"><span class="ck">Schema</span><span class="cv2">Star Schema → Property Graph</span></div>
-    <div class="cr"><span class="ck">Domain</span><span class="cv2">Retail Sales (B2C + B2B)</span></div>
-    <div class="cr"><span class="ck">Grain</span><span class="cv2">One order line item</span></div>
-    <div class="cr"><span class="ck">Graph Store</span><span class="cv2">Amazon Neptune (Gremlin)</span></div>
-  </div>
-  <div class="cs"><h3>Key Metrics</h3>
-    <div class="cf">Gross Sales = Qty × Unit Price</div>
-    <div class="cf">Net Sales = Gross − Discount</div>
-    <div class="cf">COGS = Qty × Unit Cost</div>
-    <div class="cf">Gross Profit = Net Sales − COGS</div>
-    <div class="cf">Margin % = Gross Profit / Net Sales × 100</div>
-    <div class="cf">Total = Net Sales + Tax (8%)</div>
-  </div>
-  <div class="cs"><h3>Business Segments</h3>
-    <div class="cr"><span class="ck">Customer</span><span class="cv2">Retail B2C · Wholesale B2B</span></div>
-    <div class="cr"><span class="ck">Loyalty</span><span class="cv2">Bronze → Silver → Gold → Platinum</span></div>
-    <div class="cr"><span class="ck">Store</span><span class="cv2">Flagship · Retail · E-Commerce</span></div>
-    <div class="cr"><span class="ck">Channels</span><span class="cv2">All · In-Store · Online</span></div>
-  </div>
-  <div class="cs"><h3>Click any node</h3>
-    <div style="font-size:10px;color:#9ca3af;line-height:1.5">Select a schema node for business definition and relationships.</div>
-  </div></div>
+    <div id="OV"><div class="cs"><h3>Model Overview</h3>
+<div class="cr"><span class="ck">Schema</span><span class="cv2">Star Schema → Graph</span></div>
+<div class="cr"><span class="ck">Domain</span><span class="cv2">Retail Sales (B2C+B2B)</span></div>
+<div class="cr"><span class="ck">Graph Store</span><span class="cv2">Amazon Neptune</span></div>
+</div>
+<div class="cs"><h3>Key Metrics</h3>
+<div class="cf">Gross Sales = Qty × Unit Price</div>
+<div class="cf">Net Sales = Gross − Discount</div>
+<div class="cf">Gross Profit = Net Sales − COGS</div>
+<div class="cf">Total = Net Sales + Tax (8%)</div>
+</div>
+<div class="cs"><h3>Click any node</h3><div style="font-size:10px;color:#9ca3af">Select a node for definition and relationships.</div></div></div>
     <div id="ND"></div>
   </div>
 </div>
-
 <div id="TOP"><div class="badge">Nishant_Star_Model_<em>Business_Globe</em></div></div>
 <div id="TIP"><div class="tl" id="TL"></div><div class="td2" id="TD"></div></div>
 <div id="BAR">
   <div class="bn" id="BN"></div>
   <div class="bd" id="BD"></div>
   <div class="bt" id="BT"></div>
-  <span class="bx" onclick="clearSel()">✕</span>
+  <span class="bx" onclick="cSel()">✕</span>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
 const NODES=[{"id": "SalesTransaction", "color": "#59A14F", "size": 22, "tier": "fact", "desc": "Central fact. One row per order line item \u2014 atomic unit of revenue.", "metrics": ["Gross Sales = Qty \u00d7 Unit Price", "Net Sales = Gross \u2212 Discount", "COGS = Qty \u00d7 Unit Cost", "Gross Profit = Net Sales \u2212 COGS", "Tax = Net Sales \u00d7 8%", "Total = Net Sales + Tax", "Return Flag (TRUE/FALSE)"]}, {"id": "Customer", "color": "#4E79A7", "size": 16, "tier": "dimension", "desc": "Registered buyer. SCD Type 1. Linked to loyalty, segment, and geography.", "metrics": ["Loyalty Tier (Bronze\u2192Platinum)", "Segment (Retail B2C / Wholesale B2B)", "Age Group (18-24 to 65+)", "Registration Date", "Active Status"]}, {"id": "Product", "color": "#F28E2B", "size": 16, "tier": "dimension", "desc": "SKU in product catalogue. Belongs to Category \u2192 SubCategory \u2192 Brand \u2192 Supplier.", "metrics": ["Unit Price (USD)", "Unit Cost (USD)", "Gross Margin % = (Price-Cost)/Price\u00d7100", "Is Perishable", "Active Status"]}, {"id": "Store", "color": "#E15759", "size": 16, "tier": "dimension", "desc": "Physical or online retail location. Rolls up to District \u2192 Region.", "metrics": ["Store Type (Flagship/Retail/E-Commerce)", "Floor Area (sqft)", "Num Employees", "Is Online", "Open Date"]}, {"id": "Promotion", "color": "#76B7B2", "size": 16, "tier": "dimension", "desc": "Discount programme. PROMO-001 = No Promotion (baseline for full-price sales).", "metrics": ["Discount % (0-100)", "Min Purchase Amount (USD)", "Start / End Date", "Channel (All/In-Store/Online)", "Is Stackable"]}, {"id": "Month", "color": "#FABFD2", "size": 12, "tier": "time", "desc": "Calendar month enabling seasonality and trend analysis.", "metrics": ["Year", "Month Number (1-12)", "Month Name", "Quarter (Q1-Q4)", "Fiscal Year"]}, {"id": "Category", "color": "#EDC948", "size": 12, "tier": "hierarchy", "desc": "Top-level product grouping e.g. Electronics, Grocery, Apparel.", "metrics": ["Category Name", "Sub-Categories count"]}, {"id": "SubCategory", "color": "#B07AA1", "size": 10, "tier": "hierarchy", "desc": "Second-level product classification e.g. Audio, Beverages, Tops.", "metrics": ["Sub-Category Name", "Parent Category"]}, {"id": "Brand", "color": "#FF9DA7", "size": 10, "tier": "hierarchy", "desc": "Product brand \u2014 links products to manufacturer identity.", "metrics": ["Brand Name"]}, {"id": "Supplier", "color": "#9C755F", "size": 10, "tier": "hierarchy", "desc": "Wholesale supplier and procurement source for products.", "metrics": ["Supplier Name"]}, {"id": "Region", "color": "#F1CE63", "size": 12, "tier": "geography", "desc": "Highest geographic roll-up for sales territory management.", "metrics": ["Region (Northeast/West/Midwest/South/Southeast/National)"]}, {"id": "State", "color": "#86BCB6", "size": 10, "tier": "geography", "desc": "US state. Sits between City and Region in the geographic hierarchy.", "metrics": ["State Code (2-letter)", "Country"]}, {"id": "City", "color": "#BAB0AC", "size": 10, "tier": "geography", "desc": "City of store or customer address. Entry point into geographic hierarchy.", "metrics": ["City Name", "State Code"]}, {"id": "District", "color": "#D4A6C8", "size": 10, "tier": "geography", "desc": "Sub-regional grouping for district manager performance reporting.", "metrics": ["District Name"]}, {"id": "LoyaltyTier", "color": "#8CD17D", "size": 10, "tier": "segment", "desc": "Customer loyalty tier. Higher = higher retention priority.", "metrics": ["Tier (Bronze / Silver / Gold / Platinum)"]}, {"id": "CustomerSegment", "color": "#499894", "size": 10, "tier": "segment", "desc": "Business classification of the customer relationship.", "metrics": ["Segment (Retail B2C / Wholesale B2B)"]}, {"id": "AgeGroup", "color": "#A0CBE8", "size": 10, "tier": "segment", "desc": "Customer demographic band for targeted marketing analysis.", "metrics": ["Band (18-24 / 25-34 / 35-44 / 45-54 / 55-64 / 65+)"]}, {"id": "PromotionType", "color": "#79706E", "size": 10, "tier": "segment", "desc": "Classification of promotion strategy.", "metrics": ["None / Seasonal / Clearance / Category / Loyalty / Volume / Major Sale"]}, {"id": "Channel", "color": "#D7B5A6", "size": 10, "tier": "segment", "desc": "Sales channel where the promotion is applicable.", "metrics": ["All / In-Store / Online"]}, {"id": "StoreType", "color": "#FFBE7D", "size": 10, "tier": "segment", "desc": "Format classification of the retail location.", "metrics": ["Flagship Store / Retail Store / E-Commerce"]}, {"id": "Quarter", "color": "#B6992D", "size": 10, "tier": "time", "desc": "Calendar quarter. Aggregates months for quarterly reporting.", "metrics": ["Quarter (Q1/Q2/Q3/Q4)", "Year"]}, {"id": "FiscalYear", "color": "#D37295", "size": 10, "tier": "time", "desc": "Fiscal year label used for financial reporting alignment.", "metrics": ["Fiscal Year (e.g. FY2023)"]}];
 const EDGES=[{"source": "SalesTransaction", "target": "Customer", "rel": "BY_CUSTOMER", "type": "fact"}, {"source": "SalesTransaction", "target": "Product", "rel": "FOR_PRODUCT", "type": "fact"}, {"source": "SalesTransaction", "target": "Store", "rel": "AT_STORE", "type": "fact"}, {"source": "SalesTransaction", "target": "Promotion", "rel": "USED_PROMOTION", "type": "fact"}, {"source": "SalesTransaction", "target": "Month", "rel": "ON_DATE", "type": "fact"}, {"source": "Customer", "target": "Product", "rel": "PURCHASED", "type": "business"}, {"source": "Customer", "target": "Store", "rel": "SHOPPED_AT", "type": "business"}, {"source": "Customer", "target": "LoyaltyTier", "rel": "HAS_TIER", "type": "hierarchy"}, {"source": "Customer", "target": "CustomerSegment", "rel": "IN_SEGMENT", "type": "hierarchy"}, {"source": "Customer", "target": "AgeGroup", "rel": "IN_AGE_GROUP", "type": "hierarchy"}, {"source": "Customer", "target": "City", "rel": "LIVES_IN", "type": "geography"}, {"source": "Product", "target": "Category", "rel": "IN_CATEGORY", "type": "hierarchy"}, {"source": "Product", "target": "SubCategory", "rel": "IN_SUBCATEGORY", "type": "hierarchy"}, {"source": "Product", "target": "Brand", "rel": "MADE_BY", "type": "hierarchy"}, {"source": "Product", "target": "Supplier", "rel": "SUPPLIED_BY", "type": "hierarchy"}, {"source": "Product", "target": "Store", "rel": "SOLD_AT", "type": "business"}, {"source": "Category", "target": "SubCategory", "rel": "HAS_SUBCATEGORY", "type": "hierarchy"}, {"source": "Store", "target": "City", "rel": "LOCATED_IN", "type": "geography"}, {"source": "Store", "target": "Region", "rel": "IN_REGION", "type": "geography"}, {"source": "Store", "target": "District", "rel": "IN_DISTRICT", "type": "geography"}, {"source": "Store", "target": "StoreType", "rel": "IS_TYPE", "type": "hierarchy"}, {"source": "City", "target": "State", "rel": "IN_STATE", "type": "geography"}, {"source": "State", "target": "Region", "rel": "IN_REGION", "type": "geography"}, {"source": "Promotion", "target": "PromotionType", "rel": "IS_PROMO_TYPE", "type": "hierarchy"}, {"source": "Promotion", "target": "Channel", "rel": "AVAILABLE_ON", "type": "hierarchy"}, {"source": "Month", "target": "Quarter", "rel": "IN_QUARTER", "type": "time"}, {"source": "Month", "target": "FiscalYear", "rel": "IN_FISCAL_YEAR", "type": "time"}, {"source": "Quarter", "target": "FiscalYear", "rel": "IN_FISCAL_YEAR", "type": "time"}];
-const NAME_KEY="id";
-
-const cv=document.getElementById("cv");
+const NK="id";
+const wrap=document.getElementById('WRAP');
+let W=()=>wrap.offsetWidth, H=()=>wrap.offsetHeight;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0xf5f6fa);
-const camera=new THREE.PerspectiveCamera(50,1,1,5000);
+const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
 camera.position.set(0,0,1200);
-const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
-
-function getSidebarWidths(){
-  const mobile=window.innerWidth<=900;
-  const tablet=window.innerWidth<=1200&&!mobile;
-  const sbW = mobile?0:(tablet?200:240);
-  const ctxW= mobile?0:(tablet?220:300);
-  return{sbW,ctxW};
+renderer.domElement.style.display='block';
+wrap.appendChild(renderer.domElement);
+function resize(){
+  const w=W(),h=H();
+  if(w>0&&h>0){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}
 }
-function updateCam(){
-  const W=window.innerWidth,H=window.innerHeight;
-  const{sbW,ctxW}=getSidebarWidths();
-  const cw=Math.max(200,W-sbW-ctxW);
-  renderer.setSize(W,H);
-  camera.aspect=cw/H;
-  camera.setViewOffset(W,H,sbW,0,cw,H);
-  camera.updateProjectionMatrix();
-  // Show/hide mobile buttons
-  const mobile=window.innerWidth<=900;
-  document.getElementById("btn-sb").style.display=mobile?"block":"none";
-  document.getElementById("btn-ctx").style.display=mobile?"block":"none";
-  if(!mobile){
-    document.getElementById("SB").classList.remove("open");
-    document.getElementById("CTX").classList.remove("open");
-    document.getElementById("overlay").classList.remove("show");
-  }
-}
-updateCam();
-window.addEventListener("resize",updateCam);
-
-function toggleSB(){
-  document.getElementById("SB").classList.toggle("open");
-  document.getElementById("CTX").classList.remove("open");
-  document.getElementById("overlay").classList.toggle("show",
-    document.getElementById("SB").classList.contains("open"));
-}
-function toggleCTX(){
-  document.getElementById("CTX").classList.toggle("open");
-  document.getElementById("SB").classList.remove("open");
-  document.getElementById("overlay").classList.toggle("show",
-    document.getElementById("CTX").classList.contains("open"));
-}
-function closePanels(){
-  document.getElementById("SB").classList.remove("open");
-  document.getElementById("CTX").classList.remove("open");
-  document.getElementById("overlay").classList.remove("show");
-}
-
-scene.add(new THREE.AmbientLight(0xffffff,0.9));
-const dl=new THREE.DirectionalLight(0xffffff,0.6);dl.position.set(1,1,2);scene.add(dl);
+setTimeout(resize,0);
+window.addEventListener('resize',resize);
+scene.add(new THREE.AmbientLight(0xffffff,.8));
+const dl=new THREE.DirectionalLight(0xffffff,.5);dl.position.set(1,1,2);scene.add(dl);
 const R=290;
-// ── Brain-shaped geometry ─────────────────────────────────────────────
-function makeBrainGeo(R, seg) {
-  const geo = new THREE.SphereGeometry(R, seg, seg);
-  const pos = geo.attributes.position;
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
-    const len = Math.sqrt(x*x+y*y+z*z)||1;
-    const nx=x/len, ny=y/len, nz=z/len;
-    const theta = Math.atan2(nz, nx);
-    const phi   = Math.acos(Math.max(-1,Math.min(1,ny)));
-    // Surface folds (gyri/sulci)
-    const folds = 1
-      + 0.07 * Math.sin(6*theta)   * Math.sin(3*phi)
-      + 0.05 * Math.sin(9*theta+1) * Math.sin(5*phi)
-      + 0.03 * Math.sin(4*theta-2) * Math.sin(7*phi);
-    // Midline groove between hemispheres
-    const groove = 1 - 0.14 * Math.exp(-nx*nx / 0.04);
-    // Flatten top/bottom (brain is wider than tall)
-    const flatY = 0.82;
-    const r2 = R * folds * groove;
-    pos.setXYZ(i, nx*r2, ny*r2*flatY, nz*r2);
-  }
-  pos.needsUpdate = true; geo.computeVertexNormals();
-  return geo;
-}
-const brainGeo = makeBrainGeo(R, 72);
-scene.add(new THREE.Mesh(brainGeo,
-  new THREE.MeshBasicMaterial({color:0xdddddd,wireframe:true,opacity:0.3,transparent:true})));
-// Faint solid brain for depth
-const brainSolid = new THREE.Mesh(makeBrainGeo(R*0.98, 48),
-  new THREE.MeshPhongMaterial({color:0xf0f4ff,transparent:true,opacity:0.08,side:THREE.BackSide}));
-scene.add(brainSolid);
-
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,36,36),new THREE.MeshBasicMaterial({color:0xcccccc,wireframe:true,opacity:0.15,transparent:true})));
+scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1.5,8,80),new THREE.MeshBasicMaterial({color:0xbbbbbb,transparent:true,opacity:0.35})));
+(()=>{
+  const TC={"fact":"#16a34a","dimension":"#2563eb","hierarchy":"#7c3aed","geography":"#d97706","segment":"#0891b2","time":"#db2777"},EC={"fact":"#16a34a","business":"#2563eb","hierarchy":"#7c3aed","geography":"#d97706","time":"#db2777"};
+  const tiers={};NODES.forEach(n=>tiers[n.tier]=(tiers[n.tier]||0)+1);
+  const tl=document.getElementById('TL2');
+  Object.entries(tiers).forEach(([t,c])=>{const d=document.createElement('div');d.className='li';d.innerHTML='<div class="dot" style="background:'+(TC[t]||'#9ca3af')+'"></div><span class="lbl">'+t+'</span><span class="cnt">'+c+'</span>';tl.appendChild(d);});
+  const et={};EDGES.forEach(e=>et[e.type]=(et[e.type]||0)+1);
+  const el=document.getElementById('EL2');
+  Object.entries(et).forEach(([t,c])=>{const d=document.createElement('div');d.className='li';d.innerHTML='<div class="dot" style="background:'+(EC[t]||'#9ca3af')+';border-radius:2px"></div><span class="lbl">'+t+'</span><span class="cnt">'+c+'</span>';el.appendChild(d);});
+  // brain shape
+  function mkBrain(R,seg){const geo=new THREE.SphereGeometry(R,seg,seg);const pos=geo.attributes.position;for(let i=0;i<pos.count;i++){const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i);const l=Math.sqrt(x*x+y*y+z*z)||1;const nx=x/l,ny=y/l,nz=z/l;const th=Math.atan2(nz,nx),ph=Math.acos(Math.max(-1,Math.min(1,ny)));const f=1+.07*Math.sin(6*th)*Math.sin(3*ph)+.05*Math.sin(9*th+1)*Math.sin(5*ph);const g=1-.14*Math.exp(-nx*nx/.04);const r2=R*f*g;pos.setXYZ(i,nx*r2,ny*r2*.82,nz*r2);}pos.needsUpdate=true;geo.computeVertexNormals();return geo;}
+  scene.remove(scene.children.find(c=>c.isMesh&&c.geometry instanceof THREE.SphereGeometry&&!c.userData.nid));
+  scene.add(new THREE.Mesh(mkBrain(R,56),new THREE.MeshBasicMaterial({color:0xcccccc,wireframe:true,opacity:.18,transparent:true})));
+})();
 let spin=true,drag=false,ox=0,oy=0,rx=0,ry=0;
 const piv=new THREE.Group();scene.add(piv);
-
-cv.addEventListener("mousedown",e=>{drag=true;ox=e.clientX;oy=e.clientY});
-cv.addEventListener("mousemove",e=>{
-  if(drag){
-    spin=false;document.getElementById("SPIN").classList.remove("on");
-    ry+=(e.clientX-ox)*0.004;rx+=(e.clientY-oy)*0.004;
-    rx=Math.max(-1.5,Math.min(1.5,rx));
-    piv.rotation.y=ry;piv.rotation.x=rx;ox=e.clientX;oy=e.clientY;
-  }else doHover(e);
+const cv=renderer.domElement;
+cv.addEventListener('mousedown',e=>{drag=true;ox=e.clientX;oy=e.clientY});
+cv.addEventListener('mousemove',e=>{
+  if(drag){spin=false;document.getElementById('SPIN').classList.remove('on');
+    ry+=(e.clientX-ox)*.004;rx+=(e.clientY-oy)*.004;
+    rx=Math.max(-1.5,Math.min(1.5,rx));piv.rotation.y=ry;piv.rotation.x=rx;ox=e.clientX;oy=e.clientY;
+  }else hov(e);
 });
-cv.addEventListener("mouseup",()=>drag=false);
-// Touch support
-let lastTouchDist=0;
-cv.addEventListener("touchstart",e=>{
-  if(e.touches.length===1){drag=true;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}
-  if(e.touches.length===2){
-    lastTouchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
-      e.touches[0].clientY-e.touches[1].clientY);
-  }
-  e.preventDefault();},{passive:false});
-cv.addEventListener("touchmove",e=>{
-  if(e.touches.length===1&&drag){
-    spin=false;document.getElementById("SPIN").classList.remove("on");
-    ry+=(e.touches[0].clientX-ox)*0.005;rx+=(e.touches[0].clientY-oy)*0.005;
-    rx=Math.max(-1.5,Math.min(1.5,rx));
-    piv.rotation.y=ry;piv.rotation.x=rx;
-    ox=e.touches[0].clientX;oy=e.touches[0].clientY;
-  }
-  if(e.touches.length===2){
-    const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
-      e.touches[0].clientY-e.touches[1].clientY);
-    camera.position.z=Math.max(400,Math.min(3000,camera.position.z-(d-lastTouchDist)*2));
-    lastTouchDist=d;
-  }
-  e.preventDefault();},{passive:false});
-cv.addEventListener("touchend",()=>drag=false);
-cv.addEventListener("mouseleave",()=>drag=false);
-cv.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(3000,camera.position.z+e.deltaY*0.8))});
-cv.addEventListener("click",e=>{const h=cast(e);h?selNode(h.object.userData.nid):clearSel()});
-
-function resetCam(){camera.position.set(0,0,1200);rx=0;ry=0;piv.rotation.set(0,0,0);clearSel()}
-function toggleSpin(){spin=!spin;document.getElementById("SPIN").classList.toggle("on",spin)}
-
+cv.addEventListener('mouseup',()=>drag=false);
+cv.addEventListener('mouseleave',()=>drag=false);
+cv.addEventListener('wheel',e=>camera.position.z=Math.max(350,Math.min(3000,camera.position.z+e.deltaY*.8)));
+cv.addEventListener('click',e=>{const h=cast(e);h?selN(h.object.userData.nid):cSel()});
+let lt=0;
+cv.addEventListener('touchstart',e=>{if(e.touches.length===1){drag=true;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}if(e.touches.length===2)lt=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);e.preventDefault();},{passive:false});
+cv.addEventListener('touchmove',e=>{if(e.touches.length===1&&drag){spin=false;ry+=(e.touches[0].clientX-ox)*.005;rx+=(e.touches[0].clientY-oy)*.005;rx=Math.max(-1.5,Math.min(1.5,rx));piv.rotation.y=ry;piv.rotation.x=rx;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);camera.position.z=Math.max(350,Math.min(3000,camera.position.z-(d-lt)*2));lt=d;}e.preventDefault();},{passive:false});
+cv.addEventListener('touchend',()=>drag=false);
+function rCam(){camera.position.set(0,0,1200);rx=0;ry=0;piv.rotation.set(0,0,0);cSel();}
+function tSpin(){spin=!spin;document.getElementById('SPIN').classList.toggle('on',spin);}
 const rc=new THREE.Raycaster(),mo=new THREE.Vector2();
-let meshes={},lines=[];
+let MM={},LL=[];
 function cast(e){
   const r=cv.getBoundingClientRect();
   mo.x=((e.clientX-r.left)/r.width)*2-1;
   mo.y=-((e.clientY-r.top)/r.height)*2+1;
   rc.setFromCamera(mo,camera);
-  return rc.intersectObjects(Object.values(meshes),false)[0]||null;
+  return rc.intersectObjects(Object.values(MM),false)[0]||null;
 }
-
-const TIP=document.getElementById("TIP");
-let hov=null;
-function doHover(e){
+const TIP=document.getElementById('TIP');let hovId=null;
+function hov(e){
   const h=cast(e);
-  if(h){
-    const nid=h.object.userData.nid,n=NODES.find(x=>x.id===nid);
-    if(nid!==hov){hov=nid;if(n){
-      document.getElementById("TL").textContent=n[NAME_KEY];
-      document.getElementById("TL").style.color=n.color;
-      document.getElementById("TD").textContent=n.desc;
-      TIP.style.display="block";
-    }}
-    cv.style.cursor="pointer";
-  }else{TIP.style.display="none";hov=null;cv.style.cursor="default"}
-  if(TIP.style.display!=="none"){TIP.style.left=(e.clientX+14)+"px";TIP.style.top=(e.clientY-10)+"px"}
+  if(h){const nid=h.object.userData.nid,n=NODES.find(x=>x.id===nid);
+    if(nid!==hovId){hovId=nid;if(n){document.getElementById('TL').textContent=n[NK];document.getElementById('TL').style.color=n.color;document.getElementById('TD').textContent=n.desc;TIP.style.display='block';}}
+    cv.style.cursor='pointer';
+  }else{TIP.style.display='none';hovId=null;cv.style.cursor='default';}
+  if(TIP.style.display!=='none'){TIP.style.left=(e.clientX+14)+'px';TIP.style.top=(e.clientY-10)+'px';}
 }
-
 function fib(n,R){
   const pts=[],phi=Math.PI*(3-Math.sqrt(5));
-  for(let i=0;i<n;i++){
-    const y0=1-(i/(n-1))*2,r0=Math.sqrt(1-y0*y0),t=phi*i;
-    const nx=Math.cos(t)*r0, ny=y0, nz=Math.sin(t)*r0;
-    const theta=Math.atan2(nz,nx), phiA=Math.acos(Math.max(-1,Math.min(1,ny)));
-    // Apply same brain distortion as wireframe
-    const folds=1
-      +0.07*Math.sin(6*theta)*Math.sin(3*phiA)
-      +0.05*Math.sin(9*theta+1)*Math.sin(5*phiA)
-      +0.03*Math.sin(4*theta-2)*Math.sin(7*phiA);
-    const groove=1-0.14*Math.exp(-nx*nx/0.04);
-    const r2=R*folds*groove;
-    pts.push(new THREE.Vector3(nx*r2, ny*r2*0.82, nz*r2));
-  }
+  for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;
+    pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R));}
   return pts;
 }
-
 function build(){
   const pos=fib(NODES.length,R),idx={};
-  NODES.forEach((n,i)=>{n._p=pos[i];idx[n.id]=i});
+  NODES.forEach((n,i)=>{n._p=pos[i];idx[n.id]=i;});
   NODES.forEach((n,i)=>{
     const r=Math.max(4,Math.min(13,n.size/4.5));
-    const m=new THREE.Mesh(
-      new THREE.SphereGeometry(r,14,14),
-      new THREE.MeshPhongMaterial({
-        color:new THREE.Color(n.color),
-        emissive:new THREE.Color(n.color).multiplyScalar(0.05),
-        shininess:60,transparent:true,opacity:0.95})
-    );
-    m.position.copy(pos[i]);m.userData={nid:n.id};
-    piv.add(m);meshes[n.id]=m;
-    const c=document.createElement("canvas");c.width=320;c.height=56;
-    const cx=c.getContext("2d");
-    cx.font="bold 17px -apple-system,sans-serif";
-    cx.fillStyle="#1a1a2e";
-    cx.textAlign="center";
-    cx.fillText(n[NAME_KEY].length>18?n[NAME_KEY].slice(0,17)+"…":n[NAME_KEY],160,34);
-    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:0.9}));
-    sp.scale.set(70,13,1);
-    sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+12);
+    const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,12),
+      new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),shininess:40,transparent:false}));
+    m.position.copy(pos[i]);m.userData={nid:n.id};piv.add(m);MM[n.id]=m;
+    const c=document.createElement('canvas');c.width=256;c.height=48;
+    const x=c.getContext('2d');x.font='bold 16px sans-serif';x.fillStyle=n.color;x.textAlign='center';
+    x.fillText(n[NK].length>18?n[NK].slice(0,17)+'…':n[NK],128,30);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:.9}));
+    sp.scale.set(64,13,1);sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+10);
     piv.add(sp);
   });
   EDGES.forEach(e=>{
     const si=idx[e.source],ti=idx[e.target];
     if(si===undefined||ti===undefined)return;
     const s=NODES[si]._p,t=NODES[ti]._p;
-    const mid=s.clone().add(t).multiplyScalar(0.5);
-    mid.normalize().multiplyScalar(R*1.42);
-    const geo=new THREE.BufferGeometry().setFromPoints(
-      new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(32));
-    const l=new THREE.Line(geo,new THREE.LineBasicMaterial({
-      color:new THREE.Color(NODES[si].color),transparent:false,opacity:1.0}));
-    l.userData={src:e.source,tgt:e.target,rel:e.rel};
-    piv.add(l);lines.push(l);
+    const mid=s.clone().add(t).multiplyScalar(.5);
+    mid.normalize().multiplyScalar(R*1.4);
+    const pts=new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(24);
+    const geo=new THREE.BufferGeometry().setFromPoints(pts);
+    const l=new THREE.Line(geo,new THREE.LineBasicMaterial({color:new THREE.Color(NODES[si].color)}));
+    l.userData={src:e.source,tgt:e.target,rel:e.rel||''};piv.add(l);LL.push(l);
   });
 }
-
-function selNode(nid){
+function selN(nid){
   const n=NODES.find(x=>x.id===nid);if(!n)return;
   const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
-  Object.entries(meshes).forEach(([id,m])=>{m.material.opacity=id===nid?1:.12;m.scale.setScalar(id===nid?2:1)});
-  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1.0:.08});
-  const metrics=(n.metrics||[]).map(m=>`<div class="nm">${m}</div>`).join("");
-  const rh=rels.map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="nr"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel}</span><span class="ra">→</span><span style="color:${on?.color||'#374151'};font-size:9px">${ot}</span></div>`}).join("");
-  document.getElementById("ND").innerHTML=`<div class="nl" style="color:${n.color}">${n.id}</div><div class="nt">${n.tier||""} tier</div><div class="nd2" style="border-color:${n.color}">${n.desc}</div>${metrics?`<div class="nmh">Attributes</div>${metrics}`:""}<div class="nrh">Relationships (${rels.length})</div>${rh}`;
-  document.getElementById("OV").style.display="none";
-  document.getElementById("ND").style.display="block";
-  document.getElementById("BK").style.display="block";
-  document.getElementById("CTX-S").textContent=n.id;
-  document.getElementById("BN").innerHTML=`<span style="color:${n.color}">${n[NAME_KEY]}</span>`;
-  document.getElementById("BD").textContent=n.desc;
-  document.getElementById("BT").innerHTML=rels.slice(0,7).map(e=>{
+  Object.entries(MM).forEach(([id,m])=>{m.material.transparent=true;m.material.opacity=id===nid?1:.08;m.scale.setScalar(id===nid?2:1);});
+  LL.forEach(l=>{l.material.transparent=true;l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:.04;});
+  const metrics=(n.metrics||[]).map(m=>'<div class="nm">'+m+'</div>').join('');
+  const rh=rels.map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return'<div class="nr"><span class="ra">'+(io?'→':'←')+'</span><span class="rn">'+e.rel+'</span><span class="ra">→</span><span style="color:'+(on?.color||'#374151')+';font-size:9px">'+ot+'</span></div>';}).join('');
+  document.getElementById('ND').innerHTML='<div class="nl" style="color:'+n.color+'">'+n.id+'</div><div class="nt">'+(n.tier||'')+' tier</div><div class="nd2" style="border-color:'+n.color+'">'+n.desc+'</div>'+(metrics?'<div class="nmh">Attributes</div>'+metrics:'')+'<div class="nrh">Relationships ('+rels.length+')</div>'+rh;
+  document.getElementById('OV').style.display='none';document.getElementById('ND').style.display='block';document.getElementById('BK').style.display='block';document.getElementById('CS').textContent=n.id;
+  document.getElementById('BN').innerHTML='<span style="color:'+n.color+'">'+n[NK]+'</span>';
+  document.getElementById('BD').textContent=n.desc;
+  document.getElementById('BT').innerHTML=rels.slice(0,7).map(e=>{
     const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);
-    return`<span class="btag" style="color:${on?.color||'#374151'};border-color:${on?.color||'#e8eaed'}">${io?"→":"←"} ${e.rel||"connects"} ${on?.[NAME_KEY]||ot}</span>`;
-  }).join("")+(rels.length>7?`<span style="font-size:9px;color:#9ca3af">+${rels.length-7} more</span>`:"");
-  document.getElementById("BAR").style.display="flex";
+    return '<span class="btag" style="color:'+(on?.color||'#374151')+';border-color:'+(on?.color||'#e8eaed')+'">'+(io?'→':'←')+' '+(e.rel||'connects')+' '+(on?.[NK]||ot)+'</span>';
+  }).join('')+(rels.length>7?'<span style="font-size:9px;color:#9ca3af">+'+(rels.length-7)+' more</span>':'');
+  document.getElementById('BAR').style.display='flex';
 }
-
-function clearSel(){
-  Object.values(meshes).forEach(m=>{m.material.opacity=0.95;m.scale.setScalar(1)});
-  lines.forEach(l=>{l.material.opacity=1.0});
-  document.getElementById("BAR").style.display="none";
+function cSel(){
+  Object.values(MM).forEach(m=>{m.material.transparent=false;m.material.opacity=1;m.scale.setScalar(1);});
+  LL.forEach(l=>{l.material.transparent=false;l.material.opacity=1;});
+  document.getElementById('BAR').style.display='none';
   showOv();
 }
-function showOv(){
-  document.getElementById("OV").style.display="block";
-  document.getElementById("ND").style.display="none";
-  document.getElementById("BK").style.display="none";
-}
-
-(()=>{
-  const TC={"fact":"#16a34a","dimension":"#2563eb","hierarchy":"#7c3aed","geography":"#d97706","segment":"#0891b2","time":"#db2777"};
-  const EC={"fact":"#16a34a","business":"#2563eb","hierarchy":"#7c3aed","geography":"#d97706","time":"#db2777"};
-  const tiers={};NODES.forEach(n=>tiers[n.tier]=(tiers[n.tier]||0)+1);
-  const tl=document.getElementById("TIER-LEG");
-  Object.entries(tiers).forEach(([t,c])=>{
-    const d=document.createElement("div");d.className="li";
-    d.innerHTML=`<div class="dot" style="background:${TC[t]||'#9ca3af'}"></div><span class="lbl">${t}</span><span class="cnt">${c}</span>`;
-    tl.appendChild(d);
-  });
-  const et={};EDGES.forEach(e=>et[e.type]=(et[e.type]||0)+1);
-  const el=document.getElementById("EDGE-LEG");
-  Object.entries(et).forEach(([t,c])=>{
-    const d=document.createElement("div");d.className="li";
-    d.innerHTML=`<div class="dot" style="background:${EC[t]||'#9ca3af'};border-radius:2px"></div><span class="lbl">${t}</span><span class="cnt">${c}</span>`;
-    el.appendChild(d);
-  });
-})();
+function showOv(){document.getElementById('OV').style.display='block';document.getElementById('ND').style.display='none';document.getElementById('BK').style.display='none';}
+function tSB(){document.getElementById('SB').classList.toggle('open');document.getElementById('CTX').classList.remove('open');document.getElementById('OVL').classList.toggle('show',document.getElementById('SB').classList.contains('open'));}
+function tCTX(){document.getElementById('CTX').classList.toggle('open');document.getElementById('SB').classList.remove('open');document.getElementById('OVL').classList.toggle('show',document.getElementById('CTX').classList.contains('open'));}
+function cPan(){document.getElementById('SB').classList.remove('open');document.getElementById('CTX').classList.remove('open');document.getElementById('OVL').classList.remove('show');}
+function mb(){const m=window.innerWidth<=900;document.getElementById('BSB').style.display=m?'block':'none';document.getElementById('BCTX').style.display=m?'block':'none';}
+window.addEventListener('resize',mb);mb();
 build();
-(function anim(){requestAnimationFrame(anim);if(spin)piv.rotation.y+=0.0012;renderer.render(scene,camera)})();
-</script>
-</body></html>
+(function anim(){requestAnimationFrame(anim);if(spin)piv.rotation.y+=.0012;renderer.render(scene,camera);})();
+</script></body></html>
