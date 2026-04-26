@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Diagnostic</title></head>
+<body style="font-family:monospace;padding:20px;background:#f5f6fa">
+<h2>Globe Diagnostic</h2>
+<div id="log" style="background:#fff;border:1px solid #ccc;padding:10px;margin-top:10px;line-height:2"></div>
+<div id="wrap" style="width:400px;height:300px;background:#ddd;margin-top:10px;position:relative">
+  <span style="padding:10px;color:#999">Canvas renders here</span>
+</div>
+
+<script>
+function log(msg, color) {
+  const d = document.getElementById('log');
+  d.innerHTML += '<span style="color:'+(color||'#333')+'">✓ '+msg+'</span><br>';
+}
+
+log('HTML loaded');
+log('wrap div: '+document.getElementById('wrap').offsetWidth+'x'+document.getElementById('wrap').offsetHeight+'px');
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"
+  onload="log('Three.js loaded from cdnjs','green')"
+  onerror="log('Three.js FAILED from cdnjs — trying jsdelivr','red');loadFallback()">
+</script>
+
+<script>
+function loadFallback() {
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js';
+  s.onload = () => log('Three.js loaded from jsdelivr','green');
+  s.onerror = () => log('Three.js FAILED from jsdelivr too','red');
+  document.head.appendChild(s);
+}
+
+setTimeout(()=>{
+  if(typeof THREE === 'undefined') {
+    log('THREE is undefined after timeout','red');
+    return;
+  }
+  log('THREE object available');
+
+  const wrap = document.getElementById('wrap');
+  wrap.innerHTML = '';
+  const W = wrap.offsetWidth, H = wrap.offsetHeight;
+  log('Wrap size: '+W+'x'+H+'px');
+
+  try {
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x4E79A7);
+    const camera = new THREE.PerspectiveCamera(45, W/H, 1, 1000);
+    camera.position.z = 5;
+    const renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(W, H);
+    wrap.appendChild(renderer.domElement);
+    log('Renderer created and appended');
+
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 16, 16),
+      new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true})
+    );
+    scene.add(mesh);
+    renderer.render(scene, camera);
+    log('Rendered one frame — you should see a blue box with white wireframe sphere above','green');
+  } catch(e) {
+    log('ERROR: '+e.message,'red');
+  }
+}, 500);
+</script>
+</body></html>
