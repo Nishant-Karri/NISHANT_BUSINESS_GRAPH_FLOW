@@ -93,7 +93,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e
 </style>
 </head><body>
 
-<canvas id="cv" style="position:fixed;left:240px;top:0;display:block"></canvas>
+<canvas id="cv" style="position:fixed;left:0;top:0;z-index:1"></canvas>
 
 <div id="SB">
   <div class="logo">Nishant_Star_Model_<em>Business_Globe</em><em>Interactive Knowledge Globe</em></div>
@@ -162,22 +162,22 @@ const EDGES=[{"source": "SalesTransaction", "target": "Customer", "rel": "BY_CUS
 const NAME_KEY="id";
 
 const cv=document.getElementById("cv");
-cv.width=window.innerWidth-240-300; cv.height=window.innerHeight;
-
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x050810);
-const camera=new THREE.PerspectiveCamera(50,cv.width/cv.height,1,5000);
+const camera=new THREE.PerspectiveCamera(50,1,1,5000);
 camera.position.set(0,0,1250);
-
 const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(cv.width,cv.height);
 
-window.addEventListener("resize",()=>{
-  cv.width=window.innerWidth-240-300;cv.height=window.innerHeight;
-  renderer.setSize(cv.width,cv.height);
-  camera.aspect=cv.width/cv.height;camera.updateProjectionMatrix();
-});
+function updateCam(){
+  const W=window.innerWidth,H=window.innerHeight,cw=W-240-300;
+  renderer.setSize(W,H);
+  camera.aspect=cw/H;
+  camera.setViewOffset(W,H,240,0,cw,H);
+  camera.updateProjectionMatrix();
+}
+updateCam();
+window.addEventListener("resize",updateCam);
 
 scene.add(new THREE.AmbientLight(0xffffff,0.5));
 const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
