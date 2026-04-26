@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Metric Drift Monitor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
+  color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+
+/* Same sidebar layout as other pages */
+#SB{position:fixed;left:0;top:0;bottom:0;width:240px;background:#fff;
+  border-right:2px solid #e8eaed;z-index:10;display:flex;flex-direction:column;
+  box-shadow:2px 0 12px rgba(0,0,0,.06);transition:transform .3s ease}
+#CTX{position:fixed;right:0;top:0;bottom:0;width:300px;background:#fff;
+  border-left:2px solid #e8eaed;z-index:10;display:flex;flex-direction:column;
+  box-shadow:-2px 0 12px rgba(0,0,0,.06);transition:transform .3s ease}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:9}
+
+@media(max-width:900px){
+  #SB{transform:translateX(-100%);width:min(240px,85vw)}
+  #CTX{transform:translateX(100%);width:min(300px,85vw)}
+  #SB.open{transform:translateX(0)}
+  #CTX.open{transform:translateX(0)}
+  #overlay.show{display:block}
+  #TOP{left:52px!important;right:52px!important}
+}
+
+/* Sidebar internals */
+.logo{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.5}
+.logo em{color:#7c3aed;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+.sbox{padding:10px 14px;border-bottom:1px solid #e8eaed;background:#f8f9ff}
+.stat{display:flex;justify-content:space-between;padding:3px 0;font-size:11px}
+.stat b{color:#7c3aed;font-weight:700}
+.sb-sec{flex:1;overflow-y:auto;padding:12px 14px}
+.sb-sec h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px;font-weight:600}
+.legend-item{display:flex;align-items:center;gap:7px;padding:3px 0;font-size:10px}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ctrl{padding:10px 14px;border-top:1px solid #e8eaed;display:flex;gap:6px;flex-wrap:wrap;background:#fafafa}
+.btn{padding:5px 12px;background:#fff;border:1.5px solid #d1d5db;border-radius:6px;
+  color:#374151;font-size:10px;cursor:pointer;font-weight:500;transition:.15s}
+.btn:hover,.btn.on{border-color:#7c3aed;color:#7c3aed}
+.navl{padding:8px 14px;border-top:1px solid #e8eaed;font-size:10px;background:#fafafa}
+.navl a{color:#7c3aed;text-decoration:none;font-weight:500;display:block;padding:2px 0}
+.navl a:hover{color:#5b21b6}
+
+/* Right context */
+.ch{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;background:#f8f9ff}
+.ch h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1a1a2e}
+.ch p{font-size:9px;color:#6b7280;margin-top:2px}
+.cb{flex:1;overflow-y:auto;padding:12px 14px}
+.cs{margin-bottom:15px}
+.cs h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:#7c3aed;margin-bottom:7px;border-bottom:1.5px solid #e8eaed;padding-bottom:3px}
+.cr{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:10px}
+.cr:last-child{border:none}
+.ck{color:#6b7280;width:44%}
+.cv2{color:#1f2937;text-align:right;width:54%;font-size:9.5px;line-height:1.4;font-weight:500}
+.cf{background:#f3f4f6;border:1px solid #e8eaed;border-left:3px solid #7c3aed;
+  border-radius:5px;padding:5px 8px;font-family:Menlo,monospace;
+  font-size:8.5px;color:#1f2937;margin:2px 0;line-height:1.5}
+
+/* Top badge */
+#TOP{position:fixed;top:14px;left:240px;right:300px;z-index:20;
+  display:flex;justify-content:center;pointer-events:none}
+.badge{background:#fff;border:1.5px solid #e8eaed;border-radius:20px;padding:6px 20px;
+  font-size:11px;font-weight:700;color:#1a1a2e;letter-spacing:.5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);pointer-events:auto;white-space:nowrap}
+.badge em{color:#7c3aed;font-style:normal}
+
+/* Mobile buttons */
+#btn-sb,#btn-ctx{display:none;position:fixed;top:10px;z-index:200;width:40px;height:40px;
+  border-radius:10px;border:1.5px solid #e8eaed;background:#fff;font-size:18px;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+#btn-sb{left:10px}
+#btn-ctx{right:10px;font-size:16px}
+
+/* Main content area */
+#main{position:fixed;left:240px;right:300px;top:0;bottom:0;overflow:hidden;
+  display:flex;flex-direction:column}
+@media(max-width:900px){#main{left:0;right:0}}
+
+/* Top status bar */
+#status-bar{background:#fff;border-bottom:1px solid #e8eaed;padding:10px 20px;
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+#status-bar h3{font-size:13px;font-weight:700;flex:1;color:#1a1a2e}
+#status-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;
+  background:#f3f4f6;color:#6b7280;border:1px solid #e8eaed}
+#status-badge.running{background:#eff6ff;color:#2563eb;border-color:#bfdbfe;
+  animation:pulse .8s ease-in-out infinite}
+#status-badge.done{background:#f0fdf4;color:#16a34a;border-color:#bbf7d0}
+#status-badge.error{background:#fef2f2;color:#dc2626;border-color:#fecaca}
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+#last-run-txt{font-size:11px;color:#6b7280}
+#run-btn{padding:7px 16px;background:#7c3aed;color:#fff;border:none;border-radius:8px;
+  font-size:11px;font-weight:600;cursor:pointer;box-shadow:0 2px 6px rgba(124,58,237,.3)}
+#run-btn:hover{background:#5b21b6}
+#run-btn:disabled{background:#9ca3af;cursor:not-allowed;box-shadow:none}
+
+/* Offline notice */
+#offline{display:none;flex:1;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;padding:40px;text-align:center}
+#offline .icon{font-size:48px}
+#offline h3{font-size:18px;font-weight:700;color:#1a1a2e}
+#offline p{font-size:13px;color:#6b7280;max-width:400px;line-height:1.6}
+.code-block{background:#1a1a2e;color:#e8eaf6;padding:10px 16px;border-radius:8px;
+  font-family:Menlo,monospace;font-size:11px;text-align:left;width:100%;max-width:420px}
+
+/* Dashboard content */
+#dash-content{flex:1;overflow-y:auto;padding:16px 20px}
+.summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:12px;margin-bottom:20px}
+.sum-card{background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:12px 14px;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sum-card .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.8px;
+  color:#6b7280;font-weight:600;margin-bottom:4px}
+.sum-card .val{font-size:22px;font-weight:700}
+.sum-card.red .val{color:#dc2626}
+.sum-card.orange .val{color:#ea580c}
+.sum-card.yellow .val{color:#d97706}
+.sum-card.purple .val{color:#7c3aed}
+.sum-card.green .val{color:#16a34a}
+.sum-card .sub{font-size:10px;color:#6b7280;margin-top:2px}
+
+.sec-title{font-size:13px;font-weight:700;margin-bottom:12px;color:#1a1a2e;
+  display:flex;align-items:center;gap:8px}
+.sec-badge{background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:500}
+
+/* Metrics table */
+.tbl-wrap{background:#fff;border:1px solid #e8eaed;border-radius:10px;
+  overflow:auto;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+table{width:100%;border-collapse:collapse}
+thead th{padding:9px 12px;text-align:left;font-size:9px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.8px;color:#6b7280;
+  background:#f8f9ff;border-bottom:2px solid #e8eaed;white-space:nowrap}
+tbody tr{border-bottom:1px solid #f3f4f6}
+tbody tr:last-child{border:none}
+tbody tr:hover{background:#fafbff}
+tbody td{padding:8px 12px;font-size:11px}
+.mv{font-weight:600;font-family:Menlo,monospace}
+.mv.good{color:#16a34a}
+.mv.warn{color:#ea580c}
+.mv.bad{color:#dc2626}
+.sn{font-weight:600;color:#1a1a2e}
+.st{font-size:9px;color:#6b7280;margin-top:1px}
+
+/* Alert cards */
+.alerts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:14px;margin-bottom:20px}
+.alert-card{background:#fff;border:1px solid #e8eaed;border-radius:12px;
+  overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.card-hdr{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e8eaed}
+.sev{padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.sev-CRITICAL{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.sev-HIGH{background:#fff7ed;color:#ea580c;border:1px solid #fed7aa}
+.sev-MEDIUM{background:#fefce8;color:#d97706;border:1px solid #fef08a}
+.sev-LOW{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+.atitle{flex:1;font-weight:700;font-size:12px;color:#1a1a2e}
+.dpill{font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;font-family:Menlo,monospace}
+.dpos{background:#fff7ed;color:#ea580c}
+.dneg{background:#f0fdf4;color:#16a34a}
+.card-body{padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ah4{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#6b7280;font-weight:600;margin-bottom:5px}
+.mrow{display:flex;gap:10px;margin-bottom:8px}
+.mbox{flex:1;background:#f8f9ff;border:1px solid #e8eaed;border-radius:7px;padding:6px 8px;text-align:center}
+.mbox .mk{font-size:8px;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;margin-bottom:2px}
+.mbox .mv2{font-size:13px;font-weight:700;font-family:Menlo,monospace}
+.loss-t{width:100%;border-collapse:collapse}
+.loss-t td{padding:3px 0;font-size:11px;color:#374151}
+.loss-t td:last-child{text-align:right;font-weight:700;font-family:Menlo,monospace;color:#dc2626}
+.ctx-grp{margin-bottom:4px}
+.ctx-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;font-weight:600;margin-bottom:2px}
+.ctx-tags{display:flex;flex-wrap:wrap;gap:3px}
+.ctx-tag{padding:1px 6px;background:#f3f4f6;border:1px solid #e8eaed;border-radius:5px;font-size:9px;color:#374151}
+.rec-box{font-size:10px;color:#374151;line-height:1.6;background:#f8f9ff;border-radius:8px;
+  padding:8px;border-left:3px solid #7c3aed;white-space:pre-wrap;
+  grid-column:1/-1;max-height:200px;overflow-y:auto}
+</style>
+</head>
+<body>
+
+<button id="btn-sb"  onclick="toggleSB()"  style="display:none">☰</button>
+<button id="btn-ctx" onclick="toggleCTX()" style="display:none">ℹ</button>
+<div id="overlay" onclick="closePanels()"></div>
+
+<!-- Left sidebar -->
+<div id="SB">
+  <div class="logo">Metric Drift Monitor<em>Business Graph Intelligence</em></div>
+  <div class="sbox">
+    <div class="stat"><span>Stores Monitored</span><b id="sb-stores">—</b></div>
+    <div class="stat"><span>Alerts Detected</span><b id="sb-alerts">—</b></div>
+    <div class="stat"><span>90-Day Exposure</span><b id="sb-exp">—</b></div>
+    <div class="stat"><span>Last Analysis</span><b id="sb-last">—</b></div>
+  </div>
+  <div class="sb-sec">
+    <h4>Alert Severity</h4>
+    <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div><span>Critical — Immediate action</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ea580c"></div><span>High — Action this week</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div><span>Medium — Monitor closely</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div><span>Low — Watch trend</span></div>
+    <h4 style="margin-top:14px">Metrics Tracked</h4>
+    <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div><span>Gross Margin %</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div><span>Return Rate %</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div><span>Avg Order Value</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div><span>Discount Rate %</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div><span>Net Sales</span></div>
+    <h4 style="margin-top:14px">Data Source</h4>
+    <div style="font-size:10px;color:#6b7280;line-height:1.6">
+      Amazon Neptune<br>Star Schema Business Graph<br>10 stores · 36 transactions<br>Claude Sonnet 4.6 (Bedrock)
+    </div>
+  </div>
+  <div class="ctrl">
+    <button class="btn on" onclick="loadDashboard()">↺ Refresh</button>
+  </div>
+  <div class="navl">
+    <a href="index.html">← Skills Globe</a>
+    <a href="business_graph.html">⬡ Business Globe</a>
+  </div>
+</div>
+
+<!-- Center main -->
+<div id="main">
+  <div id="status-bar">
+    <h3>Metric Drift <span style="color:#7c3aed">Dashboard</span></h3>
+    <span id="last-run-txt"></span>
+    <span id="status-badge">Checking server…</span>
+    <button id="run-btn" onclick="triggerRun()" disabled>▶ Run Analysis</button>
+  </div>
+
+  <!-- Offline state -->
+  <div id="offline">
+    <div class="icon">⚡</div>
+    <h3>Start the local server to view live data</h3>
+    <p>The Metric Drift Dashboard runs locally and connects to your Amazon Neptune graph. Start it with:</p>
+    <div class="code-block">cd /Users/nishantsai/gt/etl_pipeline<br>python3 drift_dashboard.py</div>
+    <p style="margin-top:8px">Then open <b>http://localhost:8766</b> directly, or come back here after starting it.</p>
+  </div>
+
+  <!-- Dashboard content (shown when server is online) -->
+  <div id="dash-content" style="display:none">
+    <div class="summary-cards" id="sum-cards">
+      <div class="sum-card"><div class="lbl">Total Alerts</div><div class="val" id="c-total">—</div><div class="sub">across all stores</div></div>
+      <div class="sum-card red"><div class="lbl">Critical</div><div class="val" id="c-crit">—</div><div class="sub">immediate action</div></div>
+      <div class="sum-card orange"><div class="lbl">High</div><div class="val" id="c-high">—</div><div class="sub">action this week</div></div>
+      <div class="sum-card yellow"><div class="lbl">Medium</div><div class="val" id="c-med">—</div><div class="sub">monitor closely</div></div>
+      <div class="sum-card purple"><div class="lbl">Stores</div><div class="val" id="c-stores">—</div><div class="sub">monitored</div></div>
+      <div class="sum-card green"><div class="lbl">90-Day Exposure</div><div class="val" id="c-exp">—</div><div class="sub">if unaddressed</div></div>
+    </div>
+
+    <div class="sec-title">Store Metrics <span class="sec-badge" id="tbl-badge">—</span></div>
+    <div class="tbl-wrap" id="metrics-tbl"></div>
+
+    <div class="sec-title" id="alerts-title" style="display:none">
+      Drift Alerts <span class="sec-badge" id="alert-badge">—</span>
+    </div>
+    <div class="alerts-grid" id="alerts-grid"></div>
+  </div>
+</div>
+
+<!-- Right context panel -->
+<div id="CTX">
+  <div class="ch"><h2>Business Context</h2><p id="ctx-sub">Neptune Graph Monitor</p></div>
+  <div class="cb">
+    <div class="cs"><h3>What is Metric Drift?</h3>
+      <div style="font-size:10px;color:#374151;line-height:1.6">
+        Metric drift occurs when a store's KPI deviates more than <b>12%</b> from the cross-store baseline. The system queries the Neptune business graph for linked nodes — only the relevant context for each metric — then generates root-cause analysis and recommendations.
+      </div>
+    </div>
+    <div class="cs"><h3>Graph Traversal Per Metric</h3>
+      <div class="cr"><span class="ck">Gross Margin</span><span class="cv2">→ Product → Category → Brand → Supplier</span></div>
+      <div class="cr"><span class="ck">Return Rate</span><span class="cv2">→ Product → Customer → LoyaltyTier</span></div>
+      <div class="cr"><span class="ck">Avg Order Value</span><span class="cv2">→ Customer → Loyalty → Promotion</span></div>
+      <div class="cr"><span class="ck">Discount Rate</span><span class="cv2">→ Promotion → Type → Channel</span></div>
+      <div class="cr"><span class="ck">Net Sales</span><span class="cv2">→ Category → Brand → Region</span></div>
+    </div>
+    <div class="cs"><h3>Loss Projection Formula</h3>
+      <div class="cf">Daily Sales = Net Sales / 30</div>
+      <div class="cf">Impact Rate = |Drift %| / 100</div>
+      <div class="cf">Loss = Daily × Impact × Multiplier × Days</div>
+      <div style="font-size:9px;color:#9ca3af;margin-top:4px">Multipliers: Return Rate 1.2× · Gross Margin 0.8× · Discount 0.9× · AOV 0.6× · Net Sales 1.0×</div>
+    </div>
+    <div class="cs"><h3>Drift Threshold</h3>
+      <div class="cr"><span class="ck">Alert trigger</span><span class="cv2">&gt;12% from baseline</span></div>
+      <div class="cr"><span class="ck">Baseline</span><span class="cv2">Cross-store average</span></div>
+      <div class="cr"><span class="ck">Severity LOW</span><span class="cv2">12–15% deviation</span></div>
+      <div class="cr"><span class="ck">Severity MEDIUM</span><span class="cv2">15–25% deviation</span></div>
+      <div class="cr"><span class="ck">Severity HIGH</span><span class="cv2">25–40% deviation</span></div>
+      <div class="cr"><span class="ck">Severity CRITICAL</span><span class="cv2">&gt;40% deviation</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="TOP"><div class="badge">Metric Drift <em>Monitor</em></div></div>
+
+<script>
+const API = 'http://localhost:8766';
+let polling = null;
+
+// ── Server connectivity ───────────────────────────────────────────────────
+async function checkServer() {
+  try {
+    const s = await fetch(API + '/api/status', {mode:'cors'}).then(r=>r.json());
+    document.getElementById("offline").style.display = "none";
+    document.getElementById("dash-content").style.display = "block";
+    document.getElementById("run-btn").disabled = false;
+    setStatus(s.state);
+    if (s.last_run) {
+      document.getElementById("last-run-txt").textContent = "Last run: " + s.last_run;
+      document.getElementById("sb-last").textContent = s.last_run.split(" ")[1];
+    }
+    if (s.state === "done") loadDashboard();
+    return true;
+  } catch(e) {
+    document.getElementById("offline").style.display = "flex";
+    document.getElementById("dash-content").style.display = "none";
+    document.getElementById("run-btn").disabled = true;
+    document.getElementById("status-badge").textContent = "Server offline";
+    document.getElementById("status-badge").className = "error";
+    return false;
+  }
+}
+
+function setStatus(state) {
+  const b = document.getElementById("status-badge");
+  const labels = {idle:"Idle",running:"Running…",done:"Complete",error:"Error"};
+  b.textContent = labels[state] || state;
+  b.className = state;
+}
+
+async function triggerRun() {
+  document.getElementById("run-btn").disabled = true;
+  await fetch(API + '/api/run', {method:'POST', mode:'cors'});
+  setStatus("running");
+  polling = setInterval(async () => {
+    const s = await fetch(API + '/api/status', {mode:'cors'}).then(r=>r.json());
+    setStatus(s.state);
+    if (s.last_run) document.getElementById("last-run-txt").textContent = "Last run: " + s.last_run;
+    if (s.state === "done") { clearInterval(polling); document.getElementById("run-btn").disabled=false; loadDashboard(); }
+    if (s.state === "error") { clearInterval(polling); document.getElementById("run-btn").disabled=false; }
+  }, 2000);
+}
+
+async function loadDashboard() {
+  const d = await fetch(API + '/api/data', {mode:'cors'}).then(r=>r.json());
+  renderSummary(d.alerts, d.metrics);
+  renderMetrics(d.metrics);
+  renderAlerts(d.alerts);
+  document.getElementById("sb-stores").textContent = d.metrics.length;
+  document.getElementById("sb-alerts").textContent = d.alerts.length;
+  const exp = d.alerts.reduce((s,a)=>s+(a.loss_90d||0),0);
+  document.getElementById("sb-exp").textContent = "$" + exp.toLocaleString("en-US",{maximumFractionDigits:0});
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function renderSummary(alerts, metrics) {
+  document.getElementById("c-total").textContent  = alerts.length;
+  document.getElementById("c-crit").textContent   = alerts.filter(a=>a.severity==="CRITICAL").length;
+  document.getElementById("c-high").textContent   = alerts.filter(a=>a.severity==="HIGH").length;
+  document.getElementById("c-med").textContent    = alerts.filter(a=>a.severity==="MEDIUM").length;
+  document.getElementById("c-stores").textContent = metrics.length;
+  const exp = alerts.reduce((s,a)=>s+(a.loss_90d||0),0);
+  document.getElementById("c-exp").textContent    = "$" + exp.toLocaleString("en-US",{maximumFractionDigits:0});
+  document.getElementById("tbl-badge").textContent = metrics.length + " stores";
+}
+
+function mc(val, metric) {
+  const t = {gross_margin:{g:55,w:45},return_rate:{g:5,w:15},discount_rate:{g:5,w:12},aov:{g:250,w:150},net_sales:{g:700,w:400}};
+  const r = t[metric]; if (!r) return "";
+  const lb = metric==="return_rate"||metric==="discount_rate";
+  return lb ? (val<=r.g?"good":val<=r.w?"warn":"bad") : (val>=r.g?"good":val>=r.w?"warn":"bad");
+}
+
+function renderMetrics(metrics) {
+  const rows = metrics.sort((a,b)=>b.net_sales-a.net_sales).map(m=>`
+    <tr>
+      <td><div class="sn">${m.store_name}</div><div class="st">${m.store_type}</div></td>
+      <td><span class="mv ${mc(m.gross_margin,'gross_margin')}">${m.gross_margin.toFixed(1)}%</span></td>
+      <td><span class="mv ${mc(m.return_rate,'return_rate')}">${m.return_rate.toFixed(1)}%</span></td>
+      <td><span class="mv ${mc(m.aov,'aov')}">$${m.aov.toFixed(0)}</span></td>
+      <td><span class="mv ${mc(m.discount_rate,'discount_rate')}">${m.discount_rate.toFixed(1)}%</span></td>
+      <td><span class="mv ${mc(m.net_sales,'net_sales')}">$${m.net_sales.toLocaleString("en-US",{maximumFractionDigits:0})}</span></td>
+      <td style="color:#6b7280;font-size:11px">${m.txn_count}</td>
+    </tr>`).join("");
+  document.getElementById("metrics-tbl").innerHTML = `
+    <table>
+      <thead><tr><th>Store</th><th>Gross Margin</th><th>Return Rate</th><th>AOV</th><th>Discount Rate</th><th>Net Sales</th><th>Txns</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function renderAlerts(alerts) {
+  if (!alerts.length) return;
+  document.getElementById("alerts-title").style.display = "flex";
+  document.getElementById("alert-badge").textContent = alerts.length + " alerts";
+  const ML = {gross_margin:"Gross Margin %",return_rate:"Return Rate %",aov:"Avg Order Value",discount_rate:"Discount Rate %",net_sales:"Net Sales"};
+  const cards = alerts.sort((a,b)=>({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[b.severity]||0)-({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[a.severity]||0)).map(a=>{
+    const dp = a.drift_pct>0?"dpos":"dneg";
+    const sign = a.drift_pct>0?"+":"";
+    const isAmt = ["aov","net_sales"].includes(a.metric);
+    const u = isAmt?"$":"", suf = isAmt?"":"%";
+    const ctx = Object.entries(a.graph_context||{}).slice(0,4).map(([k,v])=>`
+      <div class="ctx-grp"><div class="ctx-lbl">${k.replace(/_/g," ")}</div>
+      <div class="ctx-tags">${(Array.isArray(v)?v:[v]).slice(0,3).map(t=>`<span class="ctx-tag">${t}</span>`).join("")}</div></div>`).join("");
+    const rec = (a.recommendation||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    return `<div class="alert-card">
+      <div class="card-hdr">
+        <span class="sev sev-${a.severity}">${a.severity}</span>
+        <span class="atitle">${a.store_name} — ${ML[a.metric]||a.metric}</span>
+        <span class="dpill ${dp}">${sign}${a.drift_pct}%</span>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="ah4">Metric Values</div>
+          <div class="mrow">
+            <div class="mbox"><div class="mk">Actual</div><div class="mv2" style="color:#dc2626">${u}${a.actual.toFixed(1)}${suf}</div></div>
+            <div class="mbox"><div class="mk">Baseline</div><div class="mv2" style="color:#16a34a">${u}${a.baseline.toFixed(1)}${suf}</div></div>
+          </div>
+          <div class="ah4">Projected Loss</div>
+          <table class="loss-t">
+            <tr><td>30 days</td><td>$${(a.loss_30d||0).toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>
+            <tr><td>60 days</td><td>$${(a.loss_60d||0).toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>
+            <tr><td>90 days</td><td>$${(a.loss_90d||0).toLocaleString("en-US",{maximumFractionDigits:0})}</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="ah4">Graph Context</div>
+          ${ctx||'<div style="font-size:10px;color:#9ca3af">No context</div>'}
+        </div>
+        <div class="rec-box"><b>Recommendation</b>\n\n${rec}</div>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("alerts-grid").innerHTML = cards;
+}
+
+// ── Mobile ────────────────────────────────────────────────────────────────
+function toggleSB(){document.getElementById("SB").classList.toggle("open");document.getElementById("CTX").classList.remove("open");document.getElementById("overlay").classList.toggle("show",document.getElementById("SB").classList.contains("open"))}
+function toggleCTX(){document.getElementById("CTX").classList.toggle("open");document.getElementById("SB").classList.remove("open");document.getElementById("overlay").classList.toggle("show",document.getElementById("CTX").classList.contains("open"))}
+function closePanels(){document.getElementById("SB").classList.remove("open");document.getElementById("CTX").classList.remove("open");document.getElementById("overlay").classList.remove("show")}
+function handleResize(){const m=window.innerWidth<=900;document.getElementById("btn-sb").style.display=m?"block":"none";document.getElementById("btn-ctx").style.display=m?"block":"none"}
+window.addEventListener("resize",handleResize);handleResize();
+
+// ── Init ──────────────────────────────────────────────────────────────────
+checkServer();
+setInterval(checkServer, 10000);
+</script>
+</body></html>
