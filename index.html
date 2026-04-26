@@ -121,7 +121,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e
   <div class="cb-tags" id="cb-t"></div>
   <span class="cb-x" onclick="clearSel()">✕</span>
 </div>
-<div id="loading"><p class="pulse">Building Skills Globe…</p><small>64 nodes · 117 connections</small></div>
+<div id="loading" style="display:none"><p class="pulse">Building Skills Globe…</p><small>64 nodes · 117 connections</small></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
@@ -292,7 +292,6 @@ function buildLegend(){
 }
 
 build();buildLegend();
-document.getElementById("loading").style.display="none";
 (function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
 </script>
 
@@ -471,7 +470,6 @@ function buildLegend(){
 }
 
 build();buildLegend();
-document.getElementById("loading").style.display="none";
 (function animate(){requestAnimationFrame(animate);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
 </script>
 
@@ -612,7 +610,6 @@ function buildLeg(){
 }
 
 build();buildLeg();
-document.getElementById("loading").style.display="none";
 (function anim(){requestAnimationFrame(anim);if(spinning)pivot.rotation.y+=0.0012;renderer.render(scene,camera)})();
 </script>
 </body></html>
