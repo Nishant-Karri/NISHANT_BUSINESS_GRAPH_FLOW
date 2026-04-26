@@ -93,7 +93,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050810;color:#e0e0e
 </style>
 </head><body>
 
-<canvas id="cv"></canvas>
+<canvas id="cv" style="position:fixed;left:240px;top:0;display:block"></canvas>
 
 <div id="SB">
   <div class="logo">Neptune Skills <em>Knowledge Globe</em><em>Interactive Knowledge Globe</em></div>
@@ -156,7 +156,7 @@ const EDGES=[{"source": "aws", "target": "cat_cloud", "rel": "PART_OF"}, {"sourc
 const NAME_KEY="label";
 
 const cv=document.getElementById("cv");
-cv.width=window.innerWidth; cv.height=window.innerHeight;
+cv.width=window.innerWidth-240-280; cv.height=window.innerHeight;
 
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x050810);
@@ -168,7 +168,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(cv.width,cv.height);
 
 window.addEventListener("resize",()=>{
-  cv.width=window.innerWidth;cv.height=window.innerHeight;
+  cv.width=window.innerWidth-240-280;cv.height=window.innerHeight;
   renderer.setSize(cv.width,cv.height);
   camera.aspect=cv.width/cv.height;camera.updateProjectionMatrix();
 });
