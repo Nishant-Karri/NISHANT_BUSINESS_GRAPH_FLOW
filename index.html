@@ -6,8 +6,8 @@
 <title>Nishant Neptune Knowledge Skill Graph</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;width:100vw;height:100vh}
-#sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:rgba(8,10,22,0.93);border-right:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px)}
+body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;width:100vw;height:100vh;display:grid;grid-template-columns:240px 1fr 280px}
+#sidebar{position:relative;width:240px;background:rgba(8,10,22,0.93);border-right:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px)}
 #logo{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
 #logo h1{font-size:11px;font-weight:700;letter-spacing:.5px;color:#fff;line-height:1.5}
 #logo h1 em{color:#FF9900;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
@@ -30,7 +30,7 @@ body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFo
 #to-biz a{color:#59A14F;text-decoration:none}
 #to-biz a:hover{color:#fff}
 /* Right panel */
-#context{position:fixed;right:0;top:0;bottom:0;width:280px;background:rgba(8,10,22,0.93);border-left:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px);overflow:hidden}
+#context{position:relative;width:280px;background:rgba(8,10,22,0.93);border-left:1px solid #1a1f3a;z-index:10;display:flex;flex-direction:column;backdrop-filter:blur(12px);overflow:hidden}
 #ctx-header{padding:16px 14px 12px;border-bottom:1px solid #1a1f3a}
 #ctx-header h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff}
 #ctx-header p{font-size:9px;color:#555;margin-top:3px}
@@ -51,7 +51,8 @@ body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFo
 #back-btn{font-size:10px;color:#76B7B2;cursor:pointer;padding:6px 0;display:none;margin-bottom:8px}
 #back-btn:hover{color:#fff}
 /* Top bar */
-#top-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:10}
+#top-bar{position:fixed;top:14px;left:240px;right:280px;display:flex;justify-content:center;z-index:10;pointer-events:none}
+.title-badge{pointer-events:auto}
 .title-badge{background:rgba(8,10,22,.88);border:1px solid #252a48;border-radius:20px;padding:6px 20px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;backdrop-filter:blur(8px);white-space:nowrap}
 .title-badge em{color:#FF9900;font-style:normal}
 /* Tooltip */
@@ -65,6 +66,9 @@ body{background:#050810;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFo
 .pulse{animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 canvas{display:block}
+#canvas-wrap{position:relative;overflow:hidden;background:#050810}
+#canvas-wrap canvas{display:block;position:absolute;left:0;top:0}
+
 
 /* ── Bottom connection bar ── */
 #conn-bar{position:fixed;bottom:20px;left:260px;right:300px;z-index:10;
@@ -103,6 +107,7 @@ canvas{display:block}
     <a href="business_graph.html">⬡ Business Globe →</a>
   </div>
 </div>
+<div id="canvas-wrap"></div>
 
 <div id="top-bar">
   <div class="title-badge">Neptune Skills <em>Knowledge Globe</em></div>
@@ -155,20 +160,18 @@ const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x050810);
 const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
 camera.position.set(0,0,1400);
+const _wrap=document.getElementById("canvas-wrap");
+const W=()=>_wrap.clientWidth||window.innerWidth-520;
+const H=()=>_wrap.clientHeight||window.innerHeight;
 const renderer=new THREE.WebGLRenderer({antialias:true});
-const LW=240,RW=280;
-const CW=()=>Math.max(200,window.innerWidth-LW-RW);
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setSize(W(),H());
+_wrap.appendChild(renderer.domElement);
 function updateCamera(){
-  const w=window.innerWidth,h=H(),cw=CW();
-  renderer.setSize(w,h);
-  camera.aspect=cw/h;
-  camera.setViewOffset(w,h,LW,0,cw,h);
+  renderer.setSize(W(),H());
+  camera.aspect=W()/H();
   camera.updateProjectionMatrix();
 }
-renderer.setPixelRatio(devicePixelRatio);
-renderer.domElement.style.cssText="position:fixed;left:0;top:0;z-index:1";
-document.body.appendChild(renderer.domElement);
-updateCamera();
 window.addEventListener("resize",updateCamera);
 scene.add(new THREE.AmbientLight(0xffffff,0.5));
 const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(1,1,2);scene.add(dl);
@@ -197,7 +200,9 @@ function toggleSpin(){spinning=!spinning;document.getElementById("btn-spin").cla
 const raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();
 let meshMap={},lineObjects=[],hiddenCats=new Set();
 function raycast(e){
-  mouse.x=(e.clientX/window.innerWidth)*2-1;mouse.y=-(e.clientY/H())*2+1;
+  const rect=renderer.domElement.getBoundingClientRect();
+  mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
+  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
   raycaster.setFromCamera(mouse,camera);
   return raycaster.intersectObjects(Object.values(meshMap),false)[0]||null;
 }
