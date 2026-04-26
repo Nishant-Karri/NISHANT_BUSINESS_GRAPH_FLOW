@@ -279,7 +279,7 @@ const W=()=>window.innerWidth, H=()=>window.innerHeight;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x050810);
 const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
-camera.position.set(0,0,900);
+camera.position.set(0,0,1400);
 const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(devicePixelRatio);
 renderer.setSize(W(),H());
@@ -314,7 +314,7 @@ renderer.domElement.addEventListener("mouseleave",()=>drag=false);
 renderer.domElement.addEventListener("wheel",e=>{camera.position.z=Math.max(300,Math.min(2500,camera.position.z+e.deltaY*0.8))});
 renderer.domElement.addEventListener("click",e=>{const h=raycast(e);if(h)selectNode(h.object.userData.nid);else clearSelect()});
 
-function resetCamera(){camera.position.set(0,0,900);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSelect()}
+function resetCamera(){camera.position.set(0,0,1400);rx=0;ry=0;pivot.rotation.set(0,0,0);clearSelect()}
 function toggleSpin(){spinning=!spinning;document.getElementById("btn-spin").classList.toggle("on",spinning)}
 
 // ── Raycasting ─────────────────────────────────────────────────────────────
