@@ -429,13 +429,8 @@ function renderAlerts(alerts) {
             <div class="mbox"><div class="mk">Actual</div><div class="mv2" style="color:#dc2626">${u}${a.actual.toFixed(1)}${suf}</div></div>
             <div class="mbox"><div class="mk">Baseline</div><div class="mv2" style="color:#16a34a">${u}${a.baseline.toFixed(1)}${suf}</div></div>
           </div>
-          <div class="ah4">Projected Loss
-            <input type="range" min="7" max="180" value="90"
-              style="width:70px;margin-left:6px;vertical-align:middle;accent-color:#dc2626"
-              oninput="updProj('${chartId}',${JSON.stringify(a)},+this.value,this.nextElementSibling)"
-            /><span style="font-size:9px;color:#6b7280">90d</span>
-          </div>
-          <canvas id="${chartId}" height="100"></canvas>
+          <div class="ah4">Projected Loss — Next 90 Days</div>
+          <canvas id="${chartId}" height="95" style="max-width:100%"></canvas>
         </div>
         <div>
           <div class="ah4">Graph Context</div>
@@ -447,7 +442,7 @@ function renderAlerts(alerts) {
   }).join("");
   document.getElementById("alerts-grid").innerHTML = cards;
   setTimeout(() => alerts.forEach(a => {
-    drawProj(`chart-${a.store_id}-${a.metric}`, a, 90);
+    drawProj(`chart-${a.store_id}-${a.metric}`, a);
   }), 50);
 }
 
@@ -461,21 +456,26 @@ window.addEventListener("resize",handleResize);handleResize();
 
 const _ch = {};
 const _M = {gross_margin:.8,return_rate:1.2,aov:.6,discount_rate:.9,net_sales:1.0};
-function calcL(a,days){return (a.net_sales||500)/30*Math.abs(a.drift_pct)/100*(_M[a.metric]||1)*days;}
-function drawProj(id,a,days){
-  const cv=document.getElementById(id);if(!cv)return;
-  if(_ch[id]){_ch[id].destroy();delete _ch[id];}
-  const pts=Math.min(days,30),step=days/pts;
-  const labels=Array.from({length:pts+1},(_,i)=>Math.round(i*step)+'d');
-  const data=Array.from({length:pts+1},(_,i)=>+calcL(a,i*step).toFixed(2));
-  const bad=(a.metric==="return_rate"||a.metric==="discount_rate")?a.drift_pct>0:a.drift_pct<0;
-  const color=bad?'#dc2626':'#16a34a';
-  _ch[id]=new Chart(cv,{type:'line',data:{labels,datasets:[{label:'Loss ($)',data,borderColor:color,backgroundColor:color+'18',borderWidth:2,pointRadius:0,fill:true,tension:.4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.parsed.y.toLocaleString('en-US',{maximumFractionDigits:0})}}},
-    scales:{x:{grid:{display:false},ticks:{font:{size:8},color:'#9ca3af',maxTicksLimit:6}},
-    y:{grid:{color:'#f3f4f6'},ticks:{font:{size:8},color:'#9ca3af',callback:v=>'$'+v.toLocaleString('en-US',{notation:'compact',maximumFractionDigits:0})}}}}});
+function drawProj(id, a) {
+  const cv = document.getElementById(id); if (!cv) return;
+  if (_ch[id]) { _ch[id].destroy(); delete _ch[id]; }
+  const daily = (a.net_sales||500)/30, impact = Math.abs(a.drift_pct)/100, m = _M[a.metric]||1;
+  const pts = [0,7,14,21,30,45,60,75,90];
+  const bad = (a.metric==="return_rate"||a.metric==="discount_rate") ? a.drift_pct>0 : a.drift_pct<0;
+  const color = bad ? '#dc2626' : '#16a34a';
+  _ch[id] = new Chart(cv, {
+    type:'line',
+    data:{labels:pts.map(d=>d+'d'),datasets:[{label:'Cumulative Loss ($)',
+      data:pts.map(d=>+(daily*impact*m*d).toFixed(2)),
+      borderColor:color,backgroundColor:color+'15',borderWidth:2,
+      pointRadius:3,pointBackgroundColor:color,fill:true,tension:.35}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.parsed.y.toLocaleString('en-US',{maximumFractionDigits:0})}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:8},color:'#9ca3af'}},
+        y:{grid:{color:'#f3f4f6'},ticks:{font:{size:8},color:'#9ca3af',
+          callback:v=>'$'+v.toLocaleString('en-US',{notation:'compact',maximumFractionDigits:0})}}}}
+  });
 }
-function updProj(id,a,days,el){el.textContent=days+'d';drawProj(id,a,days);}
 
 // ── Init ──────────────────────────────────────────────────────────────────
 checkServer();
