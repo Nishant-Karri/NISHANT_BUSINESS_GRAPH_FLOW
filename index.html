@@ -4,21 +4,23 @@
 <title>Nishant_Knowledge_skill Graph</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{background:#f5f6fa;color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;height:100vh;width:100vw}
 #SB{position:fixed;left:0;top:0;bottom:0;width:240px;background:#fff;border-right:2px solid #e8eaed;z-index:10;display:flex;flex-direction:column;box-shadow:2px 0 8px rgba(0,0,0,.06);transition:transform .3s}
 #CTX{position:fixed;right:0;top:0;bottom:0;width:300px;background:#fff;border-left:2px solid #e8eaed;z-index:10;display:flex;flex-direction:column;box-shadow:-2px 0 8px rgba(0,0,0,.06);transition:transform .3s}
-#OVL{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:9}
+#WRAP{position:fixed;left:240px;right:300px;top:0;bottom:0;background:#f5f6fa}
+#OVL{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9}
 @media(max-width:900px){
   #SB{transform:translateX(-100%);width:min(240px,85vw)}
   #CTX{transform:translateX(100%);width:min(300px,85vw)}
   #SB.open{transform:translateX(0)}
   #CTX.open{transform:translateX(0)}
   #OVL.show{display:block}
+  #WRAP{left:0;right:0}
   #TOP{left:52px!important;right:52px!important}
 }
 .logo{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.5}
 .logo em{color:#ea580c;font-style:normal;display:block;font-size:9px;margin-top:2px;letter-spacing:1px;text-transform:uppercase}
-.sb{padding:9px 14px;border-bottom:1px solid #e8eaed;background:#f8f9ff}
+.sb2{padding:9px 14px;border-bottom:1px solid #e8eaed;background:#f8f9ff}
 .st{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
 .st b{color:#ea580c;font-weight:700}
 .leg{flex:1;overflow-y:auto;padding:10px 14px}
@@ -34,7 +36,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;color:#1a1a2
 .btn:hover,.btn.on{border-color:#ea580c;color:#ea580c}
 .navl{padding:8px 14px;border-top:1px solid #e8eaed;font-size:10px;background:#fafafa}
 .navl a{color:#ea580c;text-decoration:none;font-weight:500;display:block;padding:1px 0}
-.navl a:hover{opacity:.7}
 .ch{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;background:#f8f9ff}
 .ch h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1a1a2e}
 .ch p{font-size:9px;color:#6b7280;margin-top:2px}
@@ -47,72 +48,60 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;color:#1a1a2
 .cv2{color:#1f2937;text-align:right;width:54%;font-size:9.5px;line-height:1.4;font-weight:500}
 .cf{background:#f3f4f6;border:1px solid #e8eaed;border-left:3px solid #ea580c;border-radius:5px;padding:5px 8px;font-family:Menlo,monospace;font-size:8.5px;color:#1f2937;margin:2px 0;line-height:1.5}
 #ND{display:none}
-#ND .nl{font-size:13px;font-weight:700;margin-bottom:2px}
-#ND .nt{font-size:9px;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;letter-spacing:1px}
-#ND .nd2{font-size:10px;color:#374151;line-height:1.5;padding:7px;background:#f8f9ff;border-radius:6px;border-left:3px solid;margin-bottom:8px}
-#ND .nmh{font-size:9px;text-transform:uppercase;color:#ea580c;margin-bottom:5px;letter-spacing:.8px;font-weight:600}
-#ND .nm{font-family:Menlo,monospace;font-size:8.5px;color:#1f2937;background:#f3f4f6;padding:3px 8px;border-radius:4px;margin:2px 0;border:1px solid #e8eaed}
-#ND .nrh{font-size:9px;text-transform:uppercase;color:#2563eb;margin:10px 0 4px;letter-spacing:.8px;font-weight:600}
-#ND .nr{display:flex;align-items:center;gap:5px;font-size:9px;padding:2px 0;border-bottom:1px solid #f3f4f6}
-#ND .nr:last-child{border:none}
+.nl{font-size:13px;font-weight:700;margin-bottom:2px}
+.nt{font-size:9px;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;letter-spacing:1px}
+.nd2{font-size:10px;color:#374151;line-height:1.5;padding:7px;background:#f8f9ff;border-radius:6px;border-left:3px solid;margin-bottom:8px}
+.nmh{font-size:9px;text-transform:uppercase;color:#ea580c;margin-bottom:5px;letter-spacing:.8px;font-weight:600}
+.nm{font-family:Menlo,monospace;font-size:8.5px;color:#1f2937;background:#f3f4f6;padding:3px 8px;border-radius:4px;margin:2px 0;border:1px solid #e8eaed}
+.nrh{font-size:9px;text-transform:uppercase;color:#2563eb;margin:10px 0 4px;letter-spacing:.8px;font-weight:600}
+.nr{display:flex;align-items:center;gap:5px;font-size:9px;padding:2px 0;border-bottom:1px solid #f3f4f6}
+.nr:last-child{border:none}
 .ra{color:#9ca3af;font-size:8px}
 .rn{color:#d97706;font-family:Menlo,monospace;font-size:8px;font-weight:600}
 #BK{font-size:10px;color:#ea580c;cursor:pointer;padding:5px 0;display:none;margin-bottom:8px;font-weight:500}
 #TOP{position:fixed;top:14px;left:240px;right:300px;z-index:20;display:flex;justify-content:center;pointer-events:none}
 .badge{background:#fff;border:1.5px solid #e8eaed;border-radius:20px;padding:6px 20px;font-size:11px;font-weight:700;color:#1a1a2e;letter-spacing:.5px;box-shadow:0 2px 8px rgba(0,0,0,.08);pointer-events:auto;white-space:nowrap}
 .badge em{color:#ea580c;font-style:normal}
-#btn-sb,#btn-ctx{display:none;position:fixed;top:10px;z-index:200;width:40px;height:40px;border-radius:10px;border:1.5px solid #e8eaed;background:#fff;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-#btn-sb{left:10px}
-#btn-ctx{right:10px;font-size:16px}
+#BSB,#BCTX{display:none;position:fixed;top:10px;z-index:200;width:40px;height:40px;border-radius:10px;border:1.5px solid #e8eaed;background:#fff;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+#BSB{left:10px}
+#BCTX{right:10px;font-size:16px}
 #TIP{position:fixed;background:#fff;border:1.5px solid #e8eaed;border-radius:10px;padding:8px 12px;font-size:10px;pointer-events:none;display:none;z-index:30;max-width:210px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .tl{font-weight:700;font-size:11px;margin-bottom:2px}
 .td2{font-size:9px;color:#6b7280;line-height:1.4}
 #BAR{position:fixed;bottom:18px;left:256px;right:316px;z-index:20;display:none;background:#fff;border:1.5px solid #e8eaed;border-radius:14px;padding:10px 16px;gap:10px;flex-wrap:wrap;align-items:flex-start;box-shadow:0 4px 20px rgba(0,0,0,.10)}
-#BAR .bn{font-size:12px;font-weight:700;flex-shrink:0}
-#BAR .bd{font-size:10px;color:#6b7280;flex:1;line-height:1.4;min-width:160px}
-#BAR .bt{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
+.bn{font-size:12px;font-weight:700;flex-shrink:0}
+.bd{font-size:10px;color:#6b7280;flex:1;line-height:1.4;min-width:160px}
+.bt{display:flex;gap:5px;flex-wrap:wrap;width:100%;margin-top:5px}
 .btag{padding:2px 9px;border-radius:10px;font-size:9px;font-weight:600;border:1.5px solid;background:#f8f9ff}
-#BAR .bx{color:#9ca3af;cursor:pointer;font-size:14px;flex-shrink:0}
-#BAR .bx:hover{color:#1a1a2e}
+.bx{color:#9ca3af;cursor:pointer;font-size:14px;flex-shrink:0}
 @media(max-width:900px){#BAR{left:10px;right:10px}}
 </style>
 </head><body>
-<button id="btn-sb" onclick="tSB()">☰</button>
-<button id="btn-ctx" onclick="tCTX()">ℹ</button>
+<button id="BSB" onclick="tSB()">☰</button>
+<button id="BCTX" onclick="tCTX()">ℹ</button>
 <div id="OVL" onclick="cPan()"></div>
 <div id="SB">
   <div class="logo">Nishant_Knowledge_<em>skill Graph</em><em>Interactive Knowledge Globe</em></div>
-  <div class="sb"><div class="st"><span>Skill Nodes</span><b>64</b></div>
-<div class="st"><span>Connections</span><b>117</b></div>
-<div class="st"><span>Categories</span><b>12</b></div></div>
-  <div class="leg"><h4>Skill Categories</h4><div id="CAT-LEG"></div></div>
+  <div class="sb2"><div class="st"><span>Nodes</span><b>64</b></div><div class="st"><span>Connections</span><b>117</b></div></div>
+  <div class="leg"><h4>Categories</h4><div id="CAT"></div></div>
   <div class="ctrl">
-    <button class="btn on" id="SPIN" onclick="toggleSpin()">⟳ Spin</button>
-    <button class="btn" onclick="resetCam()">⌖ Reset</button>
+    <button class="btn on" id="SPIN" onclick="tSpin()">⟳ Spin</button>
+    <button class="btn" onclick="rCam()">⌖ Reset</button>
   </div>
-  <div class="navl"><a href="business_graph.html">⬡ Business Globe →</a>
-<a href="drift_dashboard.html" style="color:#7c3aed">📊 Drift Dashboard →</a></div>
+  <div class="navl"><a href="business_graph.html">⬡ Business Globe</a>
+<a href="drift_dashboard.html" style="color:#7c3aed">📊 Drift Dashboard</a></div>
 </div>
+<div id="WRAP"></div>
 <div id="CTX">
   <div class="ch"><h2>Context</h2><p id="CS"></p></div>
   <div class="cb">
     <span id="BK" onclick="showOv()">← Overview</span>
     <div id="OV"><div class="cs"><h3>Stack Overview</h3>
 <div class="cr"><span class="ck">Graph Store</span><span class="cv2">Amazon Neptune</span></div>
-<div class="cr"><span class="ck">Query Language</span><span class="cv2">Gremlin + SPARQL</span></div>
 <div class="cr"><span class="ck">Cloud</span><span class="cv2">AWS (us-east-1)</span></div>
 <div class="cr"><span class="ck">Language</span><span class="cv2">Python + SQL</span></div>
 <div class="cr"><span class="ck">AI Layer</span><span class="cv2">16 Bedrock / Claude Agents</span></div>
-</div>
-<div class="cs"><h3>Categories</h3>
-<div class="cr"><span class="ck">Cloud &amp; Infra</span><span class="cv2">VPC, IAM, EC2, S3</span></div>
-<div class="cr"><span class="ck">Data Engineering</span><span class="cv2">Glue, Spark, dbt, Kafka</span></div>
-<div class="cr"><span class="ck">AI / ML</span><span class="cv2">Bedrock, Claude Agents</span></div>
-<div class="cr"><span class="ck">Analytics</span><span class="cv2">Athena, Pandas, boto3</span></div>
-<div class="cr"><span class="ck">Governance</span><span class="cv2">Medallion, Lineage, RBAC</span></div>
-</div>
-<div class="cs"><h3>Click any node</h3>
-<div style="font-size:10px;color:#9ca3af;line-height:1.5">Select a skill to see connections.</div></div></div>
+</div><div class="cs"><h3>Click any node</h3><div style="font-size:10px;color:#9ca3af">Select a skill to see connections.</div></div></div>
     <div id="ND"></div>
   </div>
 </div>
@@ -122,111 +111,134 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;color:#1a1a2
   <div class="bn" id="BN"></div>
   <div class="bd" id="BD"></div>
   <div class="bt" id="BT"></div>
-  <span class="bx" onclick="clearSel()">✕</span>
+  <span class="bx" onclick="cSel()">✕</span>
 </div>
-<canvas id="cv" style="position:fixed;left:0;top:0;z-index:1"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<div id="ERR" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-          background:#fff;border:2px solid red;padding:20px;z-index:999;
-          font-family:monospace;font-size:12px;max-width:80%;display:none;word-break:break-all"></div>
 <script>
-window.onerror=function(msg,src,line,col,err){
-  const d=document.getElementById("ERR");
-  d.style.display="block";
-  d.innerHTML="<b>Error line "+line+":</b><br>"+msg+"<br><br>"+String(err?.stack||"").replace(/\n/g,"<br>");
-  return true;
-};
-try{
 const NODES=[{"id": "cat_cloud", "label": "Cloud & Infra", "color": "#c2410c", "size": 42, "desc": "Core AWS infrastructure layer \u2014 VPC, IAM, EC2, S3 and Terraform IaC underpin every service in the platform."}, {"id": "cat_data_eng", "label": "Data Engineering", "color": "#00A1C9", "size": 42, "desc": "ETL and transformation layer \u2014 Glue jobs, Spark/PySpark, dbt, Kafka and Kinesis move data through the pipeline."}, {"id": "cat_data_fmt", "label": "Data Formats", "color": "#7B68EE", "size": 42, "desc": "Storage formats used in the data lake \u2014 Iceberg tables, Parquet columnar files, JSON and CSV raw ingestion."}, {"id": "cat_ai_ml", "label": "AI & ML Agents", "color": "#FF6B6B", "size": 42, "desc": "AI agent platform \u2014 16 Bedrock agents powered by Anthropic Claude orchestrating multi-agent workflows."}, {"id": "cat_devops", "label": "DevOps & CI/CD", "color": "#16a34a", "size": 42, "desc": "CI/CD and version control \u2014 GitLab pipelines automate Terraform deploys, Glue jobs and Bedrock agent updates."}, {"id": "cat_languages", "label": "Languages", "color": "#b45309", "size": 42, "desc": "Programming languages and config formats \u2014 Python, SQL, HCL, Bash and YAML drive every layer of the stack."}, {"id": "cat_monitoring", "label": "Monitoring", "color": "#dc2626", "size": 42, "desc": "Observability layer \u2014 CloudWatch alarms and logs surface Glue job failures; Great Expectations validates data."}, {"id": "cat_messaging", "label": "Messaging & Events", "color": "#7c3aed", "size": 42, "desc": "Event-driven wiring \u2014 EventBridge schedules Glue runs, SNS/SES send failure alerts and MR approval emails."}, {"id": "cat_analytics", "label": "Analytics & Query", "color": "#0d9488", "size": 42, "desc": "Query and analysis layer \u2014 Athena runs SQL on S3, Pandas handles wrangling, boto3 is the AWS Python SDK."}, {"id": "cat_governance", "label": "Governance", "color": "#4b5563", "size": 42, "desc": "Data quality and compliance \u2014 Medallion architecture (Bronze\u2192Silver\u2192Gold), lineage tracking, RBAC via IAM."}, {"id": "cat_graph", "label": "Graph & Knowledge", "color": "#ea580c", "size": 42, "desc": "This knowledge graph \u2014 Neptune stores skill relationships; Gremlin and SPARQL are the query languages."}, {"id": "aws", "label": "Amazon Web Services", "color": "#c2410c", "size": 20, "desc": "Amazon Web Services \u2014 the cloud platform hosting every service in this project."}, {"id": "ec2", "label": "AWS EC2", "color": "#c2410c", "size": 12, "desc": "AWS EC2 \u2014 virtual machines used for compute-heavy workloads and SSM-managed access."}, {"id": "vpc", "label": "AWS VPC", "color": "#c2410c", "size": 12, "desc": "AWS VPC \u2014 private network isolating Neptune, Glue and EC2 from the public internet."}, {"id": "iam", "label": "AWS IAM", "color": "#c2410c", "size": 16, "desc": "AWS IAM \u2014 roles and policies enforcing least-privilege access across all services."}, {"id": "s3", "label": "AWS S3", "color": "#c2410c", "size": 20, "desc": "AWS S3 \u2014 central data lake storing raw, Bronze, Silver and Gold layer datasets."}, {"id": "terraform", "label": "Terraform", "color": "#c2410c", "size": 16, "desc": "Terraform (HCL) \u2014 provisions all AWS resources; state stored in S3, deployed via GitLab CI."}, {"id": "glue", "label": "AWS Glue", "color": "#00A1C9", "size": 20, "desc": "AWS Glue \u2014 serverless Spark ETL service running PySpark transformation jobs nightly."}, {"id": "glue_crawler", "label": "Glue Crawler", "color": "#00A1C9", "size": 16, "desc": "AWS Glue Crawler \u2014 auto-discovers S3 schemas and registers them in the Glue Catalog."}, {"id": "glue_catalog", "label": "Glue Catalog", "color": "#00A1C9", "size": 16, "desc": "AWS Glue Catalog \u2014 central metadata store used by Athena and Glue jobs for schema discovery."}, {"id": "spark", "label": "Apache Spark", "color": "#00A1C9", "size": 16, "desc": "Apache Spark \u2014 distributed compute engine powering all large-scale Glue ETL transformations."}, {"id": "pyspark", "label": "PySpark", "color": "#00A1C9", "size": 16, "desc": "PySpark \u2014 Python API for Spark, used in all Glue job scripts for data transformation."}, {"id": "dbt", "label": "dbt", "color": "#00A1C9", "size": 16, "desc": "dbt \u2014 SQL-based transformation framework running models in Snowflake with built-in testing."}, {"id": "kafka", "label": "Apache Kafka", "color": "#00A1C9", "size": 12, "desc": "Apache Kafka \u2014 distributed event streaming platform for high-throughput data ingestion."}, {"id": "kinesis", "label": "AWS Kinesis", "color": "#00A1C9", "size": 12, "desc": "AWS Kinesis \u2014 managed real-time streaming service feeding data directly into Glue jobs."}, {"id": "snowflake", "label": "Snowflake", "color": "#00A1C9", "size": 16, "desc": "Snowflake \u2014 cloud data warehouse where dbt models are materialised for analytics."}, {"id": "flink", "label": "Apache Flink", "color": "#00A1C9", "size": 12, "desc": "Apache Flink \u2014 stateful stream processing framework integrated with Kafka and Kinesis."}, {"id": "iceberg", "label": "Apache Iceberg", "color": "#7B68EE", "size": 16, "desc": "Apache Iceberg \u2014 open table format enabling ACID transactions and time-travel on S3."}, {"id": "parquet", "label": "Apache Parquet", "color": "#7B68EE", "size": 16, "desc": "Apache Parquet \u2014 columnar storage format optimised for Athena and Spark query performance."}, {"id": "json_fmt", "label": "JSON", "color": "#7B68EE", "size": 20, "desc": "JSON \u2014 universal data exchange format used across all API calls and agent responses."}, {"id": "csv", "label": "CSV", "color": "#7B68EE", "size": 20, "desc": "CSV \u2014 raw ingestion format for source data arriving in the Bronze S3 layer."}, {"id": "bedrock", "label": "AWS Bedrock", "color": "#FF6B6B", "size": 16, "desc": "AWS Bedrock \u2014 fully managed AI service hosting the 16 Claude-powered digital worker agents."}, {"id": "claude", "label": "Anthropic Claude", "color": "#FF6B6B", "size": 20, "desc": "Anthropic Claude (Sonnet 4) \u2014 foundation model powering all 16 Bedrock agents in this project."}, {"id": "multi_agents", "label": "Multi-Agent Orchestration", "color": "#FF6B6B", "size": 20, "desc": "Multi-Agent Orchestration \u2014 16 specialised agents (Mayor, Worker, Analytics Engineer, etc.) collaborating via Bedrock."}, {"id": "sagemaker", "label": "AWS SageMaker", "color": "#FF6B6B", "size": 12, "desc": "AWS SageMaker \u2014 ML platform used for model training, this Neptune notebook and MLflow tracking."}, {"id": "mlflow", "label": "MLflow", "color": "#FF6B6B", "size": 12, "desc": "MLflow \u2014 open-source MLOps platform for experiment tracking integrated with SageMaker."}, {"id": "gitlab_ci", "label": "GitLab CI/CD", "color": "#16a34a", "size": 20, "desc": "GitLab CI/CD \u2014 pipeline automating validate \u2192 plan \u2192 apply for all Terraform modules."}, {"id": "git", "label": "Git", "color": "#16a34a", "size": 20, "desc": "Git \u2014 version control underpinning all code changes across GitLab and GitHub repositories."}, {"id": "github", "label": "GitHub", "color": "#16a34a", "size": 20, "desc": "GitHub \u2014 hosts the MULTI_DIGITAL_WORKERS agent CLAUDE.md source files."}, {"id": "gitlab", "label": "GitLab", "color": "#16a34a", "size": 20, "desc": "GitLab \u2014 primary DevOps platform hosting CI/CD pipelines and the NishantKarri-project repo."}, {"id": "docker", "label": "Docker", "color": "#16a34a", "size": 16, "desc": "Docker \u2014 container images used in GitLab CI runners for Terraform and Python jobs."}, {"id": "ssm", "label": "AWS SSM", "color": "#16a34a", "size": 12, "desc": "AWS SSM \u2014 Systems Manager enabling secure shell access to EC2 without open SSH ports."}, {"id": "python", "label": "Python", "color": "#b45309", "size": 20, "desc": "Python \u2014 primary language for Glue ETL scripts, agent tools, load scripts and this app."}, {"id": "sql", "label": "SQL", "color": "#b45309", "size": 20, "desc": "SQL \u2014 query language used in Athena, dbt models and Snowflake transformations."}, {"id": "hcl", "label": "HCL (Terraform)", "color": "#b45309", "size": 16, "desc": "HCL (HashiCorp Config Language) \u2014 the language all Terraform infrastructure is written in."}, {"id": "bash", "label": "Bash / Shell", "color": "#b45309", "size": 16, "desc": "Bash / Shell \u2014 scripting language used in GitLab CI job steps and automation scripts."}, {"id": "yaml", "label": "YAML", "color": "#b45309", "size": 20, "desc": "YAML \u2014 config format for .gitlab-ci.yml pipeline definitions and service configurations."}, {"id": "cloudwatch", "label": "AWS CloudWatch", "color": "#dc2626", "size": 16, "desc": "AWS CloudWatch \u2014 collects metrics and logs from Glue jobs, Lambda and Bedrock agents."}, {"id": "cw_alarms", "label": "CloudWatch Alarms", "color": "#dc2626", "size": 16, "desc": "CloudWatch Alarms \u2014 triggers SNS notifications when Glue jobs fail or breach thresholds."}, {"id": "cw_logs", "label": "CloudWatch Logs", "color": "#dc2626", "size": 16, "desc": "CloudWatch Logs \u2014 centralised log storage for all Glue job runs and Bedrock agent activity."}, {"id": "great_exp", "label": "Great Expectations", "color": "#dc2626", "size": 12, "desc": "Great Expectations \u2014 data quality framework running validation suites on pipeline outputs."}, {"id": "eventbridge", "label": "AWS EventBridge", "color": "#7c3aed", "size": 16, "desc": "AWS EventBridge \u2014 event bus scheduling nightly Glue triggers and detecting state changes."}, {"id": "sns", "label": "AWS SNS", "color": "#7c3aed", "size": 16, "desc": "AWS SNS \u2014 pub/sub service routing CloudWatch alarms and EventBridge events to email."}, {"id": "ses", "label": "AWS SES", "color": "#7c3aed", "size": 12, "desc": "AWS SES \u2014 email service sending MR approval requests and pipeline failure notifications."}, {"id": "athena", "label": "AWS Athena", "color": "#0d9488", "size": 16, "desc": "AWS Athena \u2014 serverless SQL query engine running directly against S3 data lake files."}, {"id": "pandas", "label": "Pandas", "color": "#0d9488", "size": 16, "desc": "Pandas \u2014 Python DataFrame library used for local data wrangling and analysis scripts."}, {"id": "boto3", "label": "boto3", "color": "#0d9488", "size": 20, "desc": "boto3 \u2014 the AWS Python SDK used in every script to interact with AWS services."}, {"id": "lineage", "label": "Data Lineage", "color": "#4b5563", "size": 16, "desc": "Data Lineage \u2014 tracks the flow of data from S3 source through Bronze\u2192Silver\u2192Gold layers."}, {"id": "rbac", "label": "RBAC", "color": "#4b5563", "size": 12, "desc": "RBAC (Role-Based Access Control) \u2014 enforced via IAM roles restricting access by principle."}, {"id": "data_quality", "label": "Data Quality", "color": "#4b5563", "size": 16, "desc": "Data Quality \u2014 validation and profiling implemented via Great Expectations and dbt tests."}, {"id": "medallion", "label": "Medallion Architecture", "color": "#4b5563", "size": 20, "desc": "Medallion Architecture \u2014 Bronze (raw) \u2192 Silver (cleaned) \u2192 Gold (aggregated) data layers on S3."}, {"id": "neptune_svc", "label": "Amazon Neptune", "color": "#ea580c", "size": 12, "desc": "Amazon Neptune \u2014 this graph database storing the Skills Knowledge Graph you are exploring now."}, {"id": "gremlin", "label": "Gremlin", "color": "#ea580c", "size": 12, "desc": "Gremlin \u2014 graph traversal language used to query Neptune vertices and edges."}, {"id": "sparql", "label": "SPARQL", "color": "#ea580c", "size": 9, "desc": "SPARQL \u2014 RDF graph query language supported by Neptune for linked-data use cases."}];
 const EDGES=[{"source": "aws", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "ec2", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "vpc", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "iam", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "s3", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "terraform", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "glue", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_crawler", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_catalog", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "spark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "pyspark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "dbt", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kafka", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kinesis", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "snowflake", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "flink", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "iceberg", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "parquet", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "json_fmt", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "csv", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "bedrock", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "claude", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "multi_agents", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "sagemaker", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "mlflow", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "gitlab_ci", "target": "cat_devops", "rel": "PART_OF"}, {"source": "git", "target": "cat_devops", "rel": "PART_OF"}, {"source": "github", "target": "cat_devops", "rel": "PART_OF"}, {"source": "gitlab", "target": "cat_devops", "rel": "PART_OF"}, {"source": "docker", "target": "cat_devops", "rel": "PART_OF"}, {"source": "ssm", "target": "cat_devops", "rel": "PART_OF"}, {"source": "python", "target": "cat_languages", "rel": "PART_OF"}, {"source": "sql", "target": "cat_languages", "rel": "PART_OF"}, {"source": "hcl", "target": "cat_languages", "rel": "PART_OF"}, {"source": "bash", "target": "cat_languages", "rel": "PART_OF"}, {"source": "yaml", "target": "cat_languages", "rel": "PART_OF"}, {"source": "cloudwatch", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_alarms", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_logs", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "great_exp", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "eventbridge", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "sns", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "ses", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "athena", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "pandas", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "boto3", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "lineage", "target": "cat_governance", "rel": "PART_OF"}, {"source": "rbac", "target": "cat_governance", "rel": "PART_OF"}, {"source": "data_quality", "target": "cat_governance", "rel": "PART_OF"}, {"source": "medallion", "target": "cat_governance", "rel": "PART_OF"}, {"source": "neptune_svc", "target": "cat_graph", "rel": "PART_OF"}, {"source": "gremlin", "target": "cat_graph", "rel": "PART_OF"}, {"source": "sparql", "target": "cat_graph", "rel": "PART_OF"}, {"source": "terraform", "target": "aws", "rel": "DEPLOYS_TO"}, {"source": "terraform", "target": "ec2", "rel": "PROVISIONS"}, {"source": "terraform", "target": "vpc", "rel": "PROVISIONS"}, {"source": "terraform", "target": "iam", "rel": "PROVISIONS"}, {"source": "terraform", "target": "s3", "rel": "PROVISIONS"}, {"source": "terraform", "target": "glue", "rel": "PROVISIONS"}, {"source": "terraform", "target": "athena", "rel": "PROVISIONS"}, {"source": "terraform", "target": "eventbridge", "rel": "PROVISIONS"}, {"source": "terraform", "target": "bedrock", "rel": "PROVISIONS"}, {"source": "terraform", "target": "neptune_svc", "rel": "PROVISIONS"}, {"source": "gitlab_ci", "target": "terraform", "rel": "EXECUTES"}, {"source": "glue", "target": "s3", "rel": "READS_FROM"}, {"source": "glue", "target": "s3", "rel": "WRITES_TO"}, {"source": "glue", "target": "iceberg", "rel": "PRODUCES"}, {"source": "glue", "target": "parquet", "rel": "PRODUCES"}, {"source": "pyspark", "target": "glue", "rel": "RUNS_ON"}, {"source": "spark", "target": "glue", "rel": "POWERS"}, {"source": "glue_crawler", "target": "s3", "rel": "CRAWLS"}, {"source": "glue_crawler", "target": "glue_catalog", "rel": "POPULATES"}, {"source": "athena", "target": "s3", "rel": "QUERIES"}, {"source": "athena", "target": "glue_catalog", "rel": "USES"}, {"source": "dbt", "target": "snowflake", "rel": "TRANSFORMS_IN"}, {"source": "dbt", "target": "sql", "rel": "USES"}, {"source": "medallion", "target": "glue", "rel": "IMPLEMENTED_BY"}, {"source": "medallion", "target": "s3", "rel": "STORED_IN"}, {"source": "iceberg", "target": "s3", "rel": "STORED_IN"}, {"source": "kinesis", "target": "glue", "rel": "FEEDS"}, {"source": "kafka", "target": "flink", "rel": "INTEGRATES_WITH"}, {"source": "flink", "target": "kinesis", "rel": "INTEGRATES_WITH"}, {"source": "bedrock", "target": "claude", "rel": "USES_MODEL"}, {"source": "multi_agents", "target": "bedrock", "rel": "DEPLOYED_ON"}, {"source": "multi_agents", "target": "glue", "rel": "ORCHESTRATES"}, {"source": "claude", "target": "python", "rel": "GENERATES"}, {"source": "sagemaker", "target": "mlflow", "rel": "INTEGRATES_WITH"}, {"source": "sagemaker", "target": "python", "rel": "USES"}, {"source": "eventbridge", "target": "glue", "rel": "TRIGGERS"}, {"source": "eventbridge", "target": "sns", "rel": "PUBLISHES_TO"}, {"source": "sns", "target": "ses", "rel": "INTEGRATES_WITH"}, {"source": "ses", "target": "gitlab_ci", "rel": "NOTIFIES"}, {"source": "cloudwatch", "target": "eventbridge", "rel": "FEEDS"}, {"source": "cw_alarms", "target": "sns", "rel": "ALERTS_TO"}, {"source": "cw_logs", "target": "cloudwatch", "rel": "PART_OF"}, {"source": "python", "target": "glue", "rel": "POWERS"}, {"source": "python", "target": "boto3", "rel": "USES"}, {"source": "python", "target": "pandas", "rel": "USES"}, {"source": "python", "target": "great_exp", "rel": "USES"}, {"source": "sql", "target": "athena", "rel": "QUERIES_VIA"}, {"source": "sql", "target": "snowflake", "rel": "QUERIES_VIA"}, {"source": "hcl", "target": "terraform", "rel": "WRITTEN_IN"}, {"source": "bash", "target": "gitlab_ci", "rel": "USED_IN"}, {"source": "yaml", "target": "gitlab_ci", "rel": "CONFIGURES"}, {"source": "boto3", "target": "aws", "rel": "ACCESSES"}, {"source": "data_quality", "target": "great_exp", "rel": "IMPLEMENTED_BY"}, {"source": "data_quality", "target": "dbt", "rel": "IMPLEMENTED_BY"}, {"source": "lineage", "target": "glue_catalog", "rel": "TRACKED_IN"}, {"source": "rbac", "target": "iam", "rel": "ENFORCED_BY"}, {"source": "gitlab_ci", "target": "docker", "rel": "USES"}, {"source": "gitlab_ci", "target": "git", "rel": "USES"}, {"source": "gitlab", "target": "gitlab_ci", "rel": "HOSTS"}, {"source": "github", "target": "git", "rel": "HOSTS"}, {"source": "ssm", "target": "ec2", "rel": "ACCESSES"}, {"source": "neptune_svc", "target": "gremlin", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "sparql", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "aws", "rel": "PART_OF"}];
 const NK="label";
+const wrap=document.getElementById('WRAP');
+let W=()=>wrap.offsetWidth, H=()=>wrap.offsetHeight;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0xf5f6fa);
-const camera=new THREE.PerspectiveCamera(45,1,1,5000);
+const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
 camera.position.set(0,0,1200);
-const cv=document.getElementById("cv");
-const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
+renderer.domElement.style.display='block';
+wrap.appendChild(renderer.domElement);
 function resize(){
-  const W=window.innerWidth,H=window.innerHeight;
-  renderer.setSize(W,H);
-  camera.aspect=W/H;
-  camera.updateProjectionMatrix();
+  const w=W(),h=H();
+  if(w>0&&h>0){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}
 }
-resize();
-window.addEventListener("resize",resize);
+setTimeout(resize,0);
+window.addEventListener('resize',resize);
 scene.add(new THREE.AmbientLight(0xffffff,.8));
-const dl=new THREE.DirectionalLight(0xffffff,.6);dl.position.set(1,1,2);scene.add(dl);
+const dl=new THREE.DirectionalLight(0xffffff,.5);dl.position.set(1,1,2);scene.add(dl);
 const R=320;
-scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,40,40),new THREE.MeshBasicMaterial({color:0xdddddd,wireframe:true,opacity:0.18,transparent:true})));
-scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1.5,8,100),new THREE.MeshBasicMaterial({color:0xcccccc,transparent:true,opacity:0.4})));
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(R,36,36),new THREE.MeshBasicMaterial({color:0xcccccc,wireframe:true,opacity:0.15,transparent:true})));
+scene.add(new THREE.Mesh(new THREE.TorusGeometry(R+3,1.5,8,80),new THREE.MeshBasicMaterial({color:0xbbbbbb,transparent:true,opacity:0.35})));
+(()=>{const cats=NODES.filter(n=>n.id.startsWith('cat_'));const leg=document.getElementById('CAT');cats.forEach(n=>{const d=document.createElement('div');d.className='li';d.innerHTML='<div class="dot" style="background:'+n.color+'"></div><span class="lbl">'+n.label+'</span>';leg.appendChild(d);});})();
 let spin=true,drag=false,ox=0,oy=0,rx=0,ry=0;
 const piv=new THREE.Group();scene.add(piv);
-cv.addEventListener("mousedown",e=>{drag=true;ox=e.clientX;oy=e.clientY});
-cv.addEventListener("mousemove",e=>{
-  if(drag){spin=false;document.getElementById("SPIN").classList.remove("on");
-    ry+=(e.clientX-ox)*0.004;rx+=(e.clientY-oy)*0.004;
+const cv=renderer.domElement;
+cv.addEventListener('mousedown',e=>{drag=true;ox=e.clientX;oy=e.clientY});
+cv.addEventListener('mousemove',e=>{
+  if(drag){spin=false;document.getElementById('SPIN').classList.remove('on');
+    ry+=(e.clientX-ox)*.004;rx+=(e.clientY-oy)*.004;
     rx=Math.max(-1.5,Math.min(1.5,rx));piv.rotation.y=ry;piv.rotation.x=rx;ox=e.clientX;oy=e.clientY;
-  }else doHov(e);
+  }else hov(e);
 });
-cv.addEventListener("mouseup",()=>drag=false);
-cv.addEventListener("mouseleave",()=>drag=false);
-cv.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(3000,camera.position.z+e.deltaY*0.8))});
-cv.addEventListener("click",e=>{const h=cast(e);h?sel(h.object.userData.nid):clearSel()});
-let lt=0;cv.addEventListener("touchstart",e=>{if(e.touches.length===1){drag=true;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}if(e.touches.length===2){lt=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}e.preventDefault();},{passive:false});
-cv.addEventListener("touchmove",e=>{if(e.touches.length===1&&drag){spin=false;ry+=(e.touches[0].clientX-ox)*0.005;rx+=(e.touches[0].clientY-oy)*0.005;rx=Math.max(-1.5,Math.min(1.5,rx));piv.rotation.y=ry;piv.rotation.x=rx;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);camera.position.z=Math.max(400,Math.min(3000,camera.position.z-(d-lt)*2));lt=d;}e.preventDefault();},{passive:false});
-cv.addEventListener("touchend",()=>drag=false);
-function resetCam(){camera.position.set(0,0,1200);rx=0;ry=0;piv.rotation.set(0,0,0);clearSel()}
-function toggleSpin(){spin=!spin;document.getElementById("SPIN").classList.toggle("on",spin)}
+cv.addEventListener('mouseup',()=>drag=false);
+cv.addEventListener('mouseleave',()=>drag=false);
+cv.addEventListener('wheel',e=>camera.position.z=Math.max(350,Math.min(3000,camera.position.z+e.deltaY*.8)));
+cv.addEventListener('click',e=>{const h=cast(e);h?selN(h.object.userData.nid):cSel()});
+let lt=0;
+cv.addEventListener('touchstart',e=>{if(e.touches.length===1){drag=true;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}if(e.touches.length===2)lt=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);e.preventDefault();},{passive:false});
+cv.addEventListener('touchmove',e=>{if(e.touches.length===1&&drag){spin=false;ry+=(e.touches[0].clientX-ox)*.005;rx+=(e.touches[0].clientY-oy)*.005;rx=Math.max(-1.5,Math.min(1.5,rx));piv.rotation.y=ry;piv.rotation.x=rx;ox=e.touches[0].clientX;oy=e.touches[0].clientY;}if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);camera.position.z=Math.max(350,Math.min(3000,camera.position.z-(d-lt)*2));lt=d;}e.preventDefault();},{passive:false});
+cv.addEventListener('touchend',()=>drag=false);
+function rCam(){camera.position.set(0,0,1200);rx=0;ry=0;piv.rotation.set(0,0,0);cSel();}
+function tSpin(){spin=!spin;document.getElementById('SPIN').classList.toggle('on',spin);}
 const rc=new THREE.Raycaster(),mo=new THREE.Vector2();
 let MM={},LL=[];
-function cast(e){mo.x=(e.clientX/window.innerWidth)*2-1;mo.y=-(e.clientY/window.innerHeight)*2+1;rc.setFromCamera(mo,camera);return rc.intersectObjects(Object.values(MM),false)[0]||null;}
-const TIP=document.getElementById("TIP");let hov=null;
-function doHov(e){const h=cast(e);if(h){const nid=h.object.userData.nid,n=NODES.find(x=>x.id===nid);if(nid!==hov){hov=nid;if(n){document.getElementById("TL").textContent=n[NK];document.getElementById("TL").style.color=n.color;document.getElementById("TD").textContent=n.desc;TIP.style.display="block";}}cv.style.cursor="pointer";}else{TIP.style.display="none";hov=null;cv.style.cursor="default"}if(TIP.style.display!=="none"){TIP.style.left=(e.clientX+14)+"px";TIP.style.top=(e.clientY-10)+"px"}}
-function fib(n,R){const pts=[],phi=Math.PI*(3-Math.sqrt(5));for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R));}return pts;}
+function cast(e){
+  const r=cv.getBoundingClientRect();
+  mo.x=((e.clientX-r.left)/r.width)*2-1;
+  mo.y=-((e.clientY-r.top)/r.height)*2+1;
+  rc.setFromCamera(mo,camera);
+  return rc.intersectObjects(Object.values(MM),false)[0]||null;
+}
+const TIP=document.getElementById('TIP');let hovId=null;
+function hov(e){
+  const h=cast(e);
+  if(h){const nid=h.object.userData.nid,n=NODES.find(x=>x.id===nid);
+    if(nid!==hovId){hovId=nid;if(n){document.getElementById('TL').textContent=n[NK];document.getElementById('TL').style.color=n.color;document.getElementById('TD').textContent=n.desc;TIP.style.display='block';}}
+    cv.style.cursor='pointer';
+  }else{TIP.style.display='none';hovId=null;cv.style.cursor='default';}
+  if(TIP.style.display!=='none'){TIP.style.left=(e.clientX+14)+'px';TIP.style.top=(e.clientY-10)+'px';}
+}
+function fib(n,R){
+  const pts=[],phi=Math.PI*(3-Math.sqrt(5));
+  for(let i=0;i<n;i++){const y=1-(i/(n-1))*2,r=Math.sqrt(1-y*y),t=phi*i;
+    pts.push(new THREE.Vector3(Math.cos(t)*r*R,y*R,Math.sin(t)*r*R));}
+  return pts;
+}
 function build(){
   const pos=fib(NODES.length,R),idx={};
   NODES.forEach((n,i)=>{n._p=pos[i];idx[n.id]=i;});
   NODES.forEach((n,i)=>{
     const r=Math.max(4,Math.min(13,n.size/4.5));
-    const m=new THREE.Mesh(new THREE.SphereGeometry(r,14,14),new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),emissive:new THREE.Color(n.color).multiplyScalar(0.1),shininess:60,transparent:true,opacity:1}));
+    const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,12),
+      new THREE.MeshPhongMaterial({color:new THREE.Color(n.color),shininess:40,transparent:false}));
     m.position.copy(pos[i]);m.userData={nid:n.id};piv.add(m);MM[n.id]=m;
-    const c=document.createElement("canvas");c.width=320;c.height=56;
-    const cx=c.getContext("2d");cx.font="bold 17px sans-serif";cx.fillStyle=n.color;cx.textAlign="center";cx.fillText(n[NK].length>18?n[NK].slice(0,17)+"…":n[NK],160,34);
+    const c=document.createElement('canvas');c.width=256;c.height=48;
+    const x=c.getContext('2d');x.font='bold 16px sans-serif';x.fillStyle=n.color;x.textAlign='center';
+    x.fillText(n[NK].length>18?n[NK].slice(0,17)+'…':n[NK],128,30);
     const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:.9}));
-    sp.scale.set(70,13,1);sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+12);piv.add(sp);
+    sp.scale.set(64,13,1);sp.position.copy(pos[i]).addScaledVector(pos[i].clone().normalize(),r+10);
+    piv.add(sp);
   });
   EDGES.forEach(e=>{
-    const si=idx[e.source],ti=idx[e.target];if(si===undefined||ti===undefined)return;
+    const si=idx[e.source],ti=idx[e.target];
+    if(si===undefined||ti===undefined)return;
     const s=NODES[si]._p,t=NODES[ti]._p;
-    const mid=s.clone().add(t).multiplyScalar(0.5);mid.normalize().multiplyScalar(R*1.4);
-    const geo=new THREE.BufferGeometry().setFromPoints(new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(30));
-    const l=new THREE.Line(geo,new THREE.LineBasicMaterial({color:new THREE.Color(NODES[si].color),transparent:false,opacity:1}));
-    l.userData={src:e.source,tgt:e.target,rel:e.rel};piv.add(l);LL.push(l);
+    const mid=s.clone().add(t).multiplyScalar(.5);
+    mid.normalize().multiplyScalar(R*1.4);
+    const pts=new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(24);
+    const geo=new THREE.BufferGeometry().setFromPoints(pts);
+    const l=new THREE.Line(geo,new THREE.LineBasicMaterial({color:new THREE.Color(NODES[si].color)}));
+    l.userData={src:e.source,tgt:e.target,rel:e.rel||''};piv.add(l);LL.push(l);
   });
 }
-function sel(nid){
+function selN(nid){
   const n=NODES.find(x=>x.id===nid);if(!n)return;
   const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
-  Object.entries(MM).forEach(([id,m])=>{m.material.opacity=id===nid?1:.07;m.scale.setScalar(id===nid?2:1)});
-  LL.forEach(l=>{l.material.transparent=true;l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:.03});
-  const rh=rels.slice(0,12).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="nr"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel||"connects"}</span><span class="ra">→</span><span style="color:${on?.color||'#374151'};font-size:9px">${on?.label||ot}</span></div>`}).join("")+(rels.length>12?`<div style="font-size:9px;color:#9ca3af">+${rels.length-12} more</div>`:"");
-  document.getElementById("ND").innerHTML=`<div class="nl" style="color:${n.color}">${n.label}</div><div class="nd2" style="border-color:${n.color}">${n.desc}</div><div class="nrh">Connections (${rels.length})</div>${rh}`;
-  document.getElementById("OV").style.display="none";document.getElementById("ND").style.display="block";document.getElementById("BK").style.display="block";document.getElementById("CS").textContent=n.label;
-  document.getElementById("BN").innerHTML=`<span style="color:${n.color}">${n[NK]}</span>`;
-  document.getElementById("BD").textContent=n.desc;
-  document.getElementById("BT").innerHTML=rels.slice(0,7).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<span class="btag" style="color:${on?.color||'#374151'};border-color:${on?.color||'#e8eaed'}">${io?"→":"←"} ${e.rel||"connects"} ${on?.[NK]||ot}</span>`}).join("")+(rels.length>7?`<span style="font-size:9px;color:#9ca3af">+${rels.length-7} more</span>`:"");
-  document.getElementById("BAR").style.display="flex";
+  Object.entries(MM).forEach(([id,m])=>{m.material.transparent=true;m.material.opacity=id===nid?1:.08;m.scale.setScalar(id===nid?2:1);});
+  LL.forEach(l=>{l.material.transparent=true;l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1:.04;});
+  const rh=rels.slice(0,10).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return'<div class="nr"><span class="ra">'+(io?'→':'←')+'</span><span class="rn">'+(e.rel||'connects')+'</span><span class="ra">→</span><span style="color:'+(on?.color||'#374151')+';font-size:9px">'+(on?.label||ot)+'</span></div>';}).join('')+(rels.length>10?'<div style="font-size:9px;color:#9ca3af">+'+(rels.length-10)+' more</div>':'');
+  document.getElementById('ND').innerHTML='<div class="nl" style="color:'+n.color+'">'+n.label+'</div><div class="nd2" style="border-color:'+n.color+'">'+n.desc+'</div><div class="nrh">Connections ('+rels.length+')</div>'+rh;
+  document.getElementById('OV').style.display='none';document.getElementById('ND').style.display='block';document.getElementById('BK').style.display='block';document.getElementById('CS').textContent=n.label;
+  document.getElementById('BN').innerHTML='<span style="color:'+n.color+'">'+n[NK]+'</span>';
+  document.getElementById('BD').textContent=n.desc;
+  document.getElementById('BT').innerHTML=rels.slice(0,7).map(e=>{
+    const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);
+    return '<span class="btag" style="color:'+(on?.color||'#374151')+';border-color:'+(on?.color||'#e8eaed')+'">'+(io?'→':'←')+' '+(e.rel||'connects')+' '+(on?.[NK]||ot)+'</span>';
+  }).join('')+(rels.length>7?'<span style="font-size:9px;color:#9ca3af">+'+(rels.length-7)+' more</span>':'');
+  document.getElementById('BAR').style.display='flex';
 }
-function clearSel(){Object.values(MM).forEach(m=>{m.material.opacity=1;m.material.transparent=false;m.scale.setScalar(1)});LL.forEach(l=>{l.material.transparent=false;l.material.opacity=1});document.getElementById("BAR").style.display="none";showOv();}
-function showOv(){document.getElementById("OV").style.display="block";document.getElementById("ND").style.display="none";document.getElementById("BK").style.display="none";}
-function tSB(){document.getElementById("SB").classList.toggle("open");document.getElementById("CTX").classList.remove("open");document.getElementById("OVL").classList.toggle("show",document.getElementById("SB").classList.contains("open"))}
-function tCTX(){document.getElementById("CTX").classList.toggle("open");document.getElementById("SB").classList.remove("open");document.getElementById("OVL").classList.toggle("show",document.getElementById("CTX").classList.contains("open"))}
-function cPan(){document.getElementById("SB").classList.remove("open");document.getElementById("CTX").classList.remove("open");document.getElementById("OVL").classList.remove("show")}
-function mbtn(){const m=window.innerWidth<=900;["btn-sb","btn-ctx"].forEach(id=>document.getElementById(id).style.display=m?"block":"none")}
-window.addEventListener("resize",mbtn);mbtn();
-(()=>{const cats=NODES.filter(n=>n.id.startsWith("cat_"));const leg=document.getElementById("CAT-LEG");cats.forEach(n=>{const d=document.createElement("div");d.className="li";d.innerHTML=`<div class="dot" style="background:${n.color}"></div><span class="lbl">${n.label}</span>`;leg.appendChild(d);});})();
+function cSel(){
+  Object.values(MM).forEach(m=>{m.material.transparent=false;m.material.opacity=1;m.scale.setScalar(1);});
+  LL.forEach(l=>{l.material.transparent=false;l.material.opacity=1;});
+  document.getElementById('BAR').style.display='none';
+  showOv();
+}
+function showOv(){document.getElementById('OV').style.display='block';document.getElementById('ND').style.display='none';document.getElementById('BK').style.display='none';}
+function tSB(){document.getElementById('SB').classList.toggle('open');document.getElementById('CTX').classList.remove('open');document.getElementById('OVL').classList.toggle('show',document.getElementById('SB').classList.contains('open'));}
+function tCTX(){document.getElementById('CTX').classList.toggle('open');document.getElementById('SB').classList.remove('open');document.getElementById('OVL').classList.toggle('show',document.getElementById('CTX').classList.contains('open'));}
+function cPan(){document.getElementById('SB').classList.remove('open');document.getElementById('CTX').classList.remove('open');document.getElementById('OVL').classList.remove('show');}
+function mb(){const m=window.innerWidth<=900;document.getElementById('BSB').style.display=m?'block':'none';document.getElementById('BCTX').style.display=m?'block':'none';}
+window.addEventListener('resize',mb);mb();
 build();
-(function anim(){requestAnimationFrame(anim);if(spin)piv.rotation.y+=0.0012;renderer.render(scene,camera)})();
-}catch(e){const d=document.getElementById('ERR');d.style.display='block';d.innerHTML='<b>Caught:</b><br>'+e.message+'<br>'+String(e.stack||'').replace(/\n/g,'<br>');}
+(function anim(){requestAnimationFrame(anim);if(spin)piv.rotation.y+=.0012;renderer.render(scene,camera);})();
 </script></body></html>
