@@ -321,9 +321,10 @@ function toggleSpin(){spin=!spin;document.getElementById("SPIN").classList.toggl
 const rc=new THREE.Raycaster(),mo=new THREE.Vector2();
 let meshes={},lines=[];
 function cast(e){
-  const r=cv.getBoundingClientRect();
-  mo.x=((e.clientX-r.left)/r.width)*2-1;
-  mo.y=-((e.clientY-r.top)/r.height)*2+1;
+  const {sbW,ctxW}=getSidebarWidths();
+  const cw=Math.max(200,window.innerWidth-sbW-ctxW);
+  mo.x=((e.clientX-sbW)/cw)*2-1;
+  mo.y=-(e.clientY/window.innerHeight)*2+1;
   rc.setFromCamera(mo,camera);
   return rc.intersectObjects(Object.values(meshes),false)[0]||null;
 }
