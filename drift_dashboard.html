@@ -256,13 +256,10 @@ tbody td{padding:8px 12px;font-size:11px}
   </div>
 
   <!-- Offline state -->
-  <div id="offline">
-    <div class="icon">⚠️</div>
-    <h3>Could not load dashboard data</h3>
-    <p>Neither the live server nor the snapshot file could be reached. If you're on desktop and want live data:</p>
-    <div class="code-block">cd ~/gt/etl_pipeline
-python3 drift_dashboard.py</div>
-    <p style="margin-top:8px;font-size:11px;color:#9ca3af">The page will automatically retry every 10 seconds.</p>
+  <div id="offline" style="display:flex">
+    <div class="icon" id="offline-icon">⏳</div>
+    <h3 id="offline-title">Loading dashboard…</h3>
+    <p id="offline-msg">Fetching Neptune graph data.</p>
   </div>
 
   <!-- Dashboard content (shown when server is online) -->
@@ -328,9 +325,15 @@ let polling = null;
 let liveMode = false;
 
 // ── Data loading ──────────────────────────────────────────────────────────
+function fetchWithTimeout(url, opts={}, ms=2000) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(()=>ctrl.abort(), ms);
+  return fetch(url, {...opts, signal:ctrl.signal}).finally(()=>clearTimeout(tid));
+}
+
 async function tryLive() {
   try {
-    const s = await fetch(API + '/api/status', {mode:'cors'}).then(r=>r.json());
+    const s = await fetchWithTimeout(API + '/api/status', {mode:'cors'}).then(r=>r.json());
     liveMode = true;
     setSourceBadge(true, s.last_run);
     document.getElementById("run-btn").disabled = false;
@@ -386,7 +389,15 @@ function setSourceBadge(live, ts) {
 
 async function checkServer() {
   const live = await tryLive();
-  if (!live) await tryStatic();
+  if (live) return;
+  const snap = await tryStatic();
+  if (!snap) {
+    document.getElementById("offline-icon").textContent = "⚠️";
+    document.getElementById("offline-title").textContent = "Could not load data";
+    document.getElementById("offline-msg").innerHTML =
+      "Neither the live server nor the snapshot could be reached.<br>" +
+      "<span style='font-size:11px;color:#9ca3af'>Retrying every 10 seconds.</span>";
+  }
 }
 
 function setStatus(state) {
