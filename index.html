@@ -385,7 +385,7 @@ function build(){
     const geo=new THREE.BufferGeometry().setFromPoints(
       new THREE.QuadraticBezierCurve3(s,mid,t).getPoints(32));
     const l=new THREE.Line(geo,new THREE.LineBasicMaterial({
-      color:new THREE.Color(NODES[si].color),transparent:false,opacity:1.0}));
+      color:new THREE.Color(NODES[si].color),transparent:true,opacity:0.7}));
     l.userData={src:e.source,tgt:e.target,rel:e.rel};
     piv.add(l);lines.push(l);
   });
@@ -394,8 +394,17 @@ function build(){
 function selNode(nid){
   const n=NODES.find(x=>x.id===nid);if(!n)return;
   const rels=EDGES.filter(e=>e.source===nid||e.target===nid);
-  Object.entries(meshes).forEach(([id,m])=>{m.material.opacity=id===nid?1:.12;m.scale.setScalar(id===nid?2:1)});
-  lines.forEach(l=>{l.material.opacity=(l.userData.src===nid||l.userData.tgt===nid)?1.0:.08});
+  const connIds=new Set(rels.map(e=>e.source===nid?e.target:e.source));
+  Object.entries(meshes).forEach(([id,m])=>{
+    if(id===nid){m.material.opacity=1;m.scale.setScalar(2)}
+    else if(connIds.has(id)){m.material.opacity=1;m.scale.setScalar(1.4)}
+    else{m.material.opacity=0.1;m.scale.setScalar(1)}
+  });
+  lines.forEach(l=>{
+    const active=l.userData.src===nid||l.userData.tgt===nid;
+    l.material.opacity=active?1.0:0.05;
+    l.material.color.set(active?new THREE.Color(n.color):new THREE.Color(0xcccccc));
+  });
   const rh=rels.slice(0,12).map(e=>{const io=e.source===nid,ot=io?e.target:e.source,on=NODES.find(x=>x.id===ot);return`<div class="nr"><span class="ra">${io?"→":"←"}</span><span class="rn">${e.rel||"connects"}</span><span class="ra">→</span><span style="color:${on?.color||'#374151'};font-size:9px">${on?.label||ot}</span></div>`}).join("")+(rels.length>12?`<div style="font-size:9px;color:#9ca3af;margin-top:3px">+${rels.length-12} more</div>`:"");
   document.getElementById("ND").innerHTML=`<div class="nl" style="color:${n.color}">${n.label}</div><div class="nd2" style="border-color:${n.color}">${n.desc}</div><div class="nrh">Connections (${rels.length})</div>${rh}`;
   document.getElementById("OV").style.display="none";
@@ -413,7 +422,7 @@ function selNode(nid){
 
 function clearSel(){
   Object.values(meshes).forEach(m=>{m.material.opacity=0.95;m.scale.setScalar(1)});
-  lines.forEach(l=>{l.material.opacity=1.0});
+  lines.forEach((l,i)=>{l.material.opacity=0.7;const si=EDGES[i]?NODES.find(x=>x.id===EDGES[i].source):null;if(si)l.material.color.set(new THREE.Color(si.color))});
   document.getElementById("BAR").style.display="none";
   showOv();
 }
