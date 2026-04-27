@@ -1,0 +1,32 @@
+name: Generate Drift Data
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # every hour at :00
+  workflow_dispatch:        # allow manual trigger from GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate drift_data.json from knowledge graph
+        run: python generate_drift_data.py
+
+      - name: Commit and push updated data
+        run: |
+          git config user.name  "drift-bot"
+          git config user.email "drift-bot@users.noreply.github.com"
+          git add drift_data.json
+          git diff --cached --quiet && echo "No changes" || \
+            git commit -m "chore: hourly drift analysis $(date -u '+%Y-%m-%d %H:%M UTC')" && git push
