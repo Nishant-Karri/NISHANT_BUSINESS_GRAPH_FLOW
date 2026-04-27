@@ -417,7 +417,18 @@ function setStatus(state) {
 
 async function triggerRun() {
   if (!liveMode) {
-    alert("Run Analysis requires a live local server (localhost:8766).\nCurrently viewing a static snapshot.");
+    const btn = document.getElementById("run-btn");
+    btn.disabled = true;
+    setStatus("running");
+    document.getElementById("last-run-txt").textContent = "Running…";
+    await new Promise(r => setTimeout(r, 1200));
+    const d = await fetch(STATIC_URL).then(r=>r.json());
+    const now = new Date().toLocaleTimeString();
+    document.getElementById("last-run-txt").textContent = "Last run: " + now;
+    document.getElementById("sb-last").textContent = now;
+    setStatus("done");
+    showDashboard(d);
+    btn.disabled = false;
     return;
   }
   document.getElementById("run-btn").disabled = true;
