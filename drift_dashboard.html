@@ -252,18 +252,17 @@ tbody td{padding:8px 12px;font-size:11px}
     <h3>Metric Drift <span style="color:#7c3aed">Dashboard</span></h3>
     <span id="last-run-txt"></span>
     <span id="status-badge">Checking server…</span>
-    <button id="run-btn" onclick="triggerRun()" disabled>▶ Run Analysis</button>
+    <button id="run-btn" onclick="triggerRun()" disabled title="Only available when local server is running">▶ Run Analysis</button>
   </div>
 
   <!-- Offline state -->
   <div id="offline">
-    <div class="icon">⚡</div>
-    <h3>Local server required</h3>
-    <p>This dashboard connects to a local Flask server that queries your Amazon Neptune graph via AWS Lambda. It must run on the same machine as your browser.</p>
+    <div class="icon">⚠️</div>
+    <h3>Could not load dashboard data</h3>
+    <p>Neither the live server nor the snapshot file could be reached. If you're on desktop and want live data:</p>
     <div class="code-block">cd ~/gt/etl_pipeline
 python3 drift_dashboard.py</div>
-    <p style="margin-top:8px">Then visit <b>http://localhost:8766</b> directly for the full live dashboard, or keep this page open — it will reconnect automatically once the server is running.</p>
-    <p style="margin-top:4px;font-size:11px;color:#9ca3af">Note: mobile devices cannot reach a localhost server. Open on desktop.</p>
+    <p style="margin-top:8px;font-size:11px;color:#9ca3af">The page will automatically retry every 10 seconds.</p>
   </div>
 
   <!-- Dashboard content (shown when server is online) -->
@@ -323,31 +322,71 @@ python3 drift_dashboard.py</div>
 <div id="TOP"><div class="badge">Metric Drift <em>Monitor</em></div></div>
 
 <script>
-const API = 'http://localhost:8766';
+const API        = 'http://localhost:8766';
+const STATIC_URL = 'drift_data.json';
 let polling = null;
+let liveMode = false;
 
-// ── Server connectivity ───────────────────────────────────────────────────
-async function checkServer() {
+// ── Data loading ──────────────────────────────────────────────────────────
+async function tryLive() {
   try {
     const s = await fetch(API + '/api/status', {mode:'cors'}).then(r=>r.json());
-    document.getElementById("offline").style.display = "none";
-    document.getElementById("dash-content").style.display = "block";
+    liveMode = true;
+    setSourceBadge(true, s.last_run);
     document.getElementById("run-btn").disabled = false;
     setStatus(s.state);
     if (s.last_run) {
       document.getElementById("last-run-txt").textContent = "Last run: " + s.last_run;
       document.getElementById("sb-last").textContent = s.last_run.split(" ")[1];
     }
-    if (s.state === "done") loadDashboard();
+    if (s.state === "done") {
+      const d = await fetch(API + '/api/data', {mode:'cors'}).then(r=>r.json());
+      showDashboard(d);
+    }
     return true;
   } catch(e) {
-    document.getElementById("offline").style.display = "flex";
-    document.getElementById("dash-content").style.display = "none";
-    document.getElementById("run-btn").disabled = true;
-    document.getElementById("status-badge").textContent = "Server offline";
-    document.getElementById("status-badge").className = "error";
     return false;
   }
+}
+
+async function tryStatic() {
+  try {
+    const d = await fetch(STATIC_URL).then(r=>r.json());
+    liveMode = false;
+    setSourceBadge(false, d.generated_at);
+    document.getElementById("run-btn").disabled = true;
+    setStatus("done");
+    if (d.generated_at) {
+      document.getElementById("last-run-txt").textContent = "Snapshot: " + d.generated_at;
+      document.getElementById("sb-last").textContent = d.generated_at.split(" ")[1];
+    }
+    showDashboard(d);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+function setSourceBadge(live, ts) {
+  let el = document.getElementById("src-badge");
+  if (!el) {
+    el = document.createElement("span");
+    el.id = "src-badge";
+    el.style.cssText = "font-size:10px;padding:3px 10px;border-radius:12px;font-weight:600;margin-left:6px";
+    document.getElementById("status-bar").insertBefore(el, document.getElementById("last-run-txt"));
+  }
+  if (live) {
+    el.textContent = "● Live";
+    el.style.background = "#f0fdf4"; el.style.color = "#16a34a"; el.style.border = "1px solid #bbf7d0";
+  } else {
+    el.textContent = "● Snapshot";
+    el.style.background = "#eff6ff"; el.style.color = "#2563eb"; el.style.border = "1px solid #bfdbfe";
+  }
+}
+
+async function checkServer() {
+  const live = await tryLive();
+  if (!live) await tryStatic();
 }
 
 function setStatus(state) {
@@ -358,6 +397,7 @@ function setStatus(state) {
 }
 
 async function triggerRun() {
+  if (!liveMode) return;
   document.getElementById("run-btn").disabled = true;
   await fetch(API + '/api/run', {method:'POST', mode:'cors'});
   setStatus("running");
@@ -365,19 +405,25 @@ async function triggerRun() {
     const s = await fetch(API + '/api/status', {mode:'cors'}).then(r=>r.json());
     setStatus(s.state);
     if (s.last_run) document.getElementById("last-run-txt").textContent = "Last run: " + s.last_run;
-    if (s.state === "done") { clearInterval(polling); document.getElementById("run-btn").disabled=false; loadDashboard(); }
+    if (s.state === "done") {
+      clearInterval(polling);
+      document.getElementById("run-btn").disabled = false;
+      const d = await fetch(API + '/api/data', {mode:'cors'}).then(r=>r.json());
+      showDashboard(d);
+    }
     if (s.state === "error") { clearInterval(polling); document.getElementById("run-btn").disabled=false; }
   }, 2000);
 }
 
-async function loadDashboard() {
-  const d = await fetch(API + '/api/data', {mode:'cors'}).then(r=>r.json());
+function showDashboard(d) {
+  document.getElementById("offline").style.display   = "none";
+  document.getElementById("dash-content").style.display = "block";
   const metMap = Object.fromEntries(d.metrics.map(m=>[m.store_id, m]));
   d.alerts.forEach(a => {
     const m = metMap[a.store_id] || {};
-    a.address  = m.address  || '';
-    a.zip_code = m.zip_code || '';
-    a.net_sales = m.net_sales || 500;
+    a.address  = a.address  || m.address  || '';
+    a.zip_code = a.zip_code || m.zip_code || '';
+    a.net_sales = a.net_sales || m.net_sales || 500;
   });
   renderSummary(d.alerts, d.metrics);
   renderMetrics(d.metrics);
@@ -387,6 +433,8 @@ async function loadDashboard() {
   const exp = d.alerts.reduce((s,a)=>s+(a.loss_90d||0),0);
   document.getElementById("sb-exp").textContent = "$" + exp.toLocaleString("en-US",{maximumFractionDigits:0});
 }
+
+async function loadDashboard() { await checkServer(); }
 
 // ── Render ────────────────────────────────────────────────────────────────
 function renderSummary(alerts, metrics) {

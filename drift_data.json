@@ -1,0 +1,388 @@
+{
+  "alerts": [
+    {
+      "actual": 1455.26,
+      "baseline": 265.28,
+      "drift_pct": 448.6,
+      "graph_context": {
+        "channel": [
+          "All"
+        ],
+        "loyalty": [
+          "Platinum",
+          "Silver"
+        ],
+        "promotion": [
+          "Loyalty Platinum Reward",
+          "No Promotion"
+        ],
+        "segment": [
+          "Wholesale",
+          "Retail"
+        ]
+      },
+      "loss_30d": 10880.5,
+      "loss_60d": 21760.99,
+      "loss_90d": 32641.49,
+      "metric": "aov",
+      "recommendation": "ROOT CAUSE\nAverage order value is 448.6% below baseline at Chicago Midway. Platinum, Silver are purchasing fewer items per visit, indicating missed upsell/cross-sell opportunities.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting Platinum, Silver tier customers\n\u2022 Activate minimum-spend promotions (Loyalty Platinum Reward, No Promotion) to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers who exceed monthly spend thresholds\n\u2022 Analyse category affinity data to build personalised cross-sell recommendations\n\nLOSS PREVENTION\nA 448.6% AOV shortfall across 3 transactions costs $32,641 over 90 days.",
+      "severity": "CRITICAL",
+      "store_id": "STR-003",
+      "store_name": "Chicago Midway"
+    },
+    {
+      "actual": 4042.39,
+      "baseline": 822.64,
+      "drift_pct": 391.4,
+      "graph_context": {
+        "brand": [
+          "GameForce",
+          "NatureBrew",
+          "ComfortWork"
+        ],
+        "category": [
+          "Electronics",
+          "Grocery",
+          "Furniture"
+        ],
+        "loyalty": [
+          "Platinum",
+          "Silver"
+        ],
+        "region": []
+      },
+      "loss_30d": 15821.91,
+      "loss_60d": 31643.83,
+      "loss_90d": 47465.74,
+      "metric": "net_sales",
+      "recommendation": "ROOT CAUSE\nNet sales at Chicago Midway are 391.4% below the cross-store baseline. Categories Electronics, Grocery, Furniture and Platinum, Silver are underperforming vs. peer stores.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on Electronics items this week\n\u2022 Activate email/push campaigns targeting Platinum, Silver customers in this region\n\u2022 Review stock levels for GameForce, NatureBrew, ComfortWork \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Chicago Midway against top-performing Midwest stores for staffing and layout differences\n\u2022 Consider a targeted local marketing campaign for the Chicago Midway catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in $47,466 revenue gap over 90 days.",
+      "severity": "CRITICAL",
+      "store_id": "STR-003",
+      "store_name": "Chicago Midway"
+    },
+    {
+      "actual": 13.95,
+      "baseline": 4.58,
+      "drift_pct": 204.6,
+      "graph_context": {
+        "category": [
+          "Electronics",
+          "Sports & Fitness",
+          "Home & Kitchen",
+          "Grocery"
+        ],
+        "channel": [
+          "All"
+        ],
+        "promo_type": [
+          "nan",
+          "Loyalty"
+        ],
+        "promotion": [
+          "No Promotion",
+          "Loyalty Platinum Reward"
+        ]
+      },
+      "loss_30d": 2376.6,
+      "loss_60d": 4753.21,
+      "loss_90d": 7129.81,
+      "metric": "discount_rate",
+      "recommendation": "ROOT CAUSE\nDiscount rate is 204.6% above baseline at Manhattan Flagship. Promotions (No Promotion, Loyalty Platinum Reward) of type nan, Loyalty are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable 'nan, Loyalty' combinations immediately\n\u2022 Restrict discount eligibility to Platinum tier customers only for this period\n\u2022 Set a per-transaction discount ceiling of 15% for Electronics, Sports & Fitness, Home & Kitchen\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events at least 3 weeks apart\n\u2022 Shift from blanket discounts to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $7,130 in 90 days if not addressed.",
+      "severity": "CRITICAL",
+      "store_id": "STR-001",
+      "store_name": "Manhattan Flagship"
+    },
+    {
+      "actual": 13.0,
+      "baseline": 4.58,
+      "drift_pct": 183.8,
+      "graph_context": {
+        "category": [
+          "Home & Kitchen",
+          "Furniture"
+        ],
+        "channel": [
+          "All"
+        ],
+        "promo_type": [
+          "Loyalty"
+        ],
+        "promotion": [
+          "Loyalty Platinum Reward"
+        ]
+      },
+      "loss_30d": 539.62,
+      "loss_60d": 1079.23,
+      "loss_90d": 1618.85,
+      "metric": "discount_rate",
+      "recommendation": "ROOT CAUSE\nDiscount rate is 183.8% above baseline at Denver Union Station. Promotions (Loyalty Platinum Reward) of type Loyalty are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable 'Loyalty' combinations immediately\n\u2022 Restrict discount eligibility to Platinum tier customers only for this period\n\u2022 Set a per-transaction discount ceiling of 15% for Home & Kitchen, Furniture\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events at least 3 weeks apart\n\u2022 Shift from blanket discounts to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $1,619 in 90 days if not addressed.",
+      "severity": "CRITICAL",
+      "store_id": "STR-009",
+      "store_name": "Denver Union Station"
+    },
+    {
+      "actual": 0.0,
+      "baseline": 4.58,
+      "drift_pct": -100.0,
+      "graph_context": {
+        "category": [
+          "Footwear",
+          "Home & Kitchen",
+          "Electronics"
+        ],
+        "channel": [
+          "All"
+        ],
+        "promo_type": [
+          "nan"
+        ],
+        "promotion": [
+          "No Promotion"
+        ]
+      },
+      "loss_30d": 305.96,
+      "loss_60d": 611.91,
+      "loss_90d": 917.87,
+      "metric": "discount_rate",
+      "recommendation": "Discount rate is below baseline \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates.",
+      "severity": "CRITICAL",
+      "store_id": "STR-002",
+      "store_name": "LA Downtown"
+    },
+    {
+      "actual": 0.0,
+      "baseline": 4.58,
+      "drift_pct": -100.0,
+      "graph_context": {
+        "category": [
+          "Grocery",
+          "Electronics",
+          "Home & Kitchen"
+        ],
+        "channel": [
+          "All"
+        ],
+        "promo_type": [
+          "Seasonal",
+          "nan"
+        ],
+        "promotion": [
+          "Easter Weekend",
+          "No Promotion"
+        ]
+      },
+      "loss_30d": 251.87,
+      "loss_60d": 503.75,
+      "loss_90d": 755.62,
+      "metric": "discount_rate",
+      "recommendation": "Discount rate is below baseline \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates.",
+      "severity": "CRITICAL",
+      "store_id": "STR-008",
+      "store_name": "Seattle Capitol Hill"
+    },
+    {
+      "actual": 0.0,
+      "baseline": 4.58,
+      "drift_pct": -100.0,
+      "graph_context": {
+        "category": [
+          "Electronics",
+          "Home & Kitchen"
+        ],
+        "channel": [
+          "All"
+        ],
+        "promo_type": [
+          "Loyalty",
+          "nan"
+        ],
+        "promotion": [
+          "Loyalty Gold Reward",
+          "No Promotion"
+        ]
+      },
+      "loss_30d": 350.97,
+      "loss_60d": 701.95,
+      "loss_90d": 1052.92,
+      "metric": "discount_rate",
+      "recommendation": "Discount rate is below baseline \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates.",
+      "severity": "CRITICAL",
+      "store_id": "STR-005",
+      "store_name": "Phoenix Desert Ridge"
+    },
+    {
+      "actual": 76.12,
+      "baseline": 265.28,
+      "drift_pct": -71.3,
+      "graph_context": {
+        "channel": [
+          "All"
+        ],
+        "loyalty": [
+          "Bronze",
+          "Silver"
+        ],
+        "promotion": [
+          "Valentine's Day Special",
+          "Christmas Special",
+          "No Promotion"
+        ],
+        "segment": [
+          "Retail"
+        ]
+      },
+      "loss_30d": 120.61,
+      "loss_60d": 241.21,
+      "loss_90d": 361.82,
+      "metric": "aov",
+      "recommendation": "AOV is above baseline \u2014 customers are spending more per visit. Sustain by maintaining current bundle offers and loyalty incentives.",
+      "severity": "CRITICAL",
+      "store_id": "STR-007",
+      "store_name": "San Antonio Riverwalk"
+    }
+  ],
+  "metrics": [
+    {
+      "address": "100 Fifth Avenue",
+      "aov": 232.32,
+      "discount_rate": 13.95,
+      "gross_margin": 43.59,
+      "net_sales": 1290.65,
+      "region": "Northeast",
+      "return_rate": 0.0,
+      "store_id": "STR-001",
+      "store_name": "Manhattan Flagship",
+      "store_type": "Flagship Store",
+      "txn_count": 6,
+      "zip_code": "10011"
+    },
+    {
+      "address": "500 Wilshire Blvd",
+      "aov": 122.38,
+      "discount_rate": 0.0,
+      "gross_margin": 61.17,
+      "net_sales": 339.95,
+      "region": "West",
+      "return_rate": 0.0,
+      "store_id": "STR-002",
+      "store_name": "LA Downtown",
+      "store_type": "Retail Store",
+      "txn_count": 3,
+      "zip_code": "90010"
+    },
+    {
+      "address": "200 S Michigan Ave",
+      "aov": 1455.26,
+      "discount_rate": 3.06,
+      "gross_margin": 48.92,
+      "net_sales": 4042.39,
+      "region": "Midwest",
+      "return_rate": 0.0,
+      "store_id": "STR-003",
+      "store_name": "Chicago Midway",
+      "store_type": "Retail Store",
+      "txn_count": 3,
+      "zip_code": "60604"
+    },
+    {
+      "address": "5085 Westheimer Rd",
+      "aov": 103.65,
+      "discount_rate": 5.14,
+      "gross_margin": 59.99,
+      "net_sales": 479.86,
+      "region": "South",
+      "return_rate": 0.0,
+      "store_id": "STR-004",
+      "store_name": "Houston Galleria",
+      "store_type": "Retail Store",
+      "txn_count": 5,
+      "zip_code": "77056"
+    },
+    {
+      "address": "1500 Market St",
+      "aov": 121.96,
+      "discount_rate": 1.79,
+      "gross_margin": 55.28,
+      "net_sales": 451.68,
+      "region": "Northeast",
+      "return_rate": 0.0,
+      "store_id": "STR-006",
+      "store_name": "Philadelphia Center",
+      "store_type": "Retail Store",
+      "txn_count": 4,
+      "zip_code": "19102"
+    },
+    {
+      "address": "849 E Commerce St",
+      "aov": 76.12,
+      "discount_rate": 4.41,
+      "gross_margin": 60.98,
+      "net_sales": 281.92,
+      "region": "South",
+      "return_rate": 0.0,
+      "store_id": "STR-007",
+      "store_name": "San Antonio Riverwalk",
+      "store_type": "Retail Store",
+      "txn_count": 4,
+      "zip_code": "78205"
+    },
+    {
+      "address": "\u2014",
+      "aov": 123.79,
+      "discount_rate": 4.45,
+      "gross_margin": 65.39,
+      "net_sales": 343.87,
+      "region": "National",
+      "return_rate": 0.0,
+      "store_id": "STR-010",
+      "store_name": "Online Store",
+      "store_type": "E-Commerce",
+      "txn_count": 3,
+      "zip_code": "\u2014"
+    },
+    {
+      "address": "400 Pine St",
+      "aov": 100.75,
+      "discount_rate": 0.0,
+      "gross_margin": 64.98,
+      "net_sales": 279.86,
+      "region": "West",
+      "return_rate": 0.0,
+      "store_id": "STR-008",
+      "store_name": "Seattle Capitol Hill",
+      "store_type": "Retail Store",
+      "txn_count": 3,
+      "zip_code": "98101"
+    },
+    {
+      "address": "1701 Wynkoop St",
+      "aov": 176.16,
+      "discount_rate": 13.0,
+      "gross_margin": 55.86,
+      "net_sales": 326.21,
+      "region": "West",
+      "return_rate": 0.0,
+      "store_id": "STR-009",
+      "store_name": "Denver Union Station",
+      "store_type": "Retail Store",
+      "txn_count": 2,
+      "zip_code": "80202"
+    },
+    {
+      "address": "21001 N Tatum Blvd",
+      "aov": 140.39,
+      "discount_rate": 0.0,
+      "gross_margin": 57.69,
+      "net_sales": 389.97,
+      "region": "West",
+      "return_rate": 0.0,
+      "store_id": "STR-005",
+      "store_name": "Phoenix Desert Ridge",
+      "store_type": "Retail Store",
+      "txn_count": 3,
+      "zip_code": "85050"
+    }
+  ],
+  "generated_at": "2026-04-26 16:20:40",
+  "source": "Amazon Neptune \u2014 Star Schema Business Graph"
+}
