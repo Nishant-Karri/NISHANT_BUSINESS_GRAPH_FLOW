@@ -23,7 +23,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
   #SB.open{transform:translateX(0)}
   #CTX.open{transform:translateX(0)}
   #overlay.show{display:block}
-  #TOP{left:52px!important;right:52px!important}
+  #TOP{left:52px!important;right:52px!important;top:10px}
+  .badge{font-size:10px;padding:5px 12px}
+}
+@media(max-width:600px){
+  #dash-content{padding:10px 12px}
+  #status-bar{flex-wrap:wrap;gap:6px;padding:8px 12px}
+  #status-bar h3{font-size:12px;width:100%}
+  #last-run-txt{font-size:10px}
+  .summary-cards{grid-template-columns:repeat(3,1fr);gap:8px}
+  .sum-card{padding:8px 10px}
+  .sum-card .val{font-size:18px}
+  .alerts-grid{grid-template-columns:1fr}
+  .card-body{grid-template-columns:1fr}
+  .rec-box{grid-column:1}
+  thead th,tbody td{padding:6px 8px;font-size:10px}
+  .sn{font-size:10px}
+  .st{font-size:8px}
+  #offline{padding:24px 16px}
+  #offline h3{font-size:15px}
+  #offline p{font-size:12px}
+  .code-block{font-size:10px;word-break:break-all;white-space:pre-wrap}
 }
 
 /* Sidebar internals */
@@ -32,7 +52,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
 .sbox{padding:10px 14px;border-bottom:1px solid #e8eaed;background:#f8f9ff}
 .stat{display:flex;justify-content:space-between;padding:3px 0;font-size:11px}
 .stat b{color:#7c3aed;font-weight:700}
-.sb-sec{flex:1;overflow-y:auto;padding:12px 14px}
+.sb-sec{flex:1;overflow-y:auto;padding:12px 14px;min-height:0}
 .sb-sec h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px;font-weight:600}
 .legend-item{display:flex;align-items:center;gap:7px;padding:3px 0;font-size:10px}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -48,7 +68,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
 .ch{padding:14px 14px 10px;border-bottom:2px solid #e8eaed;background:#f8f9ff}
 .ch h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1a1a2e}
 .ch p{font-size:9px;color:#6b7280;margin-top:2px}
-.cb{flex:1;overflow-y:auto;padding:12px 14px}
+.cb{flex:1;overflow-y:auto;padding:12px 14px;min-height:0}
 .cs{margin-bottom:15px}
 .cs h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
   color:#7c3aed;margin-bottom:7px;border-bottom:1.5px solid #e8eaed;padding-bottom:3px}
@@ -100,12 +120,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
 
 /* Offline notice */
 #offline{display:none;flex:1;align-items:center;justify-content:center;
-  flex-direction:column;gap:16px;padding:40px;text-align:center}
+  flex-direction:column;gap:16px;padding:40px;text-align:center;overflow-y:auto}
 #offline .icon{font-size:48px}
 #offline h3{font-size:18px;font-weight:700;color:#1a1a2e}
 #offline p{font-size:13px;color:#6b7280;max-width:400px;line-height:1.6}
 .code-block{background:#1a1a2e;color:#e8eaf6;padding:10px 16px;border-radius:8px;
-  font-family:Menlo,monospace;font-size:11px;text-align:left;width:100%;max-width:420px}
+  font-family:Menlo,monospace;font-size:11px;text-align:left;width:100%;max-width:420px;
+  box-sizing:border-box;overflow-x:auto;white-space:pre}
 
 /* Dashboard content */
 #dash-content{flex:1;overflow-y:auto;padding:16px 20px}
@@ -147,7 +168,7 @@ tbody td{padding:8px 12px;font-size:11px}
 .st{font-size:9px;color:#6b7280;margin-top:1px}
 
 /* Alert cards */
-.alerts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:14px;margin-bottom:20px}
+.alerts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:14px;margin-bottom:20px}
 .alert-card{background:#fff;border:1px solid #e8eaed;border-radius:12px;
   overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .card-hdr{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e8eaed}
@@ -180,8 +201,14 @@ tbody td{padding:8px 12px;font-size:11px}
 </head>
 <body>
 
-<button id="btn-sb"  onclick="toggleSB()"  style="display:none">☰</button>
-<button id="btn-ctx" onclick="toggleCTX()" style="display:none">ℹ</button>
+<button id="btn-sb"  onclick="toggleSB()"
+  style="display:none;position:fixed;left:10px;top:10px;z-index:200;width:40px;height:40px;
+  border-radius:10px;border:1.5px solid #e8eaed;background:#fff;font-size:18px;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)">☰</button>
+<button id="btn-ctx" onclick="toggleCTX()"
+  style="display:none;position:fixed;right:10px;top:10px;z-index:200;width:40px;height:40px;
+  border-radius:10px;border:1.5px solid #e8eaed;background:#fff;font-size:16px;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)">ℹ</button>
 <div id="overlay" onclick="closePanels()"></div>
 
 <!-- Left sidebar -->
@@ -231,10 +258,12 @@ tbody td{padding:8px 12px;font-size:11px}
   <!-- Offline state -->
   <div id="offline">
     <div class="icon">⚡</div>
-    <h3>Start the local server to view live data</h3>
-    <p>The Metric Drift Dashboard runs locally and connects to your Amazon Neptune graph. Start it with:</p>
-    <div class="code-block">cd /Users/nishantsai/gt/etl_pipeline<br>python3 drift_dashboard.py</div>
-    <p style="margin-top:8px">Then open <b>http://localhost:8766</b> directly, or come back here after starting it.</p>
+    <h3>Local server required</h3>
+    <p>This dashboard connects to a local Flask server that queries your Amazon Neptune graph via AWS Lambda. It must run on the same machine as your browser.</p>
+    <div class="code-block">cd ~/gt/etl_pipeline
+python3 drift_dashboard.py</div>
+    <p style="margin-top:8px">Then visit <b>http://localhost:8766</b> directly for the full live dashboard, or keep this page open — it will reconnect automatically once the server is running.</p>
+    <p style="margin-top:4px;font-size:11px;color:#9ca3af">Note: mobile devices cannot reach a localhost server. Open on desktop.</p>
   </div>
 
   <!-- Dashboard content (shown when server is online) -->
