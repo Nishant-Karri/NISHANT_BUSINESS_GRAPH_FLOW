@@ -118,6 +118,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
 #run-btn:hover{background:#5b21b6}
 #run-btn:disabled{background:#9ca3af;cursor:not-allowed;box-shadow:none}
 
+/* Store filter */
+#store-filter{padding:5px 10px;border:1.5px solid #d1d5db;border-radius:8px;
+  font-size:11px;color:#374151;background:#fff;cursor:pointer;outline:none;
+  min-width:140px}
+#store-filter:focus{border-color:#7c3aed}
+
 /* Offline notice */
 #offline{display:none;flex:1;align-items:center;justify-content:center;
   flex-direction:column;gap:16px;padding:40px;text-align:center;overflow-y:auto}
@@ -179,8 +185,8 @@ tbody td{padding:8px 12px;font-size:11px}
 .sev-LOW{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
 .atitle{flex:1;font-weight:700;font-size:12px;color:#1a1a2e}
 .dpill{font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;font-family:Menlo,monospace}
-.dpos{background:#fff7ed;color:#ea580c}
-.dneg{background:#f0fdf4;color:#16a34a}
+.dpos{background:#f0fdf4;color:#16a34a}
+.dneg{background:#fef2f2;color:#dc2626}
 .card-body{padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ah4{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#6b7280;font-weight:600;margin-bottom:5px}
 .mrow{display:flex;gap:10px;margin-bottom:8px}
@@ -250,9 +256,12 @@ tbody td{padding:8px 12px;font-size:11px}
 <div id="main">
   <div id="status-bar">
     <h3>Metric Drift <span style="color:#7c3aed">Dashboard</span></h3>
+    <select id="store-filter" onchange="applyStoreFilter()">
+      <option value="">All Stores</option>
+    </select>
     <span id="last-run-txt"></span>
     <span id="status-badge">Checking server…</span>
-    <button id="run-btn" onclick="triggerRun()" disabled title="Only available when local server is running">▶ Run Analysis</button>
+    <button id="run-btn" onclick="triggerRun()">▶ Run Analysis</button>
   </div>
 
   <!-- Offline state -->
@@ -265,7 +274,7 @@ tbody td{padding:8px 12px;font-size:11px}
   <!-- Dashboard content (shown when server is online) -->
   <div id="dash-content" style="display:none">
     <div class="summary-cards" id="sum-cards">
-      <div class="sum-card"><div class="lbl">Total Alerts</div><div class="val" id="c-total">—</div><div class="sub">across all stores</div></div>
+      <div class="sum-card"><div class="lbl">Total Alerts</div><div class="val" id="c-total">—</div><div class="sub">negative drifts</div></div>
       <div class="sum-card red"><div class="lbl">Critical</div><div class="val" id="c-crit">—</div><div class="sub">immediate action</div></div>
       <div class="sum-card orange"><div class="lbl">High</div><div class="val" id="c-high">—</div><div class="sub">action this week</div></div>
       <div class="sum-card yellow"><div class="lbl">Medium</div><div class="val" id="c-med">—</div><div class="sub">monitor closely</div></div>
@@ -277,7 +286,7 @@ tbody td{padding:8px 12px;font-size:11px}
     <div class="tbl-wrap" id="metrics-tbl"></div>
 
     <div class="sec-title" id="alerts-title" style="display:none">
-      Drift Alerts <span class="sec-badge" id="alert-badge">—</span>
+      Negative Drift Alerts <span class="sec-badge" id="alert-badge">—</span>
     </div>
     <div class="alerts-grid" id="alerts-grid"></div>
   </div>
@@ -323,6 +332,7 @@ const API        = 'http://localhost:8766';
 const STATIC_URL = 'drift_data.json';
 let polling = null;
 let liveMode = false;
+let allData = null;
 
 // ── Data loading ──────────────────────────────────────────────────────────
 function fetchWithTimeout(url, opts={}, ms=2000) {
@@ -336,7 +346,6 @@ async function tryLive() {
     const s = await fetchWithTimeout(API + '/api/status', {mode:'cors'}).then(r=>r.json());
     liveMode = true;
     setSourceBadge(true, s.last_run);
-    document.getElementById("run-btn").disabled = false;
     setStatus(s.state);
     if (s.last_run) {
       document.getElementById("last-run-txt").textContent = "Last run: " + s.last_run;
@@ -357,7 +366,6 @@ async function tryStatic() {
     const d = await fetch(STATIC_URL).then(r=>r.json());
     liveMode = false;
     setSourceBadge(false, d.generated_at);
-    document.getElementById("run-btn").disabled = true;
     setStatus("done");
     if (d.generated_at) {
       document.getElementById("last-run-txt").textContent = "Snapshot: " + d.generated_at;
@@ -408,7 +416,10 @@ function setStatus(state) {
 }
 
 async function triggerRun() {
-  if (!liveMode) return;
+  if (!liveMode) {
+    alert("Run Analysis requires a live local server (localhost:8766).\nCurrently viewing a static snapshot.");
+    return;
+  }
   document.getElementById("run-btn").disabled = true;
   await fetch(API + '/api/run', {method:'POST', mode:'cors'});
   setStatus("running");
@@ -436,25 +447,49 @@ function showDashboard(d) {
     a.zip_code = a.zip_code || m.zip_code || '';
     a.net_sales = a.net_sales || m.net_sales || 500;
   });
-  renderSummary(d.alerts, d.metrics);
-  renderMetrics(d.metrics);
-  renderAlerts(d.alerts);
+  allData = d;
+  populateStoreFilter(d.metrics);
+  applyStoreFilter();
   document.getElementById("sb-stores").textContent = d.metrics.length;
-  document.getElementById("sb-alerts").textContent = d.alerts.length;
-  const exp = d.alerts.reduce((s,a)=>s+(a.loss_90d||0),0);
+  document.getElementById("sb-alerts").textContent = d.alerts.filter(a=>a.drift_pct<0).length;
+  const exp = d.alerts.filter(a=>a.drift_pct<0).reduce((s,a)=>s+(a.loss_90d||0),0);
   document.getElementById("sb-exp").textContent = "$" + exp.toLocaleString("en-US",{maximumFractionDigits:0});
+}
+
+function populateStoreFilter(metrics) {
+  const sel = document.getElementById("store-filter");
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Stores</option>';
+  metrics.slice().sort((a,b)=>a.store_name.localeCompare(b.store_name)).forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m.store_id;
+    opt.textContent = m.store_name;
+    sel.appendChild(opt);
+  });
+  if (current) sel.value = current;
+}
+
+function applyStoreFilter() {
+  if (!allData) return;
+  const storeId = document.getElementById("store-filter").value;
+  const metrics = storeId ? allData.metrics.filter(m=>m.store_id===storeId) : allData.metrics;
+  const alerts  = storeId ? allData.alerts.filter(a=>a.store_id===storeId)  : allData.alerts;
+  renderSummary(alerts, metrics);
+  renderMetrics(metrics);
+  renderAlerts(alerts);
 }
 
 async function loadDashboard() { await checkServer(); }
 
 // ── Render ────────────────────────────────────────────────────────────────
 function renderSummary(alerts, metrics) {
-  document.getElementById("c-total").textContent  = alerts.length;
-  document.getElementById("c-crit").textContent   = alerts.filter(a=>a.severity==="CRITICAL").length;
-  document.getElementById("c-high").textContent   = alerts.filter(a=>a.severity==="HIGH").length;
-  document.getElementById("c-med").textContent    = alerts.filter(a=>a.severity==="MEDIUM").length;
+  const neg = alerts.filter(a=>a.drift_pct<0);
+  document.getElementById("c-total").textContent  = neg.length;
+  document.getElementById("c-crit").textContent   = neg.filter(a=>a.severity==="CRITICAL").length;
+  document.getElementById("c-high").textContent   = neg.filter(a=>a.severity==="HIGH").length;
+  document.getElementById("c-med").textContent    = neg.filter(a=>a.severity==="MEDIUM").length;
   document.getElementById("c-stores").textContent = metrics.length;
-  const exp = alerts.reduce((s,a)=>s+(a.loss_90d||0),0);
+  const exp = neg.reduce((s,a)=>s+(a.loss_90d||0),0);
   document.getElementById("c-exp").textContent    = "$" + exp.toLocaleString("en-US",{maximumFractionDigits:0});
   document.getElementById("tbl-badge").textContent = metrics.length + " stores";
 }
@@ -485,11 +520,19 @@ function renderMetrics(metrics) {
 }
 
 function renderAlerts(alerts) {
-  if (!alerts.length) return;
-  document.getElementById("alerts-title").style.display = "flex";
-  document.getElementById("alert-badge").textContent = alerts.length + " alerts";
+  const neg = alerts.filter(a=>a.drift_pct<0)
+    .sort((a,b)=>({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[b.severity]||0)-({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[a.severity]||0));
+  const titleEl = document.getElementById("alerts-title");
+  const gridEl  = document.getElementById("alerts-grid");
+  if (!neg.length) {
+    titleEl.style.display = "none";
+    gridEl.innerHTML = "";
+    return;
+  }
+  titleEl.style.display = "flex";
+  document.getElementById("alert-badge").textContent = neg.length + " alerts";
   const ML = {gross_margin:"Gross Margin %",return_rate:"Return Rate %",aov:"Avg Order Value",discount_rate:"Discount Rate %",net_sales:"Net Sales"};
-  const cards = alerts.sort((a,b)=>({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[b.severity]||0)-({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[a.severity]||0)).map(a=>{
+  const cards = neg.map(a=>{
     const dp = a.drift_pct>0?"dpos":"dneg";
     const sign = a.drift_pct>0?"+":"";
     const isAmt = ["aov","net_sales"].includes(a.metric);
@@ -524,7 +567,7 @@ function renderAlerts(alerts) {
       </div>
     </div>`;
   }).join("");
-  document.getElementById("alerts-grid").innerHTML = cards;
+  gridEl.innerHTML = cards;
 }
 
 // ── Mobile ────────────────────────────────────────────────────────────────
