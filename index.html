@@ -7,8 +7,10 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
   color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-/* Canvas behind sidebars */
-#cv{position:fixed;left:0;top:0;z-index:1}
+/* Centre canvas area */
+#WRAP{position:fixed;left:240px;right:300px;top:0;bottom:0;background:#f5f6fa}
+@media(max-width:900px){#WRAP{left:0;right:0}}
+@media(min-width:901px) and (max-width:1200px){#WRAP{left:200px;right:220px}}
 /* Sidebars */
 #SB{position:fixed;left:0;top:0;bottom:0;width:240px;
   background:#ffffff;border-right:2px solid #e8eaed;
@@ -138,7 +140,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5f6fa;
 </style>
 </head><body>
 
-<canvas id="cv"></canvas>
+<div id="WRAP"></div>
 <div id="overlay" onclick="closePanels()"></div>
 <!-- Mobile nav buttons -->
 <button id="btn-sb"  onclick="toggleSB()"  aria-label="Menu"
@@ -211,30 +213,25 @@ const NODES=[{"id": "cat_cloud", "label": "Cloud & Infra", "color": "#c2410c", "
 const EDGES=[{"source": "aws", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "ec2", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "vpc", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "iam", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "s3", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "terraform", "target": "cat_cloud", "rel": "PART_OF"}, {"source": "glue", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_crawler", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "glue_catalog", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "spark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "pyspark", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "dbt", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kafka", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "kinesis", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "snowflake", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "flink", "target": "cat_data_eng", "rel": "PART_OF"}, {"source": "iceberg", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "parquet", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "json_fmt", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "csv", "target": "cat_data_fmt", "rel": "PART_OF"}, {"source": "bedrock", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "claude", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "multi_agents", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "sagemaker", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "mlflow", "target": "cat_ai_ml", "rel": "PART_OF"}, {"source": "gitlab_ci", "target": "cat_devops", "rel": "PART_OF"}, {"source": "git", "target": "cat_devops", "rel": "PART_OF"}, {"source": "github", "target": "cat_devops", "rel": "PART_OF"}, {"source": "gitlab", "target": "cat_devops", "rel": "PART_OF"}, {"source": "docker", "target": "cat_devops", "rel": "PART_OF"}, {"source": "ssm", "target": "cat_devops", "rel": "PART_OF"}, {"source": "python", "target": "cat_languages", "rel": "PART_OF"}, {"source": "sql", "target": "cat_languages", "rel": "PART_OF"}, {"source": "hcl", "target": "cat_languages", "rel": "PART_OF"}, {"source": "bash", "target": "cat_languages", "rel": "PART_OF"}, {"source": "yaml", "target": "cat_languages", "rel": "PART_OF"}, {"source": "cloudwatch", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_alarms", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "cw_logs", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "great_exp", "target": "cat_monitoring", "rel": "PART_OF"}, {"source": "eventbridge", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "sns", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "ses", "target": "cat_messaging", "rel": "PART_OF"}, {"source": "athena", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "pandas", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "boto3", "target": "cat_analytics", "rel": "PART_OF"}, {"source": "lineage", "target": "cat_governance", "rel": "PART_OF"}, {"source": "rbac", "target": "cat_governance", "rel": "PART_OF"}, {"source": "data_quality", "target": "cat_governance", "rel": "PART_OF"}, {"source": "medallion", "target": "cat_governance", "rel": "PART_OF"}, {"source": "neptune_svc", "target": "cat_graph", "rel": "PART_OF"}, {"source": "gremlin", "target": "cat_graph", "rel": "PART_OF"}, {"source": "sparql", "target": "cat_graph", "rel": "PART_OF"}, {"source": "terraform", "target": "aws", "rel": "DEPLOYS_TO"}, {"source": "terraform", "target": "ec2", "rel": "PROVISIONS"}, {"source": "terraform", "target": "vpc", "rel": "PROVISIONS"}, {"source": "terraform", "target": "iam", "rel": "PROVISIONS"}, {"source": "terraform", "target": "s3", "rel": "PROVISIONS"}, {"source": "terraform", "target": "glue", "rel": "PROVISIONS"}, {"source": "terraform", "target": "athena", "rel": "PROVISIONS"}, {"source": "terraform", "target": "eventbridge", "rel": "PROVISIONS"}, {"source": "terraform", "target": "bedrock", "rel": "PROVISIONS"}, {"source": "terraform", "target": "neptune_svc", "rel": "PROVISIONS"}, {"source": "gitlab_ci", "target": "terraform", "rel": "EXECUTES"}, {"source": "glue", "target": "s3", "rel": "READS_FROM"}, {"source": "glue", "target": "s3", "rel": "WRITES_TO"}, {"source": "glue", "target": "iceberg", "rel": "PRODUCES"}, {"source": "glue", "target": "parquet", "rel": "PRODUCES"}, {"source": "pyspark", "target": "glue", "rel": "RUNS_ON"}, {"source": "spark", "target": "glue", "rel": "POWERS"}, {"source": "glue_crawler", "target": "s3", "rel": "CRAWLS"}, {"source": "glue_crawler", "target": "glue_catalog", "rel": "POPULATES"}, {"source": "athena", "target": "s3", "rel": "QUERIES"}, {"source": "athena", "target": "glue_catalog", "rel": "USES"}, {"source": "dbt", "target": "snowflake", "rel": "TRANSFORMS_IN"}, {"source": "dbt", "target": "sql", "rel": "USES"}, {"source": "medallion", "target": "glue", "rel": "IMPLEMENTED_BY"}, {"source": "medallion", "target": "s3", "rel": "STORED_IN"}, {"source": "iceberg", "target": "s3", "rel": "STORED_IN"}, {"source": "kinesis", "target": "glue", "rel": "FEEDS"}, {"source": "kafka", "target": "flink", "rel": "INTEGRATES_WITH"}, {"source": "flink", "target": "kinesis", "rel": "INTEGRATES_WITH"}, {"source": "bedrock", "target": "claude", "rel": "USES_MODEL"}, {"source": "multi_agents", "target": "bedrock", "rel": "DEPLOYED_ON"}, {"source": "multi_agents", "target": "glue", "rel": "ORCHESTRATES"}, {"source": "claude", "target": "python", "rel": "GENERATES"}, {"source": "sagemaker", "target": "mlflow", "rel": "INTEGRATES_WITH"}, {"source": "sagemaker", "target": "python", "rel": "USES"}, {"source": "eventbridge", "target": "glue", "rel": "TRIGGERS"}, {"source": "eventbridge", "target": "sns", "rel": "PUBLISHES_TO"}, {"source": "sns", "target": "ses", "rel": "INTEGRATES_WITH"}, {"source": "ses", "target": "gitlab_ci", "rel": "NOTIFIES"}, {"source": "cloudwatch", "target": "eventbridge", "rel": "FEEDS"}, {"source": "cw_alarms", "target": "sns", "rel": "ALERTS_TO"}, {"source": "cw_logs", "target": "cloudwatch", "rel": "PART_OF"}, {"source": "python", "target": "glue", "rel": "POWERS"}, {"source": "python", "target": "boto3", "rel": "USES"}, {"source": "python", "target": "pandas", "rel": "USES"}, {"source": "python", "target": "great_exp", "rel": "USES"}, {"source": "sql", "target": "athena", "rel": "QUERIES_VIA"}, {"source": "sql", "target": "snowflake", "rel": "QUERIES_VIA"}, {"source": "hcl", "target": "terraform", "rel": "WRITTEN_IN"}, {"source": "bash", "target": "gitlab_ci", "rel": "USED_IN"}, {"source": "yaml", "target": "gitlab_ci", "rel": "CONFIGURES"}, {"source": "boto3", "target": "aws", "rel": "ACCESSES"}, {"source": "data_quality", "target": "great_exp", "rel": "IMPLEMENTED_BY"}, {"source": "data_quality", "target": "dbt", "rel": "IMPLEMENTED_BY"}, {"source": "lineage", "target": "glue_catalog", "rel": "TRACKED_IN"}, {"source": "rbac", "target": "iam", "rel": "ENFORCED_BY"}, {"source": "gitlab_ci", "target": "docker", "rel": "USES"}, {"source": "gitlab_ci", "target": "git", "rel": "USES"}, {"source": "gitlab", "target": "gitlab_ci", "rel": "HOSTS"}, {"source": "github", "target": "git", "rel": "HOSTS"}, {"source": "ssm", "target": "ec2", "rel": "ACCESSES"}, {"source": "neptune_svc", "target": "gremlin", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "sparql", "rel": "SUPPORTS"}, {"source": "neptune_svc", "target": "aws", "rel": "PART_OF"}];
 const NAME_KEY="label";
 
-const cv=document.getElementById("cv");
+const wrap=document.getElementById("WRAP");
+const LW=240,RW=300;
+let W=()=>Math.max(100,window.innerWidth-LW-RW);
+let H=()=>window.innerHeight;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0xf5f6fa);
-const camera=new THREE.PerspectiveCamera(50,1,1,5000);
+const camera=new THREE.PerspectiveCamera(45,W()/H(),1,5000);
 camera.position.set(0,0,1250);
-const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(window.devicePixelRatio);
+renderer.domElement.style.display="block";
+wrap.appendChild(renderer.domElement);
+const cv=renderer.domElement;
 
-function getSidebarWidths(){
-  const mobile=window.innerWidth<=900;
-  const tablet=window.innerWidth<=1200&&!mobile;
-  const sbW = mobile?0:(tablet?200:240);
-  const ctxW= mobile?0:(tablet?220:300);
-  return{sbW,ctxW};
-}
-function updateCam(){
-  const W=window.innerWidth,H=window.innerHeight;
-  const{sbW,ctxW}=getSidebarWidths();
-  const cw=Math.max(200,W-sbW-ctxW);
-  renderer.setSize(W,H);
-  camera.aspect=cw/H;
-  camera.setViewOffset(W,H,sbW,0,cw,H);
+function resize(){
+  const w=W(),h=H();
+  renderer.setSize(w,h);
+  camera.aspect=w/h;
   camera.updateProjectionMatrix();
-  // Show/hide mobile buttons
   const mobile=window.innerWidth<=900;
   document.getElementById("btn-sb").style.display=mobile?"block":"none";
   document.getElementById("btn-ctx").style.display=mobile?"block":"none";
@@ -244,8 +241,8 @@ function updateCam(){
     document.getElementById("overlay").classList.remove("show");
   }
 }
-updateCam();
-window.addEventListener("resize",updateCam);
+resize();
+window.addEventListener("resize",resize);
 
 function toggleSB(){
   document.getElementById("SB").classList.toggle("open");
@@ -315,16 +312,15 @@ cv.addEventListener("mouseleave",()=>drag=false);
 cv.addEventListener("wheel",e=>{camera.position.z=Math.max(400,Math.min(3000,camera.position.z+e.deltaY*0.8))});
 cv.addEventListener("click",e=>{const h=cast(e);h?selNode(h.object.userData.nid):clearSel()});
 
-function resetCam(){camera.position.set(0,0,1250);rx=0;ry=0;piv.rotation.set(0,0,0);clearSel()}
+function resetCam(){camera.position.set(0,0,1250);rx=0;ry=0;piv.rotation.set(0,0,0);clearSel();}
 function toggleSpin(){spin=!spin;document.getElementById("SPIN").classList.toggle("on",spin)}
 
 const rc=new THREE.Raycaster(),mo=new THREE.Vector2();
 let meshes={},lines=[];
 function cast(e){
-  const {sbW,ctxW}=getSidebarWidths();
-  const cw=Math.max(200,window.innerWidth-sbW-ctxW);
-  mo.x=((e.clientX-sbW)/cw)*2-1;
-  mo.y=-(e.clientY/window.innerHeight)*2+1;
+  const r=cv.getBoundingClientRect();
+  mo.x=((e.clientX-r.left)/r.width)*2-1;
+  mo.y=-((e.clientY-r.top)/r.height)*2+1;
   rc.setFromCamera(mo,camera);
   return rc.intersectObjects(Object.values(meshes),false)[0]||null;
 }
