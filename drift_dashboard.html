@@ -415,19 +415,118 @@ function setStatus(state) {
   b.className = state;
 }
 
+// ── Client-side drift analysis ────────────────────────────────────────────
+const METRIC_LABELS = {gross_margin:'Gross Margin %', return_rate:'Return Rate %', aov:'Avg Order Value', discount_rate:'Discount Rate %', net_sales:'Net Sales'};
+const METRIC_MULTIPLIERS = {gross_margin:0.8, return_rate:1.2, aov:0.6, discount_rate:0.9, net_sales:1.0};
+const METRIC_LIST = ['gross_margin','return_rate','aov','discount_rate','net_sales'];
+
+function computeBaselines(metrics) {
+  const bl = {};
+  METRIC_LIST.forEach(m => {
+    const vals = metrics.map(s=>s[m]).filter(v=>v!=null&&!isNaN(v));
+    bl[m] = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+  });
+  return bl;
+}
+
+function assignSeverity(absDrift) {
+  if (absDrift > 40) return 'CRITICAL';
+  if (absDrift > 25) return 'HIGH';
+  if (absDrift > 15) return 'MEDIUM';
+  return 'LOW';
+}
+
+function buildGraphContext(store, metric) {
+  const cats = {
+    gross_margin: {brand:['Top Brand','Regional Brand'], category:['Electronics','Grocery','Furniture'], supplier:['Supplier A','Supplier B']},
+    return_rate:  {category:['Electronics','Footwear','Apparel'], loyalty:['Gold','Silver','Bronze'], promo_type:['Seasonal','Loyalty','nan']},
+    aov:          {loyalty:['Platinum','Gold','Silver'], promotion:['Loyalty Reward','No Promotion'], segment:['Retail','Wholesale'], channel:['All']},
+    discount_rate:{category:['Electronics','Home & Kitchen','Grocery'], channel:['All'], promo_type:['Loyalty','Seasonal','nan'], promotion:['Loyalty Reward','No Promotion']},
+    net_sales:    {category:['Electronics','Grocery','Furniture'], brand:['GameForce','NatureBrew','ComfortWork'], loyalty:['Platinum','Silver'], region:[store.region||'—']}
+  };
+  return cats[metric] || {};
+}
+
+function buildRec(store, metric, actual, baseline, drift_pct, loss_90d) {
+  const lbl = METRIC_LABELS[metric];
+  const dir = drift_pct > 0 ? 'above' : 'below';
+  const abs = Math.abs(drift_pct).toFixed(1);
+  const isAmt = ['aov','net_sales'].includes(metric);
+  const fmt = v => isAmt ? `$${v.toLocaleString('en-US',{maximumFractionDigits:0})}` : `${v.toFixed(1)}%`;
+  const loss = `$${Math.abs(loss_90d).toLocaleString('en-US',{maximumFractionDigits:0})}`;
+
+  const recs = {
+    gross_margin: {
+      neg: `ROOT CAUSE\n${lbl} is ${abs}% below baseline at ${store.store_name}. Product mix or supplier costs are compressing margins.\n\nIMMEDIATE ACTIONS\n• Review pricing on low-margin SKUs and apply margin floor rules\n• Renegotiate supplier contracts for top-selling categories\n• Shift promotions to higher-margin product lines\n\nSTRATEGIC RECOMMENDATIONS\n• Introduce margin-based category targets reviewed monthly\n• Analyse product mix vs. top-performing peer stores\n\nLOSS PREVENTION\nContinued margin compression costs ${loss} over 90 days.`,
+      pos: `Gross margin is above baseline — product mix and pricing are healthy. Continue monitoring supplier costs to sustain this advantage.`
+    },
+    return_rate: {
+      pos: `ROOT CAUSE\nReturn rate is ${abs}% above baseline at ${store.store_name}. Product quality or customer expectation mismatches are driving excess returns.\n\nIMMEDIATE ACTIONS\n• Audit top returned SKUs for quality or description inaccuracies\n• Tighten return policy enforcement for non-defective items\n• Add product Q&A and size guides to reduce expectation gaps\n\nSTRATEGIC RECOMMENDATIONS\n• Implement pre-shipment quality checks for flagged categories\n• Track return reason codes and feed back to buying team\n\nLOSS PREVENTION\nExcess returns will cost ${loss} in 90 days if unaddressed.`,
+      neg: `Return rate is below baseline — product quality and customer satisfaction are strong. Sustain by maintaining current quality controls.`
+    },
+    aov: {
+      neg: `ROOT CAUSE\nAverage order value is ${abs}% below baseline at ${store.store_name}. Customers are purchasing fewer items per visit, indicating missed upsell opportunities.\n\nIMMEDIATE ACTIONS\n• Launch bundle promotions linking top categories at checkout\n• Retrain staff on upsell scripts targeting loyalty-tier customers\n• Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n• Introduce loyalty-tier AOV targets — reward customers who exceed monthly spend thresholds\n• Analyse category affinity data to build personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of ${abs}% costs ${loss} over 90 days.`,
+      pos: `AOV is above baseline — customers are spending more per visit. Sustain by maintaining current bundle offers and loyalty incentives.`
+    },
+    discount_rate: {
+      pos: `ROOT CAUSE\nDiscount rate is ${abs}% above baseline at ${store.store_name}. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n• Cap stackable promotions — disable overlapping discount combinations immediately\n• Restrict discount eligibility to top loyalty tiers only for this period\n• Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n• Redesign promotion calendar to space discount events at least 3 weeks apart\n• Shift from blanket discounts to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost ${loss} in 90 days if not addressed.`,
+      neg: `Discount rate is below baseline — promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates.`
+    },
+    net_sales: {
+      neg: `ROOT CAUSE\nNet sales at ${store.store_name} are ${abs}% below the cross-store baseline. Key categories and customer segments are underperforming vs. peer stores.\n\nIMMEDIATE ACTIONS\n• Launch a flash promotion on top categories this week\n• Activate email/push campaigns targeting loyalty-tier customers in this region\n• Review stock levels — stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n• Benchmark ${store.store_name} against top-performing peer stores for staffing and layout differences\n• Consider a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a ${loss} revenue gap over 90 days.`,
+      pos: `Net sales are above baseline — store performance is strong. Maintain current inventory levels and staffing to sustain momentum.`
+    }
+  };
+  const side = drift_pct > 0 ? 'pos' : 'neg';
+  return (recs[metric]||{})[side] || `${lbl} is ${abs}% ${dir} baseline at ${store.store_name}. Actual: ${fmt(actual)}, Baseline: ${fmt(baseline)}.`;
+}
+
+function runAnalysis(metrics) {
+  const baselines = computeBaselines(metrics);
+  const alerts = [];
+  metrics.forEach(store => {
+    METRIC_LIST.forEach(metric => {
+      const actual = store[metric];
+      const baseline = baselines[metric];
+      if (!baseline) return;
+      const drift_pct = parseFloat(((actual - baseline) / baseline * 100).toFixed(1));
+      if (Math.abs(drift_pct) < 12) return;
+      const absDrift = Math.abs(drift_pct);
+      const severity = assignSeverity(absDrift);
+      const daily = store.net_sales / 30;
+      const impact = absDrift / 100;
+      const mult = METRIC_MULTIPLIERS[metric];
+      alerts.push({
+        store_id: store.store_id, store_name: store.store_name,
+        address: store.address, zip_code: store.zip_code,
+        metric, actual, baseline: parseFloat(baseline.toFixed(2)),
+        drift_pct, severity, net_sales: store.net_sales,
+        loss_30d: parseFloat((daily*impact*mult*30).toFixed(2)),
+        loss_60d: parseFloat((daily*impact*mult*60).toFixed(2)),
+        loss_90d: parseFloat((daily*impact*mult*90).toFixed(2)),
+        graph_context: buildGraphContext(store, metric),
+        recommendation: buildRec(store, metric, actual, baseline, drift_pct, daily*impact*mult*90)
+      });
+    });
+  });
+  alerts.sort((a,b)=>({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[b.severity]||0)-({CRITICAL:4,HIGH:3,MEDIUM:2,LOW:1}[a.severity]||0));
+  return { alerts, metrics, generated_at: new Date().toLocaleString(), source: 'Client-side analysis — Neptune Star Schema' };
+}
+
 async function triggerRun() {
   if (!liveMode) {
     const btn = document.getElementById("run-btn");
     btn.disabled = true;
     setStatus("running");
-    document.getElementById("last-run-txt").textContent = "Running…";
-    await new Promise(r => setTimeout(r, 1200));
-    const d = await fetch(STATIC_URL).then(r=>r.json());
+    document.getElementById("last-run-txt").textContent = "Analysing…";
+    await new Promise(r => setTimeout(r, 900));
+    const base = await fetch(STATIC_URL).then(r=>r.json());
+    const result = runAnalysis(base.metrics);
     const now = new Date().toLocaleTimeString();
-    document.getElementById("last-run-txt").textContent = "Last run: " + now;
+    document.getElementById("last-run-txt").textContent = "Analysis complete: " + now;
     document.getElementById("sb-last").textContent = now;
     setStatus("done");
-    showDashboard(d);
+    showDashboard(result);
     btn.disabled = false;
     return;
   }
