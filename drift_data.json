@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06 02:01:09 UTC",
+  "generated_at": "2026-05-06 05:49:32 UTC",
   "source": "Neptune Star Schema Knowledge Graph \u2014 hourly generation",
   "metrics": [
     {
@@ -9,11 +9,11 @@
       "zip_code": "10011",
       "region": "Northeast",
       "store_type": "Flagship Store",
-      "gross_margin": 40.63,
-      "return_rate": 0.32,
-      "aov": 215.04,
-      "discount_rate": 8.84,
-      "net_sales": 1078.5,
+      "gross_margin": 37.61,
+      "return_rate": 0.6,
+      "aov": 215.96,
+      "discount_rate": 10.66,
+      "net_sales": 1034.0,
       "txn_count": 5
     },
     {
@@ -23,11 +23,11 @@
       "zip_code": "90010",
       "region": "West",
       "store_type": "Retail Store",
-      "gross_margin": 58.9,
+      "gross_margin": 57.44,
       "return_rate": 0.0,
-      "aov": 143.5,
+      "aov": 141.47,
       "discount_rate": 0.0,
-      "net_sales": 404.36,
+      "net_sales": 276.2,
       "txn_count": 3
     },
     {
@@ -37,11 +37,11 @@
       "zip_code": "60604",
       "region": "Midwest",
       "store_type": "Retail Store",
-      "gross_margin": 49.47,
+      "gross_margin": 51.85,
       "return_rate": 0.0,
-      "aov": 1689.78,
-      "discount_rate": 2.55,
-      "net_sales": 3714.07,
+      "aov": 1417.08,
+      "discount_rate": 1.88,
+      "net_sales": 4633.85,
       "txn_count": 2
     },
     {
@@ -51,12 +51,12 @@
       "zip_code": "77056",
       "region": "South",
       "store_type": "Retail Store",
-      "gross_margin": 68.81,
+      "gross_margin": 61.91,
       "return_rate": 0.0,
-      "aov": 99.48,
-      "discount_rate": 5.27,
-      "net_sales": 466.16,
-      "txn_count": 6
+      "aov": 98.06,
+      "discount_rate": 3.98,
+      "net_sales": 448.04,
+      "txn_count": 5
     },
     {
       "store_id": "STR-005",
@@ -65,11 +65,11 @@
       "zip_code": "85050",
       "region": "West",
       "store_type": "Retail Store",
-      "gross_margin": 65.52,
+      "gross_margin": 66.47,
       "return_rate": 0.0,
-      "aov": 120.02,
+      "aov": 148.61,
       "discount_rate": 0.0,
-      "net_sales": 390.81,
+      "net_sales": 339.27,
       "txn_count": 2
     },
     {
@@ -79,11 +79,11 @@
       "zip_code": "19102",
       "region": "Northeast",
       "store_type": "Retail Store",
-      "gross_margin": 47.25,
+      "gross_margin": 53.17,
       "return_rate": 0.0,
-      "aov": 114.58,
-      "discount_rate": 1.76,
-      "net_sales": 463.42,
+      "aov": 109.18,
+      "discount_rate": 2.47,
+      "net_sales": 535.12,
       "txn_count": 3
     },
     {
@@ -93,11 +93,11 @@
       "zip_code": "78205",
       "region": "South",
       "store_type": "Retail Store",
-      "gross_margin": 68.08,
+      "gross_margin": 52.25,
       "return_rate": 0.0,
-      "aov": 66.85,
-      "discount_rate": 4.38,
-      "net_sales": 255.74,
+      "aov": 63.87,
+      "discount_rate": 3.91,
+      "net_sales": 307.93,
       "txn_count": 4
     },
     {
@@ -107,12 +107,12 @@
       "zip_code": "98101",
       "region": "West",
       "store_type": "Retail Store",
-      "gross_margin": 65.62,
+      "gross_margin": 55.9,
       "return_rate": 0.0,
-      "aov": 86.11,
+      "aov": 111.08,
       "discount_rate": 0.0,
-      "net_sales": 229.54,
-      "txn_count": 2
+      "net_sales": 231.4,
+      "txn_count": 4
     },
     {
       "store_id": "STR-009",
@@ -121,12 +121,12 @@
       "zip_code": "80202",
       "region": "West",
       "store_type": "Retail Store",
-      "gross_margin": 63.78,
+      "gross_margin": 55.48,
       "return_rate": 0.0,
-      "aov": 167.08,
-      "discount_rate": 16.99,
-      "net_sales": 375.75,
-      "txn_count": 1
+      "aov": 192.97,
+      "discount_rate": 8.17,
+      "net_sales": 306.74,
+      "txn_count": 3
     },
     {
       "store_id": "STR-010",
@@ -135,11 +135,11 @@
       "zip_code": "\u2014",
       "region": "National",
       "store_type": "E-Commerce",
-      "gross_margin": 73.19,
+      "gross_margin": 65.93,
       "return_rate": 0.0,
-      "aov": 131.18,
-      "discount_rate": 6.19,
-      "net_sales": 321.36,
+      "aov": 104.05,
+      "discount_rate": 4.84,
+      "net_sales": 312.41,
       "txn_count": 2
     }
   ],
@@ -150,27 +150,30 @@
       "address": "100 Fifth Avenue",
       "zip_code": "10011",
       "metric": "return_rate",
-      "actual": 0.32,
-      "baseline": 0.03,
+      "actual": 0.6,
+      "baseline": 0.06,
       "drift_pct": 900.0,
       "severity": "CRITICAL",
-      "net_sales": 1078.5,
-      "loss_30d": 11647.8,
-      "loss_60d": 23295.6,
-      "loss_90d": 34943.4,
+      "net_sales": 1034.0,
+      "loss_30d": 11167.2,
+      "loss_60d": 22334.4,
+      "loss_90d": 33501.6,
       "graph_context": {
         "category": [
-          "Apparel"
+          "Sports & Fitness",
+          "Footwear",
+          "Home & Kitchen"
         ],
         "loyalty": [
-          "Silver"
+          "Gold"
         ],
         "promo_type": [
           "Loyalty",
+          "Flash",
           "Seasonal"
         ]
       },
-      "recommendation": "ROOT CAUSE\nReturn rate is 900.0% above baseline at Manhattan Flagship. Product quality or expectation mismatches are driving excess returns.\n\nIMMEDIATE ACTIONS\n\u2022 Audit top returned SKUs for quality or description inaccuracies\n\u2022 Tighten return policy enforcement for non-defective items\n\u2022 Add product Q&A and size guides to reduce expectation gaps\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Implement pre-shipment quality checks for flagged categories\n\u2022 Track return reason codes and feed back to buying team\n\nLOSS PREVENTION\nExcess returns will cost $34,943 in 90 days if unaddressed."
+      "recommendation": "ROOT CAUSE\nReturn rate is 900.0% above baseline at Manhattan Flagship. Product quality or expectation mismatches are driving excess returns.\n\nIMMEDIATE ACTIONS\n\u2022 Audit top returned SKUs for quality or description inaccuracies\n\u2022 Tighten return policy enforcement for non-defective items\n\u2022 Add product Q&A and size guides to reduce expectation gaps\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Implement pre-shipment quality checks for flagged categories\n\u2022 Track return reason codes and feed back to buying team\n\nLOSS PREVENTION\nExcess returns will cost $33,502 in 90 days if unaddressed."
     },
     {
       "store_id": "STR-001",
@@ -178,64 +181,30 @@
       "address": "100 Fifth Avenue",
       "zip_code": "10011",
       "metric": "discount_rate",
-      "actual": 8.84,
-      "baseline": 4.6,
-      "drift_pct": 92.3,
+      "actual": 10.66,
+      "baseline": 3.59,
+      "drift_pct": 196.9,
       "severity": "CRITICAL",
-      "net_sales": 1078.5,
-      "loss_30d": 895.91,
-      "loss_60d": 1791.82,
-      "loss_90d": 2687.73,
+      "net_sales": 1034.0,
+      "loss_30d": 1832.35,
+      "loss_60d": 3664.7,
+      "loss_90d": 5497.05,
       "graph_context": {
         "category": [
-          "Home & Kitchen"
+          "Electronics"
         ],
         "channel": [
           "All"
         ],
         "promo_type": [
-          "Loyalty"
+          "Flash"
         ],
         "promotion": [
-          "Loyalty Gold Reward",
-          "Loyalty Platinum Reward",
-          "No Promotion"
+          "No Promotion",
+          "Loyalty Platinum Reward"
         ]
       },
-      "recommendation": "ROOT CAUSE\nDiscount rate is 92.3% above baseline at Manhattan Flagship. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable overlapping discount combinations\n\u2022 Restrict discount eligibility to top loyalty tiers only\n\u2022 Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events 3+ weeks apart\n\u2022 Shift to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $2,688 in 90 days."
-    },
-    {
-      "store_id": "STR-001",
-      "store_name": "Manhattan Flagship",
-      "address": "100 Fifth Avenue",
-      "zip_code": "10011",
-      "metric": "net_sales",
-      "actual": 1078.5,
-      "baseline": 769.97,
-      "drift_pct": 40.1,
-      "severity": "CRITICAL",
-      "net_sales": 1078.5,
-      "loss_30d": 432.48,
-      "loss_60d": 864.96,
-      "loss_90d": 1297.44,
-      "graph_context": {
-        "category": [
-          "Sports & Fitness",
-          "Furniture",
-          "Grocery"
-        ],
-        "brand": [
-          "GameForce"
-        ],
-        "loyalty": [
-          "Platinum",
-          "Gold"
-        ],
-        "region": [
-          "Northeast"
-        ]
-      },
-      "recommendation": "Net sales are above baseline at Manhattan Flagship \u2014 store performance is strong. Maintain current inventory levels and staffing to sustain momentum."
+      "recommendation": "ROOT CAUSE\nDiscount rate is 196.9% above baseline at Manhattan Flagship. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable overlapping discount combinations\n\u2022 Restrict discount eligibility to top loyalty tiers only\n\u2022 Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events 3+ weeks apart\n\u2022 Shift to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $5,497 in 90 days."
     },
     {
       "store_id": "STR-002",
@@ -244,26 +213,26 @@
       "zip_code": "90010",
       "metric": "return_rate",
       "actual": 0.0,
-      "baseline": 0.03,
+      "baseline": 0.06,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 404.36,
-      "loss_30d": 485.23,
-      "loss_60d": 970.46,
-      "loss_90d": 1455.7,
+      "net_sales": 276.2,
+      "loss_30d": 331.44,
+      "loss_60d": 662.88,
+      "loss_90d": 994.32,
       "graph_context": {
         "category": [
-          "Home & Kitchen",
+          "Electronics",
           "Apparel",
-          "Electronics"
+          "Footwear"
         ],
         "loyalty": [
+          "Gold",
           "Platinum"
         ],
         "promo_type": [
-          "Seasonal",
-          "nan",
-          "Flash"
+          "Loyalty",
+          "nan"
         ]
       },
       "recommendation": "Return rate is below baseline at LA Downtown \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
@@ -274,31 +243,34 @@
       "address": "500 Wilshire Blvd",
       "zip_code": "90010",
       "metric": "aov",
-      "actual": 143.5,
-      "baseline": 283.36,
-      "drift_pct": -49.4,
+      "actual": 141.47,
+      "baseline": 260.23,
+      "drift_pct": -45.6,
       "severity": "CRITICAL",
-      "net_sales": 404.36,
-      "loss_30d": 119.85,
-      "loss_60d": 239.7,
-      "loss_90d": 359.56,
+      "net_sales": 276.2,
+      "loss_30d": 75.57,
+      "loss_60d": 151.14,
+      "loss_90d": 226.7,
       "graph_context": {
         "loyalty": [
-          "Bronze"
+          "Gold",
+          "Silver",
+          "Platinum"
         ],
         "promotion": [
+          "Valentine's Day Special",
           "Christmas Special",
-          "No Promotion",
-          "Valentine's Day Special"
+          "Loyalty Platinum Reward"
         ],
         "segment": [
+          "Wholesale",
           "Retail"
         ],
         "channel": [
           "All"
         ]
       },
-      "recommendation": "ROOT CAUSE\nAverage order value is 49.4% below baseline at LA Downtown. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 49.4% costs $360 over 90 days."
+      "recommendation": "ROOT CAUSE\nAverage order value is 45.6% below baseline at LA Downtown. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 45.6% costs $227 over 90 days."
     },
     {
       "store_id": "STR-002",
@@ -307,28 +279,27 @@
       "zip_code": "90010",
       "metric": "discount_rate",
       "actual": 0.0,
-      "baseline": 4.6,
+      "baseline": 3.59,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 404.36,
-      "loss_30d": 363.92,
-      "loss_60d": 727.85,
-      "loss_90d": 1091.77,
+      "net_sales": 276.2,
+      "loss_30d": 248.58,
+      "loss_60d": 497.16,
+      "loss_90d": 745.74,
       "graph_context": {
         "category": [
-          "Footwear",
-          "Home & Kitchen",
-          "Grocery"
+          "Furniture"
         ],
         "channel": [
           "All"
         ],
         "promo_type": [
           "nan",
-          "Flash",
-          "Seasonal"
+          "Loyalty",
+          "Flash"
         ],
         "promotion": [
+          "No Promotion",
           "Loyalty Platinum Reward"
         ]
       },
@@ -340,30 +311,33 @@
       "address": "500 Wilshire Blvd",
       "zip_code": "90010",
       "metric": "net_sales",
-      "actual": 404.36,
-      "baseline": 769.97,
-      "drift_pct": -47.5,
+      "actual": 276.2,
+      "baseline": 842.5,
+      "drift_pct": -67.2,
       "severity": "CRITICAL",
-      "net_sales": 404.36,
-      "loss_30d": 192.07,
-      "loss_60d": 384.14,
-      "loss_90d": 576.21,
+      "net_sales": 276.2,
+      "loss_30d": 185.61,
+      "loss_60d": 371.21,
+      "loss_90d": 556.82,
       "graph_context": {
         "category": [
-          "Furniture",
-          "Apparel"
+          "Electronics"
         ],
         "brand": [
-          "ComfortWork"
+          "ComfortWork",
+          "NatureBrew",
+          "GameForce"
         ],
         "loyalty": [
-          "Gold"
+          "Platinum",
+          "Gold",
+          "Silver"
         ],
         "region": [
           "West"
         ]
       },
-      "recommendation": "ROOT CAUSE\nNet sales at LA Downtown are 47.5% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark LA Downtown against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $576 revenue gap over 90 days."
+      "recommendation": "ROOT CAUSE\nNet sales at LA Downtown are 67.2% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark LA Downtown against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $557 revenue gap over 90 days."
     },
     {
       "store_id": "STR-003",
@@ -372,24 +346,25 @@
       "zip_code": "60604",
       "metric": "return_rate",
       "actual": 0.0,
-      "baseline": 0.03,
+      "baseline": 0.06,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 3714.07,
-      "loss_30d": 4456.88,
-      "loss_60d": 8913.77,
-      "loss_90d": 13370.65,
+      "net_sales": 4633.85,
+      "loss_30d": 5560.62,
+      "loss_60d": 11121.24,
+      "loss_90d": 16681.86,
       "graph_context": {
         "category": [
+          "Apparel",
           "Footwear"
         ],
         "loyalty": [
-          "Platinum",
-          "Silver",
-          "Bronze"
+          "Bronze",
+          "Gold",
+          "Silver"
         ],
         "promo_type": [
-          "Flash",
+          "Seasonal",
           "Loyalty"
         ]
       },
@@ -401,27 +376,24 @@
       "address": "200 S Michigan Ave",
       "zip_code": "60604",
       "metric": "aov",
-      "actual": 1689.78,
-      "baseline": 283.36,
-      "drift_pct": 496.3,
+      "actual": 1417.08,
+      "baseline": 260.23,
+      "drift_pct": 444.5,
       "severity": "CRITICAL",
-      "net_sales": 3714.07,
-      "loss_30d": 11059.76,
-      "loss_60d": 22119.52,
-      "loss_90d": 33179.27,
+      "net_sales": 4633.85,
+      "loss_30d": 12358.48,
+      "loss_60d": 24716.96,
+      "loss_90d": 37075.43,
       "graph_context": {
         "loyalty": [
-          "Bronze",
-          "Gold",
           "Silver"
         ],
         "promotion": [
-          "No Promotion",
-          "Loyalty Platinum Reward"
+          "Valentine's Day Special",
+          "Christmas Special"
         ],
         "segment": [
-          "Wholesale",
-          "Retail"
+          "Wholesale"
         ],
         "channel": [
           "All"
@@ -435,31 +407,28 @@
       "address": "200 S Michigan Ave",
       "zip_code": "60604",
       "metric": "discount_rate",
-      "actual": 2.55,
-      "baseline": 4.6,
-      "drift_pct": -44.5,
+      "actual": 1.88,
+      "baseline": 3.59,
+      "drift_pct": -47.6,
       "severity": "CRITICAL",
-      "net_sales": 3714.07,
-      "loss_30d": 1487.49,
-      "loss_60d": 2974.97,
-      "loss_90d": 4462.46,
+      "net_sales": 4633.85,
+      "loss_30d": 1985.14,
+      "loss_60d": 3970.28,
+      "loss_90d": 5955.42,
       "graph_context": {
         "category": [
-          "Home & Kitchen",
-          "Furniture",
+          "Electronics",
           "Grocery"
         ],
         "channel": [
           "All"
         ],
         "promo_type": [
-          "Flash",
-          "Seasonal",
-          "Loyalty"
+          "nan"
         ],
         "promotion": [
-          "Loyalty Platinum Reward",
-          "No Promotion"
+          "No Promotion",
+          "Loyalty Platinum Reward"
         ]
       },
       "recommendation": "Discount rate is below baseline at Chicago Midway \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates."
@@ -470,26 +439,23 @@
       "address": "200 S Michigan Ave",
       "zip_code": "60604",
       "metric": "net_sales",
-      "actual": 3714.07,
-      "baseline": 769.97,
-      "drift_pct": 382.4,
+      "actual": 4633.85,
+      "baseline": 842.5,
+      "drift_pct": 450.0,
       "severity": "CRITICAL",
-      "net_sales": 3714.07,
-      "loss_30d": 14202.6,
-      "loss_60d": 28405.21,
-      "loss_90d": 42607.81,
+      "net_sales": 4633.85,
+      "loss_30d": 20852.33,
+      "loss_60d": 41704.65,
+      "loss_90d": 62556.97,
       "graph_context": {
         "category": [
-          "Electronics",
           "Apparel"
         ],
         "brand": [
-          "NatureBrew",
-          "GameForce",
-          "StyleMax"
+          "ComfortWork"
         ],
         "loyalty": [
-          "Platinum"
+          "Gold"
         ],
         "region": [
           "Midwest"
@@ -504,25 +470,27 @@
       "zip_code": "77056",
       "metric": "return_rate",
       "actual": 0.0,
-      "baseline": 0.03,
+      "baseline": 0.06,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 466.16,
-      "loss_30d": 559.39,
-      "loss_60d": 1118.78,
-      "loss_90d": 1678.18,
+      "net_sales": 448.04,
+      "loss_30d": 537.65,
+      "loss_60d": 1075.3,
+      "loss_90d": 1612.94,
       "graph_context": {
         "category": [
-          "Home & Kitchen",
-          "Apparel",
-          "Electronics"
+          "Electronics",
+          "Footwear",
+          "Home & Kitchen"
         ],
         "loyalty": [
-          "Platinum"
+          "Silver",
+          "Gold"
         ],
         "promo_type": [
-          "Flash",
-          "Loyalty"
+          "Seasonal",
+          "Loyalty",
+          "Flash"
         ]
       },
       "recommendation": "Return rate is below baseline at Houston Galleria \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
@@ -533,23 +501,22 @@
       "address": "5085 Westheimer Rd",
       "zip_code": "77056",
       "metric": "aov",
-      "actual": 99.48,
-      "baseline": 283.36,
-      "drift_pct": -64.9,
+      "actual": 98.06,
+      "baseline": 260.23,
+      "drift_pct": -62.3,
       "severity": "CRITICAL",
-      "net_sales": 466.16,
-      "loss_30d": 181.52,
-      "loss_60d": 363.05,
-      "loss_90d": 544.57,
+      "net_sales": 448.04,
+      "loss_30d": 167.48,
+      "loss_60d": 334.95,
+      "loss_90d": 502.43,
       "graph_context": {
         "loyalty": [
-          "Gold",
+          "Bronze",
           "Silver"
         ],
         "promotion": [
-          "Valentine's Day Special",
-          "Christmas Special",
-          "No Promotion"
+          "No Promotion",
+          "Loyalty Platinum Reward"
         ],
         "segment": [
           "Retail",
@@ -559,7 +526,40 @@
           "All"
         ]
       },
-      "recommendation": "ROOT CAUSE\nAverage order value is 64.9% below baseline at Houston Galleria. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 64.9% costs $545 over 90 days."
+      "recommendation": "ROOT CAUSE\nAverage order value is 62.3% below baseline at Houston Galleria. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 62.3% costs $502 over 90 days."
+    },
+    {
+      "store_id": "STR-004",
+      "store_name": "Houston Galleria",
+      "address": "5085 Westheimer Rd",
+      "zip_code": "77056",
+      "metric": "net_sales",
+      "actual": 448.04,
+      "baseline": 842.5,
+      "drift_pct": -46.8,
+      "severity": "CRITICAL",
+      "net_sales": 448.04,
+      "loss_30d": 209.68,
+      "loss_60d": 419.37,
+      "loss_90d": 629.05,
+      "graph_context": {
+        "category": [
+          "Sports & Fitness"
+        ],
+        "brand": [
+          "StyleMax",
+          "NatureBrew"
+        ],
+        "loyalty": [
+          "Gold",
+          "Platinum",
+          "Silver"
+        ],
+        "region": [
+          "South"
+        ]
+      },
+      "recommendation": "ROOT CAUSE\nNet sales at Houston Galleria are 46.8% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in South\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Houston Galleria against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $629 revenue gap over 90 days."
     },
     {
       "store_id": "STR-005",
@@ -568,22 +568,24 @@
       "zip_code": "85050",
       "metric": "return_rate",
       "actual": 0.0,
-      "baseline": 0.03,
+      "baseline": 0.06,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 390.81,
-      "loss_30d": 468.97,
-      "loss_60d": 937.94,
-      "loss_90d": 1406.92,
+      "net_sales": 339.27,
+      "loss_30d": 407.12,
+      "loss_60d": 814.25,
+      "loss_90d": 1221.37,
       "graph_context": {
         "category": [
-          "Electronics"
+          "Apparel"
         ],
         "loyalty": [
-          "Gold"
+          "Bronze",
+          "Silver"
         ],
         "promo_type": [
-          "Seasonal"
+          "Seasonal",
+          "Flash"
         ]
       },
       "recommendation": "Return rate is below baseline at Phoenix Desert Ridge \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
@@ -594,245 +596,20 @@
       "address": "21001 N Tatum Blvd",
       "zip_code": "85050",
       "metric": "aov",
-      "actual": 120.02,
-      "baseline": 283.36,
-      "drift_pct": -57.6,
+      "actual": 148.61,
+      "baseline": 260.23,
+      "drift_pct": -42.9,
       "severity": "CRITICAL",
-      "net_sales": 390.81,
-      "loss_30d": 135.06,
-      "loss_60d": 270.13,
-      "loss_90d": 405.19,
+      "net_sales": 339.27,
+      "loss_30d": 87.33,
+      "loss_60d": 174.66,
+      "loss_90d": 261.98,
       "graph_context": {
         "loyalty": [
           "Silver",
-          "Gold",
-          "Platinum"
-        ],
-        "promotion": [
-          "Valentine's Day Special"
-        ],
-        "segment": [
-          "Wholesale",
-          "Retail"
-        ],
-        "channel": [
-          "All"
-        ]
-      },
-      "recommendation": "ROOT CAUSE\nAverage order value is 57.6% below baseline at Phoenix Desert Ridge. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 57.6% costs $405 over 90 days."
-    },
-    {
-      "store_id": "STR-005",
-      "store_name": "Phoenix Desert Ridge",
-      "address": "21001 N Tatum Blvd",
-      "zip_code": "85050",
-      "metric": "discount_rate",
-      "actual": 0.0,
-      "baseline": 4.6,
-      "drift_pct": -100.0,
-      "severity": "CRITICAL",
-      "net_sales": 390.81,
-      "loss_30d": 351.73,
-      "loss_60d": 703.46,
-      "loss_90d": 1055.19,
-      "graph_context": {
-        "category": [
-          "Grocery"
-        ],
-        "channel": [
-          "All"
-        ],
-        "promo_type": [
-          "Loyalty",
-          "Seasonal"
-        ],
-        "promotion": [
-          "No Promotion",
-          "Loyalty Platinum Reward"
-        ]
-      },
-      "recommendation": "Discount rate is below baseline at Phoenix Desert Ridge \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates."
-    },
-    {
-      "store_id": "STR-005",
-      "store_name": "Phoenix Desert Ridge",
-      "address": "21001 N Tatum Blvd",
-      "zip_code": "85050",
-      "metric": "net_sales",
-      "actual": 390.81,
-      "baseline": 769.97,
-      "drift_pct": -49.2,
-      "severity": "CRITICAL",
-      "net_sales": 390.81,
-      "loss_30d": 192.28,
-      "loss_60d": 384.56,
-      "loss_90d": 576.84,
-      "graph_context": {
-        "category": [
-          "Furniture"
-        ],
-        "brand": [
-          "StyleMax",
-          "GameForce",
-          "ComfortWork"
-        ],
-        "loyalty": [
-          "Platinum",
-          "Silver"
-        ],
-        "region": [
-          "West"
-        ]
-      },
-      "recommendation": "ROOT CAUSE\nNet sales at Phoenix Desert Ridge are 49.2% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Phoenix Desert Ridge against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $577 revenue gap over 90 days."
-    },
-    {
-      "store_id": "STR-006",
-      "store_name": "Philadelphia Center",
-      "address": "1500 Market St",
-      "zip_code": "19102",
-      "metric": "return_rate",
-      "actual": 0.0,
-      "baseline": 0.03,
-      "drift_pct": -100.0,
-      "severity": "CRITICAL",
-      "net_sales": 463.42,
-      "loss_30d": 556.1,
-      "loss_60d": 1112.21,
-      "loss_90d": 1668.31,
-      "graph_context": {
-        "category": [
-          "Apparel",
-          "Home & Kitchen",
-          "Footwear"
-        ],
-        "loyalty": [
-          "Platinum",
-          "Silver",
-          "Gold"
-        ],
-        "promo_type": [
-          "nan",
-          "Loyalty",
-          "Flash"
-        ]
-      },
-      "recommendation": "Return rate is below baseline at Philadelphia Center \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
-    },
-    {
-      "store_id": "STR-006",
-      "store_name": "Philadelphia Center",
-      "address": "1500 Market St",
-      "zip_code": "19102",
-      "metric": "aov",
-      "actual": 114.58,
-      "baseline": 283.36,
-      "drift_pct": -59.6,
-      "severity": "CRITICAL",
-      "net_sales": 463.42,
-      "loss_30d": 165.72,
-      "loss_60d": 331.44,
-      "loss_90d": 497.16,
-      "graph_context": {
-        "loyalty": [
-          "Bronze",
-          "Silver"
-        ],
-        "promotion": [
-          "Valentine's Day Special",
-          "Christmas Special"
-        ],
-        "segment": [
-          "Wholesale"
-        ],
-        "channel": [
-          "All"
-        ]
-      },
-      "recommendation": "ROOT CAUSE\nAverage order value is 59.6% below baseline at Philadelphia Center. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 59.6% costs $497 over 90 days."
-    },
-    {
-      "store_id": "STR-006",
-      "store_name": "Philadelphia Center",
-      "address": "1500 Market St",
-      "zip_code": "19102",
-      "metric": "discount_rate",
-      "actual": 1.76,
-      "baseline": 4.6,
-      "drift_pct": -61.7,
-      "severity": "CRITICAL",
-      "net_sales": 463.42,
-      "loss_30d": 257.34,
-      "loss_60d": 514.67,
-      "loss_90d": 772.01,
-      "graph_context": {
-        "category": [
-          "Grocery",
-          "Electronics",
-          "Footwear"
-        ],
-        "channel": [
-          "All"
-        ],
-        "promo_type": [
-          "Loyalty"
-        ],
-        "promotion": [
-          "Loyalty Gold Reward",
-          "Easter Weekend"
-        ]
-      },
-      "recommendation": "Discount rate is below baseline at Philadelphia Center \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates."
-    },
-    {
-      "store_id": "STR-007",
-      "store_name": "San Antonio Riverwalk",
-      "address": "849 E Commerce St",
-      "zip_code": "78205",
-      "metric": "return_rate",
-      "actual": 0.0,
-      "baseline": 0.03,
-      "drift_pct": -100.0,
-      "severity": "CRITICAL",
-      "net_sales": 255.74,
-      "loss_30d": 306.89,
-      "loss_60d": 613.78,
-      "loss_90d": 920.66,
-      "graph_context": {
-        "category": [
-          "Electronics",
-          "Footwear"
-        ],
-        "loyalty": [
-          "Gold"
-        ],
-        "promo_type": [
-          "nan"
-        ]
-      },
-      "recommendation": "Return rate is below baseline at San Antonio Riverwalk \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
-    },
-    {
-      "store_id": "STR-007",
-      "store_name": "San Antonio Riverwalk",
-      "address": "849 E Commerce St",
-      "zip_code": "78205",
-      "metric": "aov",
-      "actual": 66.85,
-      "baseline": 283.36,
-      "drift_pct": -76.4,
-      "severity": "CRITICAL",
-      "net_sales": 255.74,
-      "loss_30d": 117.23,
-      "loss_60d": 234.46,
-      "loss_90d": 351.69,
-      "graph_context": {
-        "loyalty": [
-          "Platinum",
           "Gold"
         ],
         "promotion": [
-          "Loyalty Platinum Reward",
           "Christmas Special",
           "Valentine's Day Special"
         ],
@@ -844,7 +621,197 @@
           "All"
         ]
       },
-      "recommendation": "ROOT CAUSE\nAverage order value is 76.4% below baseline at San Antonio Riverwalk. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 76.4% costs $352 over 90 days."
+      "recommendation": "ROOT CAUSE\nAverage order value is 42.9% below baseline at Phoenix Desert Ridge. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 42.9% costs $262 over 90 days."
+    },
+    {
+      "store_id": "STR-005",
+      "store_name": "Phoenix Desert Ridge",
+      "address": "21001 N Tatum Blvd",
+      "zip_code": "85050",
+      "metric": "discount_rate",
+      "actual": 0.0,
+      "baseline": 3.59,
+      "drift_pct": -100.0,
+      "severity": "CRITICAL",
+      "net_sales": 339.27,
+      "loss_30d": 305.34,
+      "loss_60d": 610.69,
+      "loss_90d": 916.03,
+      "graph_context": {
+        "category": [
+          "Home & Kitchen",
+          "Electronics",
+          "Grocery"
+        ],
+        "channel": [
+          "All"
+        ],
+        "promo_type": [
+          "Flash"
+        ],
+        "promotion": [
+          "Easter Weekend"
+        ]
+      },
+      "recommendation": "Discount rate is below baseline at Phoenix Desert Ridge \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates."
+    },
+    {
+      "store_id": "STR-005",
+      "store_name": "Phoenix Desert Ridge",
+      "address": "21001 N Tatum Blvd",
+      "zip_code": "85050",
+      "metric": "net_sales",
+      "actual": 339.27,
+      "baseline": 842.5,
+      "drift_pct": -59.7,
+      "severity": "CRITICAL",
+      "net_sales": 339.27,
+      "loss_30d": 202.54,
+      "loss_60d": 405.09,
+      "loss_90d": 607.63,
+      "graph_context": {
+        "category": [
+          "Apparel"
+        ],
+        "brand": [
+          "GameForce",
+          "NatureBrew"
+        ],
+        "loyalty": [
+          "Platinum",
+          "Silver",
+          "Gold"
+        ],
+        "region": [
+          "West"
+        ]
+      },
+      "recommendation": "ROOT CAUSE\nNet sales at Phoenix Desert Ridge are 59.7% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Phoenix Desert Ridge against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $608 revenue gap over 90 days."
+    },
+    {
+      "store_id": "STR-006",
+      "store_name": "Philadelphia Center",
+      "address": "1500 Market St",
+      "zip_code": "19102",
+      "metric": "return_rate",
+      "actual": 0.0,
+      "baseline": 0.06,
+      "drift_pct": -100.0,
+      "severity": "CRITICAL",
+      "net_sales": 535.12,
+      "loss_30d": 642.14,
+      "loss_60d": 1284.29,
+      "loss_90d": 1926.43,
+      "graph_context": {
+        "category": [
+          "Footwear",
+          "Sports & Fitness"
+        ],
+        "loyalty": [
+          "Bronze",
+          "Silver",
+          "Gold"
+        ],
+        "promo_type": [
+          "nan"
+        ]
+      },
+      "recommendation": "Return rate is below baseline at Philadelphia Center \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
+    },
+    {
+      "store_id": "STR-006",
+      "store_name": "Philadelphia Center",
+      "address": "1500 Market St",
+      "zip_code": "19102",
+      "metric": "aov",
+      "actual": 109.18,
+      "baseline": 260.23,
+      "drift_pct": -58.0,
+      "severity": "CRITICAL",
+      "net_sales": 535.12,
+      "loss_30d": 186.22,
+      "loss_60d": 372.44,
+      "loss_90d": 558.67,
+      "graph_context": {
+        "loyalty": [
+          "Platinum",
+          "Gold",
+          "Silver"
+        ],
+        "promotion": [
+          "Loyalty Platinum Reward",
+          "Valentine's Day Special"
+        ],
+        "segment": [
+          "Wholesale",
+          "Retail"
+        ],
+        "channel": [
+          "All"
+        ]
+      },
+      "recommendation": "ROOT CAUSE\nAverage order value is 58.0% below baseline at Philadelphia Center. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 58.0% costs $559 over 90 days."
+    },
+    {
+      "store_id": "STR-007",
+      "store_name": "San Antonio Riverwalk",
+      "address": "849 E Commerce St",
+      "zip_code": "78205",
+      "metric": "return_rate",
+      "actual": 0.0,
+      "baseline": 0.06,
+      "drift_pct": -100.0,
+      "severity": "CRITICAL",
+      "net_sales": 307.93,
+      "loss_30d": 369.52,
+      "loss_60d": 739.03,
+      "loss_90d": 1108.55,
+      "graph_context": {
+        "category": [
+          "Apparel",
+          "Home & Kitchen"
+        ],
+        "loyalty": [
+          "Bronze"
+        ],
+        "promo_type": [
+          "Loyalty",
+          "Seasonal"
+        ]
+      },
+      "recommendation": "Return rate is below baseline at San Antonio Riverwalk \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
+    },
+    {
+      "store_id": "STR-007",
+      "store_name": "San Antonio Riverwalk",
+      "address": "849 E Commerce St",
+      "zip_code": "78205",
+      "metric": "aov",
+      "actual": 63.87,
+      "baseline": 260.23,
+      "drift_pct": -75.5,
+      "severity": "CRITICAL",
+      "net_sales": 307.93,
+      "loss_30d": 139.49,
+      "loss_60d": 278.98,
+      "loss_90d": 418.48,
+      "graph_context": {
+        "loyalty": [
+          "Bronze"
+        ],
+        "promotion": [
+          "Valentine's Day Special",
+          "Christmas Special",
+          "No Promotion"
+        ],
+        "segment": [
+          "Wholesale"
+        ],
+        "channel": [
+          "All"
+        ]
+      },
+      "recommendation": "ROOT CAUSE\nAverage order value is 75.5% below baseline at San Antonio Riverwalk. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 75.5% costs $418 over 90 days."
     },
     {
       "store_id": "STR-007",
@@ -852,33 +819,34 @@
       "address": "849 E Commerce St",
       "zip_code": "78205",
       "metric": "net_sales",
-      "actual": 255.74,
-      "baseline": 769.97,
-      "drift_pct": -66.8,
+      "actual": 307.93,
+      "baseline": 842.5,
+      "drift_pct": -63.5,
       "severity": "CRITICAL",
-      "net_sales": 255.74,
-      "loss_30d": 170.83,
-      "loss_60d": 341.67,
-      "loss_90d": 512.5,
+      "net_sales": 307.93,
+      "loss_30d": 195.54,
+      "loss_60d": 391.07,
+      "loss_90d": 586.61,
       "graph_context": {
         "category": [
           "Sports & Fitness",
-          "Electronics"
+          "Apparel"
         ],
         "brand": [
-          "StyleMax",
+          "GameForce",
           "ComfortWork",
-          "GameForce"
+          "StyleMax"
         ],
         "loyalty": [
           "Gold",
-          "Silver"
+          "Silver",
+          "Platinum"
         ],
         "region": [
           "South"
         ]
       },
-      "recommendation": "ROOT CAUSE\nNet sales at San Antonio Riverwalk are 66.8% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in South\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark San Antonio Riverwalk against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $512 revenue gap over 90 days."
+      "recommendation": "ROOT CAUSE\nNet sales at San Antonio Riverwalk are 63.5% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in South\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark San Antonio Riverwalk against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $587 revenue gap over 90 days."
     },
     {
       "store_id": "STR-008",
@@ -887,25 +855,25 @@
       "zip_code": "98101",
       "metric": "return_rate",
       "actual": 0.0,
-      "baseline": 0.03,
+      "baseline": 0.06,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 229.54,
-      "loss_30d": 275.45,
-      "loss_60d": 550.9,
-      "loss_90d": 826.34,
+      "net_sales": 231.4,
+      "loss_30d": 277.68,
+      "loss_60d": 555.36,
+      "loss_90d": 833.04,
       "graph_context": {
         "category": [
+          "Apparel",
+          "Electronics",
           "Footwear"
         ],
         "loyalty": [
-          "Bronze",
           "Gold",
-          "Platinum"
+          "Bronze"
         ],
         "promo_type": [
-          "Seasonal",
-          "nan"
+          "Loyalty"
         ]
       },
       "recommendation": "Return rate is below baseline at Seattle Capitol Hill \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
@@ -916,29 +884,29 @@
       "address": "400 Pine St",
       "zip_code": "98101",
       "metric": "aov",
-      "actual": 86.11,
-      "baseline": 283.36,
-      "drift_pct": -69.6,
+      "actual": 111.08,
+      "baseline": 260.23,
+      "drift_pct": -57.3,
       "severity": "CRITICAL",
-      "net_sales": 229.54,
-      "loss_30d": 95.86,
-      "loss_60d": 191.71,
-      "loss_90d": 287.57,
+      "net_sales": 231.4,
+      "loss_30d": 79.56,
+      "loss_60d": 159.11,
+      "loss_90d": 238.67,
       "graph_context": {
         "loyalty": [
-          "Gold"
+          "Bronze"
         ],
         "promotion": [
           "Loyalty Platinum Reward"
         ],
         "segment": [
-          "Retail"
+          "Wholesale"
         ],
         "channel": [
           "All"
         ]
       },
-      "recommendation": "ROOT CAUSE\nAverage order value is 69.6% below baseline at Seattle Capitol Hill. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 69.6% costs $288 over 90 days."
+      "recommendation": "ROOT CAUSE\nAverage order value is 57.3% below baseline at Seattle Capitol Hill. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 57.3% costs $239 over 90 days."
     },
     {
       "store_id": "STR-008",
@@ -947,28 +915,28 @@
       "zip_code": "98101",
       "metric": "discount_rate",
       "actual": 0.0,
-      "baseline": 4.6,
+      "baseline": 3.59,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 229.54,
-      "loss_30d": 206.59,
-      "loss_60d": 413.17,
-      "loss_90d": 619.76,
+      "net_sales": 231.4,
+      "loss_30d": 208.26,
+      "loss_60d": 416.52,
+      "loss_90d": 624.78,
       "graph_context": {
         "category": [
-          "Home & Kitchen",
           "Electronics",
-          "Footwear"
+          "Home & Kitchen",
+          "Furniture"
         ],
         "channel": [
           "All"
         ],
         "promo_type": [
           "nan",
-          "Seasonal"
+          "Seasonal",
+          "Loyalty"
         ],
         "promotion": [
-          "Easter Weekend",
           "Loyalty Platinum Reward"
         ]
       },
@@ -980,32 +948,31 @@
       "address": "400 Pine St",
       "zip_code": "98101",
       "metric": "net_sales",
-      "actual": 229.54,
-      "baseline": 769.97,
-      "drift_pct": -70.2,
+      "actual": 231.4,
+      "baseline": 842.5,
+      "drift_pct": -72.5,
       "severity": "CRITICAL",
-      "net_sales": 229.54,
-      "loss_30d": 161.14,
-      "loss_60d": 322.27,
-      "loss_90d": 483.41,
+      "net_sales": 231.4,
+      "loss_30d": 167.76,
+      "loss_60d": 335.53,
+      "loss_90d": 503.29,
       "graph_context": {
         "category": [
-          "Sports & Fitness",
-          "Grocery",
-          "Furniture"
+          "Furniture",
+          "Electronics",
+          "Apparel"
         ],
         "brand": [
-          "NatureBrew"
+          "StyleMax"
         ],
         "loyalty": [
-          "Platinum",
-          "Gold"
+          "Silver"
         ],
         "region": [
           "West"
         ]
       },
-      "recommendation": "ROOT CAUSE\nNet sales at Seattle Capitol Hill are 70.2% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Seattle Capitol Hill against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $483 revenue gap over 90 days."
+      "recommendation": "ROOT CAUSE\nNet sales at Seattle Capitol Hill are 72.5% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Seattle Capitol Hill against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $503 revenue gap over 90 days."
     },
     {
       "store_id": "STR-009",
@@ -1014,28 +981,28 @@
       "zip_code": "80202",
       "metric": "return_rate",
       "actual": 0.0,
-      "baseline": 0.03,
+      "baseline": 0.06,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 375.75,
-      "loss_30d": 450.9,
-      "loss_60d": 901.8,
-      "loss_90d": 1352.7,
+      "net_sales": 306.74,
+      "loss_30d": 368.09,
+      "loss_60d": 736.18,
+      "loss_90d": 1104.26,
       "graph_context": {
         "category": [
-          "Apparel",
-          "Home & Kitchen",
-          "Electronics"
+          "Footwear",
+          "Electronics",
+          "Home & Kitchen"
         ],
         "loyalty": [
           "Bronze",
-          "Gold",
-          "Silver"
+          "Platinum",
+          "Gold"
         ],
         "promo_type": [
-          "Seasonal",
           "Loyalty",
-          "Flash"
+          "Flash",
+          "Seasonal"
         ]
       },
       "recommendation": "Return rate is below baseline at Denver Union Station \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
@@ -1045,64 +1012,34 @@
       "store_name": "Denver Union Station",
       "address": "1701 Wynkoop St",
       "zip_code": "80202",
-      "metric": "aov",
-      "actual": 167.08,
-      "baseline": 283.36,
-      "drift_pct": -41.0,
-      "severity": "CRITICAL",
-      "net_sales": 375.75,
-      "loss_30d": 92.43,
-      "loss_60d": 184.87,
-      "loss_90d": 277.3,
-      "graph_context": {
-        "loyalty": [
-          "Gold"
-        ],
-        "promotion": [
-          "Christmas Special"
-        ],
-        "segment": [
-          "Retail"
-        ],
-        "channel": [
-          "All"
-        ]
-      },
-      "recommendation": "ROOT CAUSE\nAverage order value is 41.0% below baseline at Denver Union Station. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 41.0% costs $277 over 90 days."
-    },
-    {
-      "store_id": "STR-009",
-      "store_name": "Denver Union Station",
-      "address": "1701 Wynkoop St",
-      "zip_code": "80202",
       "metric": "discount_rate",
-      "actual": 16.99,
-      "baseline": 4.6,
-      "drift_pct": 269.5,
+      "actual": 8.17,
+      "baseline": 3.59,
+      "drift_pct": 127.5,
       "severity": "CRITICAL",
-      "net_sales": 375.75,
-      "loss_30d": 911.38,
-      "loss_60d": 1822.76,
-      "loss_90d": 2734.14,
+      "net_sales": 306.74,
+      "loss_30d": 351.98,
+      "loss_60d": 703.97,
+      "loss_90d": 1055.95,
       "graph_context": {
         "category": [
           "Grocery",
-          "Electronics"
+          "Home & Kitchen",
+          "Footwear"
         ],
         "channel": [
           "All"
         ],
         "promo_type": [
-          "nan",
-          "Loyalty"
+          "Flash",
+          "Seasonal",
+          "nan"
         ],
         "promotion": [
-          "No Promotion",
-          "Loyalty Platinum Reward",
-          "Easter Weekend"
+          "Loyalty Gold Reward"
         ]
       },
-      "recommendation": "ROOT CAUSE\nDiscount rate is 269.5% above baseline at Denver Union Station. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable overlapping discount combinations\n\u2022 Restrict discount eligibility to top loyalty tiers only\n\u2022 Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events 3+ weeks apart\n\u2022 Shift to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $2,734 in 90 days."
+      "recommendation": "ROOT CAUSE\nDiscount rate is 127.5% above baseline at Denver Union Station. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable overlapping discount combinations\n\u2022 Restrict discount eligibility to top loyalty tiers only\n\u2022 Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events 3+ weeks apart\n\u2022 Shift to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $1,056 in 90 days."
     },
     {
       "store_id": "STR-009",
@@ -1110,32 +1047,33 @@
       "address": "1701 Wynkoop St",
       "zip_code": "80202",
       "metric": "net_sales",
-      "actual": 375.75,
-      "baseline": 769.97,
-      "drift_pct": -51.2,
+      "actual": 306.74,
+      "baseline": 842.5,
+      "drift_pct": -63.6,
       "severity": "CRITICAL",
-      "net_sales": 375.75,
-      "loss_30d": 192.38,
-      "loss_60d": 384.77,
-      "loss_90d": 577.15,
+      "net_sales": 306.74,
+      "loss_30d": 195.09,
+      "loss_60d": 390.17,
+      "loss_90d": 585.26,
       "graph_context": {
         "category": [
-          "Sports & Fitness"
+          "Grocery",
+          "Apparel"
         ],
         "brand": [
-          "NatureBrew",
-          "StyleMax"
+          "GameForce",
+          "ComfortWork"
         ],
         "loyalty": [
+          "Gold",
           "Platinum",
-          "Silver",
-          "Gold"
+          "Silver"
         ],
         "region": [
           "West"
         ]
       },
-      "recommendation": "ROOT CAUSE\nNet sales at Denver Union Station are 51.2% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Denver Union Station against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $577 revenue gap over 90 days."
+      "recommendation": "ROOT CAUSE\nNet sales at Denver Union Station are 63.6% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in West\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Denver Union Station against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $585 revenue gap over 90 days."
     },
     {
       "store_id": "STR-010",
@@ -1144,26 +1082,25 @@
       "zip_code": "\u2014",
       "metric": "return_rate",
       "actual": 0.0,
-      "baseline": 0.03,
+      "baseline": 0.06,
       "drift_pct": -100.0,
       "severity": "CRITICAL",
-      "net_sales": 321.36,
-      "loss_30d": 385.63,
-      "loss_60d": 771.26,
-      "loss_90d": 1156.9,
+      "net_sales": 312.41,
+      "loss_30d": 374.89,
+      "loss_60d": 749.78,
+      "loss_90d": 1124.68,
       "graph_context": {
         "category": [
-          "Sports & Fitness"
+          "Footwear"
         ],
         "loyalty": [
           "Silver",
-          "Gold",
-          "Platinum"
+          "Bronze"
         ],
         "promo_type": [
-          "Loyalty",
-          "nan",
-          "Flash"
+          "Seasonal",
+          "Flash",
+          "Loyalty"
         ]
       },
       "recommendation": "Return rate is below baseline at Online Store \u2014 product quality and customer satisfaction are strong. Sustain current quality controls."
@@ -1174,31 +1111,31 @@
       "address": "\u2014",
       "zip_code": "\u2014",
       "metric": "aov",
-      "actual": 131.18,
-      "baseline": 283.36,
-      "drift_pct": -53.7,
+      "actual": 104.05,
+      "baseline": 260.23,
+      "drift_pct": -60.0,
       "severity": "CRITICAL",
-      "net_sales": 321.36,
-      "loss_30d": 103.54,
-      "loss_60d": 207.08,
-      "loss_90d": 310.63,
+      "net_sales": 312.41,
+      "loss_30d": 112.47,
+      "loss_60d": 224.94,
+      "loss_90d": 337.4,
       "graph_context": {
         "loyalty": [
-          "Bronze",
+          "Gold",
           "Platinum"
         ],
         "promotion": [
-          "Loyalty Platinum Reward",
-          "Christmas Special"
+          "Valentine's Day Special"
         ],
         "segment": [
-          "Retail"
+          "Retail",
+          "Wholesale"
         ],
         "channel": [
           "All"
         ]
       },
-      "recommendation": "ROOT CAUSE\nAverage order value is 53.7% below baseline at Online Store. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 53.7% costs $311 over 90 days."
+      "recommendation": "ROOT CAUSE\nAverage order value is 60.0% below baseline at Online Store. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 60.0% costs $337 over 90 days."
     },
     {
       "store_id": "STR-010",
@@ -1206,33 +1143,32 @@
       "address": "\u2014",
       "zip_code": "\u2014",
       "metric": "net_sales",
-      "actual": 321.36,
-      "baseline": 769.97,
-      "drift_pct": -58.3,
+      "actual": 312.41,
+      "baseline": 842.5,
+      "drift_pct": -62.9,
       "severity": "CRITICAL",
-      "net_sales": 321.36,
-      "loss_30d": 187.35,
-      "loss_60d": 374.71,
-      "loss_90d": 562.06,
+      "net_sales": 312.41,
+      "loss_30d": 196.51,
+      "loss_60d": 393.01,
+      "loss_90d": 589.52,
       "graph_context": {
         "category": [
-          "Grocery",
-          "Furniture",
-          "Apparel"
+          "Grocery"
         ],
         "brand": [
           "StyleMax",
-          "NatureBrew",
           "ComfortWork"
         ],
         "loyalty": [
-          "Platinum"
+          "Gold",
+          "Platinum",
+          "Silver"
         ],
         "region": [
           "National"
         ]
       },
-      "recommendation": "ROOT CAUSE\nNet sales at Online Store are 58.3% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in National\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Online Store against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $562 revenue gap over 90 days."
+      "recommendation": "ROOT CAUSE\nNet sales at Online Store are 62.9% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in National\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Online Store against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $590 revenue gap over 90 days."
     },
     {
       "store_id": "STR-001",
@@ -1240,64 +1176,63 @@
       "address": "100 Fifth Avenue",
       "zip_code": "10011",
       "metric": "gross_margin",
-      "actual": 40.63,
-      "baseline": 60.12,
-      "drift_pct": -32.4,
+      "actual": 37.61,
+      "baseline": 55.8,
+      "drift_pct": -32.6,
       "severity": "HIGH",
-      "net_sales": 1078.5,
-      "loss_30d": 279.55,
-      "loss_60d": 559.09,
-      "loss_90d": 838.64,
-      "graph_context": {
-        "category": [
-          "Home & Kitchen"
-        ],
-        "brand": [
-          "NatureBrew",
-          "StyleMax",
-          "ComfortWork"
-        ],
-        "supplier": [
-          "DirectSource",
-          "Supplier A"
-        ]
-      },
-      "recommendation": "ROOT CAUSE\nGross Margin % is 32.4% below baseline at Manhattan Flagship. Product mix or supplier costs are compressing margins.\n\nIMMEDIATE ACTIONS\n\u2022 Review pricing on low-margin SKUs and apply margin floor rules\n\u2022 Renegotiate supplier contracts for top-selling categories\n\u2022 Shift promotions to higher-margin product lines\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce margin-based category targets reviewed monthly\n\u2022 Analyse product mix vs. top-performing peer stores\n\nLOSS PREVENTION\nContinued margin compression costs $839 over 90 days."
-    },
-    {
-      "store_id": "STR-004",
-      "store_name": "Houston Galleria",
-      "address": "5085 Westheimer Rd",
-      "zip_code": "77056",
-      "metric": "net_sales",
-      "actual": 466.16,
-      "baseline": 769.97,
-      "drift_pct": -39.5,
-      "severity": "HIGH",
-      "net_sales": 466.16,
-      "loss_30d": 184.13,
-      "loss_60d": 368.27,
-      "loss_90d": 552.4,
+      "net_sales": 1034.0,
+      "loss_30d": 269.67,
+      "loss_60d": 539.33,
+      "loss_90d": 809.0,
       "graph_context": {
         "category": [
           "Furniture",
-          "Grocery",
-          "Apparel"
+          "Home & Kitchen",
+          "Electronics"
         ],
         "brand": [
-          "StyleMax",
-          "NatureBrew",
-          "GameForce"
+          "ComfortWork",
+          "TechPro"
         ],
-        "loyalty": [
-          "Silver",
-          "Gold"
-        ],
-        "region": [
-          "South"
+        "supplier": [
+          "Supplier B"
         ]
       },
-      "recommendation": "ROOT CAUSE\nNet sales at Houston Galleria are 39.5% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in South\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Houston Galleria against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $552 revenue gap over 90 days."
+      "recommendation": "ROOT CAUSE\nGross Margin % is 32.6% below baseline at Manhattan Flagship. Product mix or supplier costs are compressing margins.\n\nIMMEDIATE ACTIONS\n\u2022 Review pricing on low-margin SKUs and apply margin floor rules\n\u2022 Renegotiate supplier contracts for top-selling categories\n\u2022 Shift promotions to higher-margin product lines\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce margin-based category targets reviewed monthly\n\u2022 Analyse product mix vs. top-performing peer stores\n\nLOSS PREVENTION\nContinued margin compression costs $809 over 90 days."
+    },
+    {
+      "store_id": "STR-006",
+      "store_name": "Philadelphia Center",
+      "address": "1500 Market St",
+      "zip_code": "19102",
+      "metric": "discount_rate",
+      "actual": 2.47,
+      "baseline": 3.59,
+      "drift_pct": -31.2,
+      "severity": "HIGH",
+      "net_sales": 535.12,
+      "loss_30d": 150.26,
+      "loss_60d": 300.52,
+      "loss_90d": 450.79,
+      "graph_context": {
+        "category": [
+          "Electronics",
+          "Home & Kitchen"
+        ],
+        "channel": [
+          "All"
+        ],
+        "promo_type": [
+          "Seasonal",
+          "Loyalty",
+          "Flash"
+        ],
+        "promotion": [
+          "No Promotion",
+          "Easter Weekend"
+        ]
+      },
+      "recommendation": "Discount rate is below baseline at Philadelphia Center \u2014 promotions are well-controlled. Monitor to ensure discount reduction is not suppressing conversion rates."
     },
     {
       "store_id": "STR-006",
@@ -1305,31 +1240,64 @@
       "address": "1500 Market St",
       "zip_code": "19102",
       "metric": "net_sales",
-      "actual": 463.42,
-      "baseline": 769.97,
-      "drift_pct": -39.8,
+      "actual": 535.12,
+      "baseline": 842.5,
+      "drift_pct": -36.5,
       "severity": "HIGH",
-      "net_sales": 463.42,
-      "loss_30d": 184.44,
-      "loss_60d": 368.88,
-      "loss_90d": 553.32,
+      "net_sales": 535.12,
+      "loss_30d": 195.32,
+      "loss_60d": 390.64,
+      "loss_90d": 585.96,
       "graph_context": {
         "category": [
-          "Sports & Fitness",
-          "Electronics"
+          "Furniture"
         ],
         "brand": [
-          "ComfortWork",
-          "NatureBrew"
+          "StyleMax",
+          "ComfortWork"
         ],
         "loyalty": [
-          "Silver"
+          "Platinum"
         ],
         "region": [
           "Northeast"
         ]
       },
-      "recommendation": "ROOT CAUSE\nNet sales at Philadelphia Center are 39.8% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in Northeast\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Philadelphia Center against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $553 revenue gap over 90 days."
+      "recommendation": "ROOT CAUSE\nNet sales at Philadelphia Center are 36.5% below the cross-store baseline. Key categories and customer segments are underperforming.\n\nIMMEDIATE ACTIONS\n\u2022 Launch a flash promotion on top categories this week\n\u2022 Activate email/push campaigns targeting loyalty-tier customers in Northeast\n\u2022 Review stock levels \u2014 stockouts may be suppressing sales\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Benchmark Philadelphia Center against top-performing peer stores for staffing and layout differences\n\u2022 Run a targeted local marketing campaign for the store's catchment area\n\nLOSS PREVENTION\nContinued underperformance will result in a $586 revenue gap over 90 days."
+    },
+    {
+      "store_id": "STR-009",
+      "store_name": "Denver Union Station",
+      "address": "1701 Wynkoop St",
+      "zip_code": "80202",
+      "metric": "aov",
+      "actual": 192.97,
+      "baseline": 260.23,
+      "drift_pct": -25.8,
+      "severity": "HIGH",
+      "net_sales": 306.74,
+      "loss_30d": 47.48,
+      "loss_60d": 94.97,
+      "loss_90d": 142.45,
+      "graph_context": {
+        "loyalty": [
+          "Silver",
+          "Gold"
+        ],
+        "promotion": [
+          "Loyalty Platinum Reward",
+          "No Promotion",
+          "Christmas Special"
+        ],
+        "segment": [
+          "Retail",
+          "Wholesale"
+        ],
+        "channel": [
+          "All"
+        ]
+      },
+      "recommendation": "ROOT CAUSE\nAverage order value is 25.8% below baseline at Denver Union Station. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 25.8% costs $142 over 90 days."
     },
     {
       "store_id": "STR-010",
@@ -1337,32 +1305,29 @@
       "address": "\u2014",
       "zip_code": "\u2014",
       "metric": "discount_rate",
-      "actual": 6.19,
-      "baseline": 4.6,
-      "drift_pct": 34.6,
+      "actual": 4.84,
+      "baseline": 3.59,
+      "drift_pct": 34.8,
       "severity": "HIGH",
-      "net_sales": 321.36,
-      "loss_30d": 100.07,
-      "loss_60d": 200.14,
-      "loss_90d": 300.21,
+      "net_sales": 312.41,
+      "loss_30d": 97.85,
+      "loss_60d": 195.69,
+      "loss_90d": 293.54,
       "graph_context": {
         "category": [
-          "Electronics",
-          "Grocery",
-          "Furniture"
+          "Home & Kitchen"
         ],
         "channel": [
           "All"
         ],
         "promo_type": [
-          "Flash"
+          "Loyalty"
         ],
         "promotion": [
-          "No Promotion",
-          "Loyalty Gold Reward"
+          "No Promotion"
         ]
       },
-      "recommendation": "ROOT CAUSE\nDiscount rate is 34.6% above baseline at Online Store. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable overlapping discount combinations\n\u2022 Restrict discount eligibility to top loyalty tiers only\n\u2022 Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events 3+ weeks apart\n\u2022 Shift to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $300 in 90 days."
+      "recommendation": "ROOT CAUSE\nDiscount rate is 34.8% above baseline at Online Store. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable overlapping discount combinations\n\u2022 Restrict discount eligibility to top loyalty tiers only\n\u2022 Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events 3+ weeks apart\n\u2022 Shift to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $294 in 90 days."
     },
     {
       "store_id": "STR-001",
@@ -1370,21 +1335,20 @@
       "address": "100 Fifth Avenue",
       "zip_code": "10011",
       "metric": "aov",
-      "actual": 215.04,
-      "baseline": 283.36,
-      "drift_pct": -24.1,
+      "actual": 215.96,
+      "baseline": 260.23,
+      "drift_pct": -17.0,
       "severity": "MEDIUM",
-      "net_sales": 1078.5,
-      "loss_30d": 155.95,
-      "loss_60d": 311.9,
-      "loss_90d": 467.85,
+      "net_sales": 1034.0,
+      "loss_30d": 105.47,
+      "loss_60d": 210.94,
+      "loss_90d": 316.4,
       "graph_context": {
         "loyalty": [
-          "Silver"
+          "Gold",
+          "Bronze"
         ],
         "promotion": [
-          "Christmas Special",
-          "No Promotion",
           "Loyalty Platinum Reward"
         ],
         "segment": [
@@ -1395,69 +1359,69 @@
           "All"
         ]
       },
-      "recommendation": "ROOT CAUSE\nAverage order value is 24.1% below baseline at Manhattan Flagship. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 24.1% costs $468 over 90 days."
+      "recommendation": "ROOT CAUSE\nAverage order value is 17.0% below baseline at Manhattan Flagship. Customers are purchasing fewer items per visit.\n\nIMMEDIATE ACTIONS\n\u2022 Launch bundle promotions linking top categories at checkout\n\u2022 Retrain staff on upsell scripts targeting loyalty-tier customers\n\u2022 Activate minimum-spend promotions to lift basket size\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce loyalty-tier AOV targets \u2014 reward customers exceeding monthly spend thresholds\n\u2022 Analyse category affinity data for personalised cross-sell recommendations\n\nLOSS PREVENTION\nAn AOV shortfall of 17.0% costs $316 over 90 days."
     },
     {
-      "store_id": "STR-003",
-      "store_name": "Chicago Midway",
-      "address": "200 S Michigan Ave",
-      "zip_code": "60604",
-      "metric": "gross_margin",
-      "actual": 49.47,
-      "baseline": 60.12,
-      "drift_pct": -17.7,
+      "store_id": "STR-001",
+      "store_name": "Manhattan Flagship",
+      "address": "100 Fifth Avenue",
+      "zip_code": "10011",
+      "metric": "net_sales",
+      "actual": 1034.0,
+      "baseline": 842.5,
+      "drift_pct": 22.7,
       "severity": "MEDIUM",
-      "net_sales": 3714.07,
-      "loss_30d": 525.91,
-      "loss_60d": 1051.82,
-      "loss_90d": 1577.74,
+      "net_sales": 1034.0,
+      "loss_30d": 234.72,
+      "loss_60d": 469.44,
+      "loss_90d": 704.15,
       "graph_context": {
         "category": [
-          "Furniture",
-          "Grocery"
+          "Furniture"
         ],
         "brand": [
-          "NatureBrew",
+          "GameForce"
+        ],
+        "loyalty": [
+          "Platinum",
+          "Silver"
+        ],
+        "region": [
+          "Northeast"
+        ]
+      },
+      "recommendation": "Net sales are above baseline at Manhattan Flagship \u2014 store performance is strong. Maintain current inventory levels and staffing to sustain momentum."
+    },
+    {
+      "store_id": "STR-005",
+      "store_name": "Phoenix Desert Ridge",
+      "address": "21001 N Tatum Blvd",
+      "zip_code": "85050",
+      "metric": "gross_margin",
+      "actual": 66.47,
+      "baseline": 55.8,
+      "drift_pct": 19.1,
+      "severity": "MEDIUM",
+      "net_sales": 339.27,
+      "loss_30d": 51.84,
+      "loss_60d": 103.68,
+      "loss_90d": 155.52,
+      "graph_context": {
+        "category": [
+          "Grocery",
+          "Home & Kitchen"
+        ],
+        "brand": [
+          "StyleMax",
           "GameForce"
         ],
         "supplier": [
+          "Supplier B",
           "DirectSource",
           "Supplier A"
         ]
       },
-      "recommendation": "ROOT CAUSE\nGross Margin % is 17.7% below baseline at Chicago Midway. Product mix or supplier costs are compressing margins.\n\nIMMEDIATE ACTIONS\n\u2022 Review pricing on low-margin SKUs and apply margin floor rules\n\u2022 Renegotiate supplier contracts for top-selling categories\n\u2022 Shift promotions to higher-margin product lines\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce margin-based category targets reviewed monthly\n\u2022 Analyse product mix vs. top-performing peer stores\n\nLOSS PREVENTION\nContinued margin compression costs $1,578 over 90 days."
-    },
-    {
-      "store_id": "STR-006",
-      "store_name": "Philadelphia Center",
-      "address": "1500 Market St",
-      "zip_code": "19102",
-      "metric": "gross_margin",
-      "actual": 47.25,
-      "baseline": 60.12,
-      "drift_pct": -21.4,
-      "severity": "MEDIUM",
-      "net_sales": 463.42,
-      "loss_30d": 79.34,
-      "loss_60d": 158.68,
-      "loss_90d": 238.01,
-      "graph_context": {
-        "category": [
-          "Furniture",
-          "Electronics",
-          "Grocery"
-        ],
-        "brand": [
-          "GameForce",
-          "TechPro"
-        ],
-        "supplier": [
-          "Global Parts Co",
-          "Supplier A",
-          "Supplier B"
-        ]
-      },
-      "recommendation": "ROOT CAUSE\nGross Margin % is 21.4% below baseline at Philadelphia Center. Product mix or supplier costs are compressing margins.\n\nIMMEDIATE ACTIONS\n\u2022 Review pricing on low-margin SKUs and apply margin floor rules\n\u2022 Renegotiate supplier contracts for top-selling categories\n\u2022 Shift promotions to higher-margin product lines\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Introduce margin-based category targets reviewed monthly\n\u2022 Analyse product mix vs. top-performing peer stores\n\nLOSS PREVENTION\nContinued margin compression costs $238 over 90 days."
+      "recommendation": "Gross Margin % is above baseline \u2014 product mix and pricing are healthy at Phoenix Desert Ridge. Continue monitoring supplier costs to sustain this advantage."
     },
     {
       "store_id": "STR-010",
@@ -1465,120 +1429,27 @@
       "address": "\u2014",
       "zip_code": "\u2014",
       "metric": "gross_margin",
-      "actual": 73.19,
-      "baseline": 60.12,
-      "drift_pct": 21.7,
+      "actual": 65.93,
+      "baseline": 55.8,
+      "drift_pct": 18.2,
       "severity": "MEDIUM",
-      "net_sales": 321.36,
-      "loss_30d": 55.79,
-      "loss_60d": 111.58,
-      "loss_90d": 167.36,
+      "net_sales": 312.41,
+      "loss_30d": 45.49,
+      "loss_60d": 90.97,
+      "loss_90d": 136.46,
       "graph_context": {
         "category": [
-          "Electronics",
-          "Furniture"
+          "Home & Kitchen"
         ],
         "brand": [
-          "GameForce",
-          "StyleMax"
+          "ComfortWork"
         ],
         "supplier": [
-          "Supplier A"
+          "Supplier B",
+          "Global Parts Co"
         ]
       },
       "recommendation": "Gross Margin % is above baseline \u2014 product mix and pricing are healthy at Online Store. Continue monitoring supplier costs to sustain this advantage."
-    },
-    {
-      "store_id": "STR-004",
-      "store_name": "Houston Galleria",
-      "address": "5085 Westheimer Rd",
-      "zip_code": "77056",
-      "metric": "gross_margin",
-      "actual": 68.81,
-      "baseline": 60.12,
-      "drift_pct": 14.4,
-      "severity": "LOW",
-      "net_sales": 466.16,
-      "loss_30d": 53.7,
-      "loss_60d": 107.4,
-      "loss_90d": 161.1,
-      "graph_context": {
-        "category": [
-          "Furniture",
-          "Apparel"
-        ],
-        "brand": [
-          "NatureBrew"
-        ],
-        "supplier": [
-          "Global Parts Co",
-          "Supplier B",
-          "Supplier A"
-        ]
-      },
-      "recommendation": "Gross Margin % is above baseline \u2014 product mix and pricing are healthy at Houston Galleria. Continue monitoring supplier costs to sustain this advantage."
-    },
-    {
-      "store_id": "STR-004",
-      "store_name": "Houston Galleria",
-      "address": "5085 Westheimer Rd",
-      "zip_code": "77056",
-      "metric": "discount_rate",
-      "actual": 5.27,
-      "baseline": 4.6,
-      "drift_pct": 14.6,
-      "severity": "LOW",
-      "net_sales": 466.16,
-      "loss_30d": 61.25,
-      "loss_60d": 122.51,
-      "loss_90d": 183.76,
-      "graph_context": {
-        "category": [
-          "Electronics",
-          "Grocery"
-        ],
-        "channel": [
-          "All"
-        ],
-        "promo_type": [
-          "Seasonal",
-          "nan"
-        ],
-        "promotion": [
-          "No Promotion",
-          "Loyalty Gold Reward"
-        ]
-      },
-      "recommendation": "ROOT CAUSE\nDiscount rate is 14.6% above baseline at Houston Galleria. Promotions are being applied too broadly, eroding net revenue.\n\nIMMEDIATE ACTIONS\n\u2022 Cap stackable promotions \u2014 disable overlapping discount combinations\n\u2022 Restrict discount eligibility to top loyalty tiers only\n\u2022 Set a per-transaction discount ceiling of 15%\n\nSTRATEGIC RECOMMENDATIONS\n\u2022 Redesign promotion calendar to space discount events 3+ weeks apart\n\u2022 Shift to personalised offers based on customer loyalty tier\n\nLOSS PREVENTION\nExcess discounting will cost $184 in 90 days."
-    },
-    {
-      "store_id": "STR-007",
-      "store_name": "San Antonio Riverwalk",
-      "address": "849 E Commerce St",
-      "zip_code": "78205",
-      "metric": "gross_margin",
-      "actual": 68.08,
-      "baseline": 60.12,
-      "drift_pct": 13.2,
-      "severity": "LOW",
-      "net_sales": 255.74,
-      "loss_30d": 27.01,
-      "loss_60d": 54.01,
-      "loss_90d": 81.02,
-      "graph_context": {
-        "category": [
-          "Apparel",
-          "Grocery"
-        ],
-        "brand": [
-          "StyleMax"
-        ],
-        "supplier": [
-          "Supplier A",
-          "DirectSource"
-        ]
-      },
-      "recommendation": "Gross Margin % is above baseline \u2014 product mix and pricing are healthy at San Antonio Riverwalk. Continue monitoring supplier costs to sustain this advantage."
     }
   ]
 }
